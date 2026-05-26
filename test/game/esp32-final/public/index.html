@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32 Controller Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+  <div class="score__container">
+    <p>Score: <span id="score">0</span></p>
+  </div>
+  <img id="heading" src="../assets/heading.png" alt="Game Title">
+  <button id="settingsBtn" class="settings__btn">Settings</button>
+  </header>
+
+  <div id="settingsPanel" class="settings__panel hidden">
+    <div class="settings__content">
+      <h2>Sensor Calibration</h2>
+      
+      <div class="setting__group">
+        <h3>Turn Potentiometer to adjust gravity</h3>
+        <p>Current Value: <span id="potValue">0</span></p>
+        
+        <button id="calibrateMinBtn">Set as MIN (Dark)</button>
+        <span id="minValue">Min: Not set</span>
+        
+        <button id="calibrateMaxBtn">Set as MAX (Bright)</button>
+        <span id="maxValue">Max: Not set</span>
+        
+        <button id="clearCalibrationBtn">Clear Calibration</button>
+        <button id="closeSettingsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameOverModal" class="settings__panel hidden">
+    <div class="settings__content">
+      <h2>GAME OVER</h2>
+      <p class="modal__score">Your Score: <span id="finalScore">0</span></p>
+      <p class="modal__text">Press the right button to restart</p>
+    </div>
+  </div>
+
+  <div id="disconnectModal" class="settings__panel hidden">
+    <div class="settings__content">
+      <h2>DISCONNECTED</h2>
+      <p class="modal__error">ESP32 Connection Lost</p>
+      <p class="modal__text">Checking for reconnection...</p>
+      <p class="modal__hint">Make sure your Arduino is powered and connected</p>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
