@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { createTrip, getTripById, updateTrip} = require('./services');
+const { sendTripEmail } = require('./mailer');
 
 const os = require('os');
 const isDevelopment = (process.env.NODE_ENV === 'development');
@@ -58,6 +59,7 @@ io.on('connection', socket => {
         socketId: socket.id
       };
     }
+
     // Add/update in liveClients with full player info
     liveClients[socket.id] = {
       playerId: data.playerId,
@@ -73,11 +75,70 @@ io.on('connection', socket => {
     socket.emit("tripCreated", tripObject);
   });
 
-  socket.on('getTrip', async (tripId) => {
-    console.log(tripId)
+  socket.on('getTrip', async ({ tripId, playerId }) => {
     const tripObject = await getTripById(tripId);
-    console.log("TRIP FROM JSON SERVER:", tripObject);
+
+    const voters = tripObject.voters || [];
+
+    if (voters.includes(playerId)) {
+      socket.emit("alreadyVoted", tripObject);
+      return;
+    }
+
     socket.emit("giveTrip", tripObject);
+  });
+
+  socket.on('playerVotes', async ({ tripId, playerId, selectedDates }) => {
+    const trip = await getTripById(tripId);
+
+    if (!trip.votes) trip.votes = {};
+    if (!trip.voters) trip.voters = [];
+
+    trip.voters.push(playerId);
+    // checkk f all dates exist
+    trip.possibleDates.forEach(date => {
+      if (!trip.votes[date]) {
+        trip.votes[date] = [];
+      }
+    });
+
+    //check f selected dates exist else create it
+    selectedDates.forEach(date => {
+      if (!trip.votes[date]) {
+        trip.votes[date] = [];
+      }
+
+      //add player id if not in there yet
+      if (!trip.votes[date].includes(playerId)) {
+        trip.votes[date].push(playerId);
+      }
+    });
+
+    await updateTrip(tripId, trip);
+
+    socket.emit('voteSubmitted', trip);
+
+
+    const everyoneVoted =
+      trip.voters.length >= trip.expectedPlayers;
+
+    if (everyoneVoted) {
+
+     const finalDate = "tomorrow" //determineWinningDate(trip);
+
+      trip.voters.forEach(voter => {
+
+        sendTripEmail(
+          'keanu.plysier@gmail.com',
+          {
+            cafe: "Test Café",
+            finalDate: finalDate
+          }
+        );
+
+      });
+
+    }
   });
 
 });

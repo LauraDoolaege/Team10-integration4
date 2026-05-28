@@ -17,250 +17,347 @@
       "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
       "cafe": "cafe",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-29",
+        " 2026-05-30",
+        " 2026-05-27",
+        " 2026-05-25",
+        " 2026-05-26",
+        " 2026-05-24",
+        " 2026-05-31",
+        " 2026-05-20",
+        " 2026-05-22",
+        " 2026-05-16",
+        " 2026-05-23"
       ],
       "expectedPlayers": 4,
-      "createdAt": "2026-05-27",
+      "createdAt": "2026-05-28",
       "status": "open",
       "players": [
         "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
       ],
-      "tripId": "30cae132-0fe6-43f0-b71b-147c6417ee83",
-      "id": "q73Qg6t0GG8"
+      "id": "J4lZPnBTQ7s"
     },
     {
       "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "lk",
+      "cafe": "test",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-13",
+        "2026-05-16",
+        "2026-05-30",
+        "2026-05-27"
       ],
+      "votes": {
+        "2026-05-13": [],
+        "2026-05-16": [],
+        "2026-05-30": [],
+        "2026-05-27": []
+      },
+      "expectedPlayers": 5,
+      "createdAt": "2026-05-28",
+      "status": "open",
+      "players": [
+        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      ],
+      "id": "-B4rIZ4DZ-c"
+    },
+    {
+      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+      "cafe": "test",
+      "possibleDates": [
+        "2026-05-05",
+        "2026-05-19",
+        "2026-05-20",
+        "2026-05-21"
+      ],
+      "votes": {
+        "2026-05-05": [
+          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+        ],
+        "2026-05-19": [
+          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+        ],
+        "2026-05-20": [
+          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+        ],
+        "2026-05-21": []
+      },
+      "expectedPlayers": 4,
+      "createdAt": "2026-05-28",
+      "status": "open",
+      "players": [
+        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      ],
+      "id": "p39Cb6rBL40"
+    },
+    {
+      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+      "cafe": "TestingTesting",
+      "possibleDates": [
+        "2026-05-15",
+        "2026-05-12"
+      ],
+      "votes": {
+        "2026-05-15": [],
+        "2026-05-12": []
+      },
+      "expectedPlayers": 4,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      ],
+      "id": "cVyIS97h9UE"
+    },
+    {
+      "initiatorId": "ccb7d193-0765-435d-94ec-5615e0c37cad",
+      "cafe": "New trip",
+      "possibleDates": [
+        "2026-05-23",
+        "2026-05-20"
+      ],
+      "votes": {
+        "2026-05-23": [],
+        "2026-05-20": []
+      },
       "expectedPlayers": 2,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "createdAt": "2026-05-28",
+      "voters": [
+        "ccb7d193-0765-435d-94ec-5615e0c37cad"
       ],
-      "tripId": "09c6a510-3dea-487c-ad32-7e3ded075fe5",
-      "id": "mGDvzZlh1T4"
+      "id": "8REC7N3XPg4"
     },
     {
       "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "lol",
+      "cafe": "testing ",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-06-19",
+        "2026-06-20",
+        "2026-06-24"
       ],
-      "expectedPlayers": 3,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-06-19": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ],
+        "2026-06-20": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ],
+        "2026-06-24": []
+      },
+      "expectedPlayers": 4,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+        "016dd152-18ef-4385-ac75-bc0e3f945e2f"
       ],
-      "tripId": "6ed84fe6-3c02-48bb-9bd1-2b391d95babd",
-      "id": "UCJhLDhg1P4"
+      "id": "JDUNNLWQVMA"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "lmjmjmj",
+      "initiatorId": "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2",
+      "cafe": "Bryan",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-22",
+        "2026-05-23"
       ],
-      "expectedPlayers": 11,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-05-22": [],
+        "2026-05-23": []
+      },
+      "expectedPlayers": 4,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2"
       ],
-      "tripId": "32593686-f3df-4bb2-8056-745f77a9939b",
-      "id": "wmoF-SDAtf4"
+      "id": "BevvqOSC3rE"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "ihgilgloglo",
+      "initiatorId": "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2",
+      "cafe": "Bryan",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-22",
+        "2026-05-23"
       ],
+      "votes": {
+        "2026-05-22": [],
+        "2026-05-23": []
+      },
+      "expectedPlayers": 4,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2"
+      ],
+      "id": "FVFWrNVcG1M"
+    },
+    {
+      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+      "cafe": "testingTest",
+      "possibleDates": [
+        "2026-05-15",
+        "2026-05-16",
+        "2026-05-23"
+      ],
+      "votes": {
+        "2026-05-15": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-16": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-23": []
+      },
       "expectedPlayers": 2,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
       ],
-      "tripId": "6ea74a94-4527-4ad6-866a-8251a33ffce3",
-      "id": "F7ozCzfJoPs"
+      "id": "STg9IBI4VbY"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "ihgilgloglo",
+      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+      "cafe": "testMail",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-05",
+        "2026-05-09",
+        "2026-05-16",
+        "2026-05-23",
+        "2026-05-08",
+        "2026-05-15",
+        "2026-05-22"
       ],
+      "votes": {
+        "2026-05-05": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-09": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-16": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-23": [],
+        "2026-05-08": [],
+        "2026-05-15": [],
+        "2026-05-22": []
+      },
       "expectedPlayers": 2,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
       ],
-      "tripId": "6f50558b-f659-4a75-b9d3-6111410c8fe5",
-      "id": "M6YOu6neyNk"
+      "id": "qxoBUhko6YQ"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "piuhpihjoh",
+      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+      "cafe": "testingMail",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-05",
+        "2026-05-06"
       ],
-      "expectedPlayers": 11,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-05-05": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-06": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
       ],
-      "tripId": "9fb23af4-66dc-42ce-93ea-773cef68c088",
-      "id": "7ksI1X-ODmA"
+      "id": "7rv6ae0jN3o"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "kp",
+      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+      "cafe": "testingEmail",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-13",
+        "2026-05-14"
       ],
-      "expectedPlayers": 10,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-05-13": [
+          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
+        ],
+        "2026-05-14": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
+        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
       ],
-      "tripId": "344a2e87-522b-445c-ac02-03998ed1568c",
-      "id": "ofZ3HUWE4NA"
+      "id": "T2-YFHykwt8"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "kp",
+      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+      "cafe": "EmailTest",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-04-29",
+        "2026-04-09",
+        "2026-04-16"
       ],
-      "expectedPlayers": 6,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-04-29": [
+          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
+        ],
+        "2026-04-09": [
+          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
+        ],
+        "2026-04-16": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
       ],
-      "tripId": "757c3782-1ef4-4cca-b990-286af639369b",
-      "id": "yPvgPvTJpeA"
+      "id": "ogru3eZapic"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "korneel",
+      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+      "cafe": "testingEMAIL",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-05-16",
+        "2026-05-30",
+        "2026-05-23"
       ],
-      "expectedPlayers": 1,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-05-16": [
+          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
+        ],
+        "2026-05-30": [
+          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
+        ],
+        "2026-05-23": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
       ],
-      "id": "iochxS_Yjzk"
+      "id": "-qc71Q0VuXs"
     },
     {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "trip",
+      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+      "cafe": "EmailTest",
       "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
+        "2026-04-29",
+        "2026-04-09",
+        "2026-04-16"
       ],
-      "expectedPlayers": 20,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+      "votes": {
+        "2026-04-29": [],
+        "2026-04-09": [],
+        "2026-04-16": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-28",
+      "voters": [
+        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
+        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
       ],
-      "id": "_shSLuiISno"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "testTRIP",
-      "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
-      ],
-      "expectedPlayers": 6,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "kyjevLRV58A"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "instpect",
-      "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
-      ],
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "Jtpj5fitNUQ"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "okokok",
-      "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
-      ],
-      "expectedPlayers": 9,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "lSR2YQo-Q_U"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "sfsqfsfefz",
-      "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
-      ],
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "SPCs7hCsP58"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "jsfldlkjslf",
-      "possibleDates": [
-        "2024-06-01",
-        "2024-06-02"
-      ],
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-27",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "3t_zdwnoJGY"
+      "id": "Me3cNsBXDoc"
     }
   ],
   "players": [

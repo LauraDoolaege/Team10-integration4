@@ -4,28 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Friend Invite</title>
+    <link rel="stylesheet" href="gov.css">
 </head>
 
 <body>
-    <h2>Friend Invite Page</h2>
-    <div id="trip-info"></div>
+    <header>
+        <h1>Official Trip Competition Portal</h1>
+    </header>
+
+    <main>
+        <h2>Friend Invite Page</h2>
+
+        <form id="trip-info">
+            <h3 id="cafe-title">Loading trip...</h3>
+
+            <p>Select your available dates:</p>
+
+            <div id="date-options"></div>
+
+            <button type="submit">Submit Vote</button>
+        </form>
+        <p id="message"></p>
+    </main>
 
     <script src="/socket.io/socket.io.js"></script>
     <script type="module">
 
-        let tripInfo;
-        let invite;
-
-        let playerId
         let socket;
-        let socketIds = [];
-        let tripObject;
-
+        let playerId;
         let tripId = new URLSearchParams(window.location.search).get('trip');
-        console.log('Trip ID from URL:', tripId);
-        const init = () => {
 
+        let message;
+        let dateOptions;
+        let cafeTitle;
+        let tripForm;
+
+        const init = () => {
             playerId = localStorage.getItem("playerId");
 
             if (!playerId) {
@@ -33,83 +49,82 @@
                 localStorage.setItem("playerId", playerId);
             }
 
-            console.log(`Player ID: ${playerId}`);
             socket = io.connect('/');
+
             socket.on('connect', () => {
-                console.log(`Connected: ${socket.id}`);
                 socket.emit("identify", { playerId });
-                socket.emit("getTrip", tripId );
+                socket.emit("getTrip", {tripId, playerId});
             });
 
-            socket.on('clients', (data) => {
-                console.log('clients:', data.clients);
-                console.log('liveClients:', data.liveClients);
+            socket.on("alreadyVoted", (trip) => {
+                tripForm.style.display = "none";
+                message.innerText = "You already voted for this trip.";
             });
 
-            
-            setQuerySelector();
+            socket.on('giveTrip', (trip) => {
+                renderTrip(trip);
+            });
+
+            socket.on("voteSubmitted", () => {
+               tripForm.style.display = "none";
+               message.innerText = "Your selected dates has been submitted!";
+            });
+
+            setQuerySelectors();
             setEventListeners();
-
-            socket.on('giveTrip', (tripObject) => {
-                console.log('Trip details: ', tripObject);
-                tripObject = tripObject;
-                setCheckButtons(tripObject);
-            });
-
-            
-
-        }
-  
-          
-            
-        const setCheckButtons = (tripObject) => {
-            const dates = tripObject.possibleDates;
-
-          dates.forEach(date => {
-            const label = document.createElement('label');
-            label.innerText = date;
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.name = 'date';
-            checkbox.value = date;
-            label.appendChild(checkbox);
-            tripInfo.appendChild(label);
-          });
-        }
-
-
-     
-        // Trip form logic
-        const setQuerySelector = () => {
-            tripInfo = document.querySelector('#trip-info');
-        }
-
-        const setEventListeners = () => {
-            // tripForm.addEventListener('submit', handleSubmitForm);
         };
 
-        // const handleSubmitForm = async (e) => {
-        //     e.preventDefault();
-        //     const formData = new FormData(tripForm);
+        const setEventListeners = () => {
+            tripForm.addEventListener("submit", handleVote);
+        };
 
-        //     const trip = {
-        //         initiatorId: playerId,
-        //         cafe: formData.get('cafe'),
-        //         possibleDates: formData.get('possibleDates').split(',').map(s => s.trim()),
-        //         expectedPlayers: Number(formData.get('expectedPlayers')),
-        //         createdAt: new Date().toISOString().slice(0, 10),
-        //         status: 'open',
-        //         players: [playerId],
-        //     }
+        const setQuerySelectors = () => {
+            message = document.querySelector('#message');
+            tripForm = document.querySelector('#trip-info');
+            dateOptions = document.querySelector('#date-options');
+            cafeTitle = document.querySelector('#cafe-title');
+        };
 
-        //     socket.emit("newTrip", trip);
+        const renderTrip = (trip) => {
+            cafeTitle.innerText = trip.cafe;
 
-        //     tripResult.innerText = `Trip created for ${trip.cafe}`;
-        // }
+            dateOptions.innerHTML = "";
+
+            trip.possibleDates.forEach(date => {
+                const label = document.createElement("label");
+                label.classList.add("checkbox-label");
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "dates";
+                checkbox.value = date;
+
+                label.appendChild(checkbox);
+                label.append(` ${date}`);
+
+                dateOptions.appendChild(label);
+                dateOptions.appendChild(document.createElement("br"));
+            });
+        };
+
+        const handleVote = (e) => {
+            e.preventDefault();
+
+            const selectedDates = Array.from(
+                document.querySelectorAll("input[name='dates']:checked") //all input fields with name 'dates' currently checked
+            ).map(cb => cb.value); //only return the value of those checkboxes
+
+            socket.emit("playerVotes", {
+                tripId,
+                playerId,
+                selectedDates
+            });
+
+            console.log("Voted:", selectedDates);
+        };
 
         init();
     </script>
 </body>
 
 </html>
-

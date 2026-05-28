@@ -6,129 +6,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Socket.io Client</title>
-  <style>
-    html {
-      box-sizing: border-box;
-    }
-
-    *,
-    *:before,
-    *:after {
-      box-sizing: inherit;
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-    }
-
-    .cursor {
-      position: absolute;
-      width: 1rem;
-      height: 1rem;
-      margin-left: -.5rem;
-      margin-right: -.5rem;
-      background: red;
-      border-radius: 50% 50%;
-      transition: top .1s, left .1s;
-    }
-  </style>
+  <link rel="stylesheet" href="gov.css">
 </head>
 
+
 <body>
-  <h2>Create a New Trip</h2>
-  <form id="trip-form">
-    <label>
-      Café:
-      <input type="text" name="cafe" required value="">
-    </label><br>
-    <label>
-      Possible Dates (comma separated):
-      <input type="text" name="possibleDates" required placeholder="2024-06-01,2024-06-02">
-    </label><br>
-    <label>
-      Expected Players:
-      <input type="number" name="expectedPlayers" required min="1" value="4">
-    </label><br>
-    <button type="submit">Create Trip</button>
-  </form>
-  <div id="trip-result"></div>
-<a class="invite" href="" target="_blank"></a> 
+
+  <header>
+    <h1>Official Trip Competition Portal</h1>
+  </header>
+  <main>
+    <a id="url" target="_blank" href=""></a>
+    <div id="qr"></div>
+  </main>
 
   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+    integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=="
+    crossorigin="anonymous"></script>
   <script type="module">
 
-
-    let tripResult;
-    let tripForm;
-    let invite;
-
-    let playerId
-    let socket;
-    let socketIds = [];
-
     const init = () => {
-      playerId = localStorage.getItem("playerId");
-      if (!playerId) {
-        playerId = crypto.randomUUID();
-        localStorage.setItem("playerId", playerId);
-      }
-      console.log(`Player ID: ${playerId}`);
-      socket = io.connect('/');
-      socket.on('connect', () => {
-        console.log(`Connected: ${socket.id}`);
-        socket.emit("identify", { playerId });
-      });
-      socket.on('clients', (data) => {
-        console.log('clients:', data.clients);
-        console.log('liveClients:', data.liveClients);
-      });
+      const $url = document.getElementById('url');
+      const url = `${new URL(`/initiator.html `, window.location)}`;
+      $url.textContent = url;
+      $url.setAttribute('href', url);
 
-      setQuerySelector();
-      setEventListeners();
+      const typeNumber = 4;
+      const errorCorrectionLevel = 'L';
+      const qr = qrcode(typeNumber, errorCorrectionLevel);
+      qr.addData(url);
+      qr.make();
+      document.getElementById('qr').innerHTML = qr.createImgTag(4);
+    };
 
-          socket.on('tripCreated', (tripObject) => {
-            console.log('Trip created:', tripObject);
-            console.log('tripObject.id:', tripObject.id);
-            const tripId = tripObject.id;
-            invite.href = `/friend.html?trip=${tripId}`;
-            invite.innerText = `/friend.html?trip=${tripId}`;
-      });
-
-    }
-
-    // Trip form logic
-   const setQuerySelector = ()=>{ 
-     tripForm = document.querySelector('#trip-form');
-     tripResult = document.querySelector('#trip-result');
-     invite = document.querySelector('.invite');
-   }
-
-   const setEventListeners = () => {
-    tripForm.addEventListener('submit', handleSubmitForm);
-  };
-
-  const handleSubmitForm = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(tripForm);
-
-    const trip = {
-      initiatorId: playerId,
-      cafe: formData.get('cafe'),
-      possibleDates: formData.get('possibleDates').split(',').map(s => s.trim()),
-      expectedPlayers: Number(formData.get('expectedPlayers')),
-      createdAt: new Date().toISOString().slice(0, 10),
-      status: 'open',
-      players: [playerId],
-    }
-    
-    socket.emit("newTrip", trip);
-
-    tripResult.innerText = `Trip created for ${trip.cafe}`;
-  }
-
-     init();
+    init();
   </script>
 </body>
 
