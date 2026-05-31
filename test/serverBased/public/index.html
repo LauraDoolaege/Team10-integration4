@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Socket.io Client</title>
+  <link rel="stylesheet" href="gov.css">
+</head>
+
+
+<body>
+
+  <header>
+    <h1>Official Trip Competition Portal</h1>
+  </header>
+  <main>
+    <a id="url" target="_blank" href=""></a>
+    <div id="qr"></div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+    integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=="
+    crossorigin="anonymous"></script>
+  <script type="module">
+
+    const init = () => {
+      const $url = document.getElementById('url');
+      const url = `${new URL(`/initiator.html `, window.location)}`;
+      $url.textContent = url;
+      $url.setAttribute('href', url);
+
+      const typeNumber = 4;
+      const errorCorrectionLevel = 'L';
+      const qr = qrcode(typeNumber, errorCorrectionLevel);
+      qr.addData(url);
+      qr.make();
+      document.getElementById('qr').innerHTML = qr.createImgTag(4);
+    };
+
+    init();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+{
+  "trips": [
+    {
+      "id": "trip-1",
+      "initiatorId": "player-1",
+      "cafe": "Cafe Central",
+      "possibleDates": [
+        "2024-06-01",
+        "2024-06-02"
+      ],
+      "expectedPlayers": 4,
+      "createdAt": "2024-05-27",
+      "status": "open",
+      "players": []
+    },
+    {
+      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+      "cafe": "Testing",
+      "possibleDates": [
+        "2026-05-30",
+        "2026-05-31",
+        "2026-06-01"
+      ],
+      "votes": {
+        "2026-05-30": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ],
+        "2026-05-31": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ],
+        "2026-06-01": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ]
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-29",
+      "players": [
+        {
+          "playerId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+          "email": "keanu.plysier@gmail.com",
+          "username": "Kp",
+          "score": 10
+        },
+        {
+          "playerId": "016dd152-18ef-4385-ac75-bc0e3f945e2f",
+          "email": "plysier.voetbalist@gmail.com",
+          "username": "kp2",
+          "score": 0
+        }
+      ],
+      "voters": [
+        "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+        "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+      ],
+      "id": "jiGNCddXZL8",
+      "status": "open"
+    }
+  ],
+  "players": [
+    {
+      "id": "player-1",
+      "playerId": "uuid-1",
+      "username": "Alice",
+      "tripId": "trip-1",
+      "score": 1200,
+      "completed": true,
+      "rank": 1
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

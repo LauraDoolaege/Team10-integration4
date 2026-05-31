@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Friend Invite</title>
+    <link rel="stylesheet" href="gov.css">
+</head>
+
+<body>
+    <header>
+        <h1>Official Trip Competition Portal</h1>
+    </header>
+
+    <main>
+        <h2>Friend Invite Page</h2>
+
+        <form id="trip-info">
+            <h3 id="cafe-title">Loading trip...</h3>
+
+            <p>Select your available dates:</p>
+
+            <div id="date-options"></div>
+
+                <label>
+                    username:
+                    <input type="text" name="username" id="possibleDates" required>
+                </label>
+                <label>
+                    email:
+                    <input type="email" name="email" required>
+                </label>
+
+            <button type="submit">Submit Vote</button>
+        </form>
+        <p id="message"></p>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+
+        let socket;
+        let playerId;
+        let tripId = new URLSearchParams(window.location.search).get('trip');
+
+        let message;
+        let dateOptions;
+        let cafeTitle;
+        let tripForm;
+
+        const init = () => {
+            playerId = localStorage.getItem("playerId");
+
+            if (!playerId) {
+                playerId = crypto.randomUUID();
+                localStorage.setItem("playerId", playerId);
+
+            }
+
+            socket = io.connect('/');
+
+            socket.on('connect', () => {
+                socket.emit("identify", { playerId });
+                socket.emit("getTrip", {tripId, playerId});
+            });
+
+            socket.on("alreadyVoted", (trip) => {
+                tripForm.style.display = "none";
+                message.innerText = "You already voted for this trip.";
+            });
+
+            socket.on('giveTrip', (trip) => {
+                renderTrip(trip);
+            });
+
+            socket.on("voteSubmitted", () => {
+               tripForm.style.display = "none";
+               message.innerText = "Your selected dates has been submitted!";
+            });
+
+            setQuerySelectors();
+            setEventListeners();
+        };
+
+        const setEventListeners = () => {
+            tripForm.addEventListener("submit", handleVote);
+        };
+
+        const setQuerySelectors = () => {
+            message = document.querySelector('#message');
+            tripForm = document.querySelector('#trip-info');
+            dateOptions = document.querySelector('#date-options');
+            cafeTitle = document.querySelector('#cafe-title');
+        };
+
+        const renderTrip = (trip) => {
+            cafeTitle.innerText = trip.cafe;
+
+            dateOptions.innerHTML = "";
+
+            trip.possibleDates.forEach(date => {
+                const label = document.createElement("label");
+                label.classList.add("checkbox-label");
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "dates";
+                checkbox.value = date;
+
+                label.appendChild(checkbox);
+                label.append(` ${date}`);
+
+                dateOptions.appendChild(label);
+                dateOptions.appendChild(document.createElement("br"));
+            });
+        };
+
+        const handleVote = (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(tripForm);
+            const username = formData.get("username");
+            const email = formData.get("email");
+
+            const selectedDates = Array.from(
+                document.querySelectorAll("input[name='dates']:checked") //all input fields with name 'dates' currently checked
+            ).map(cb => cb.value); //only return the value of those checkboxes
+
+            socket.emit("playerVotes", {
+                tripId,
+                playerId,
+                selectedDates,
+                email,
+                username,
+            });
+
+            console.log("Voted:", selectedDates);
+        };
+
+        init();
+    </script>
+</body>
+
+</html>

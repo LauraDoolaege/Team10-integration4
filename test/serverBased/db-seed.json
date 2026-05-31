@@ -1,0 +1,28 @@
+{
+    "trips": [
+        {
+            "id": "trip-1",
+            "initiatorId": "player-1",
+            "cafe": "Cafe Central",
+            "possibleDates": [
+                "2024-06-01",
+                "2024-06-02"
+            ],
+            "expectedPlayers": 4,
+            "createdAt": "2024-05-27",
+            "status": "open",
+            "players": []
+        }
+    ],
+    "players": [
+        {
+            "id": "player-1",
+            "playerId": "uuid-1",
+            "username": "Alice",
+            "tripId": "trip-1",
+            "score": 1200,
+            "completed": true,
+            "rank": 1
+        }
+    ]
+}
