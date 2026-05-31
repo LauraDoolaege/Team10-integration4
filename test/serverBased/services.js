@@ -97,14 +97,29 @@ const getPlayersByTripId = async (tripId) => {
 };
 
 // Get a single player by ID
-const getPlayerById = async (playerId) => {
+// const getPlayerByPlayerId = async (playerId) => {
+//     try {
+//         const response = await fetch(`${API_BASE_URL}/players?playerId=${playerId}`);
+//         if (!response.ok) throw new Error('Player not found');
+        
+//         return await response.json();
+//     } catch (error) {
+//         console.error('Error fetching player:', error);
+//         throw error;
+//     }
+// };
+
+const getPlayerByPlayerId = async (playerId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/players/${playerId}`);
-        if (!response.ok) throw new Error('Player not found');
-        return await response.json();
+        const response = await fetch(
+            `${API_BASE_URL}/players?playerId=${playerId}`
+        );
+        const players = await response.json();
+        return players[0] || "";
+
     } catch (error) {
         console.error('Error fetching player:', error);
-        throw error;
+        return "";
     }
 };
 
@@ -187,7 +202,7 @@ module.exports = {
     // Players
     getAllPlayers,
     getPlayersByTripId,
-    getPlayerById,
+    getPlayerByPlayerId,
     createPlayer,
     updatePlayer,
     deletePlayer,

@@ -41,18 +41,15 @@ const clients = {}; // All clients ever seen
 const liveClients = {}; // Only currently connected clients, keyed by socketId
 
 io.on('connection', socket => {
-  socket.on('disconnect', () => {//update liveClients
+
+  socket.on('disconnect', () => {
     delete liveClients[socket.id];
     io.emit('clients', { liveClients, clients });
   });
 
   socket.on('identify', (data) => {
-    // Update all-time clients
     if (clients[data.playerId]) {
-      clients[data.playerId] = {
-        ...clients[data.playerId],
-        socketId: socket.id
-      };
+      clients[data.playerId].socketId = socket.id;
     } else {
       clients[data.playerId] = {
         playerId: data.playerId,
@@ -60,7 +57,6 @@ io.on('connection', socket => {
       };
     }
 
-    // Add/update in liveClients with full player info
     liveClients[socket.id] = {
       playerId: data.playerId,
       socketId: socket.id
@@ -71,7 +67,6 @@ io.on('connection', socket => {
 
   socket.on('newTrip', async (trip) => {
     const tripObject = await createTrip(trip);
-    console.log("CREATED TRIP FROM JSON SERVER:", tripObject);
     socket.emit("tripCreated", tripObject);
   });
 
@@ -88,57 +83,108 @@ io.on('connection', socket => {
     socket.emit("giveTrip", tripObject);
   });
 
-  socket.on('playerVotes', async ({ tripId, playerId, selectedDates }) => {
+  socket.on('playerVotes', async ({
+    tripId,
+    playerId,
+    selectedDates,
+    email = "",
+    username = ""
+  }) => {
+
     const trip = await getTripById(tripId);
 
+    // init safety
     if (!trip.votes) trip.votes = {};
     if (!trip.voters) trip.voters = [];
+    if (!trip.players) trip.players = [];
+    if (!trip.status) trip.status = "open";
 
-    trip.voters.push(playerId);
-    // checkk f all dates exist
+    if (trip.status === "closed") return;
+
+    // add player
+    const existingPlayer = trip.players.find(p => p.playerId === playerId);
+
+    if (!existingPlayer) {
+      trip.players.push({ playerId, email, username, score: 0 });
+    }
+
+    // add voter
+    if (!trip.voters.includes(playerId)) {
+      trip.voters.push(playerId);
+    }
+
+    // init votes
     trip.possibleDates.forEach(date => {
-      if (!trip.votes[date]) {
-        trip.votes[date] = [];
-      }
+      if (!trip.votes[date]) trip.votes[date] = [];
     });
 
-    //check f selected dates exist else create it
+    // apply votes
     selectedDates.forEach(date => {
-      if (!trip.votes[date]) {
-        trip.votes[date] = [];
-      }
-
-      //add player id if not in there yet
       if (!trip.votes[date].includes(playerId)) {
         trip.votes[date].push(playerId);
       }
     });
 
-    await updateTrip(tripId, trip);
+    const updatedTrip = await updateTrip(tripId, trip);
 
-    socket.emit('voteSubmitted', trip);
-
+    socket.emit('voteSubmitted', updatedTrip);
 
     const everyoneVoted =
-      trip.voters.length >= trip.expectedPlayers;
+      updatedTrip.voters.length >= trip.expectedPlayers;
 
     if (everyoneVoted) {
 
-     const finalDate = "tomorrow" //determineWinningDate(trip);
+      const finalDate = getFinalDate(updatedTrip);
 
-      trip.voters.forEach(voter => {
-
+      updatedTrip.players.forEach(player => {
         sendTripEmail(
-          'keanu.plysier@gmail.com',
+          player.email || "test@example.com",
           {
-            cafe: "Test Café",
-            finalDate: finalDate
+            cafe: updatedTrip.cafe,
+            finalDate
           }
         );
-
       });
 
+      await updateTrip(tripId, updatedTrip);
     }
   });
 
 });
+
+
+const getFinalDate = (trip) => {
+  const { votes = {}, possibleDates = [] } = trip;
+
+  let highestCount = -1;
+  let candidates = [];
+
+  possibleDates.forEach((date) => {
+    const count = (votes[date] || []).length;
+
+    if (count > highestCount) {
+      highestCount = count;
+      candidates = [date];
+    } else if (count === highestCount) {
+      candidates.push(date);
+    }
+  });
+
+  if (candidates.length === 1) return candidates[0];
+
+  const today = new Date();
+
+  let closestDate = candidates[0];
+  let smallestDiff = Infinity;
+
+  candidates.forEach((date) => {
+    const diff = Math.abs(new Date(date) - today);
+
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestDate = date;
+    }
+  });
+
+  return closestDate;
+};

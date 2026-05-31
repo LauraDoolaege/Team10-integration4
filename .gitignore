@@ -1,5 +1,6 @@
 .env
 node_modules/
+
 # Ignore SSL certificates
 test/serverBased/certs/
 *.pem

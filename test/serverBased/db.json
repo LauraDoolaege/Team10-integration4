@@ -15,349 +15,45 @@
     },
     {
       "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "cafe",
+      "cafe": "Testing",
       "possibleDates": [
-        "2026-05-29",
-        " 2026-05-30",
-        " 2026-05-27",
-        " 2026-05-25",
-        " 2026-05-26",
-        " 2026-05-24",
-        " 2026-05-31",
-        " 2026-05-20",
-        " 2026-05-22",
-        " 2026-05-16",
-        " 2026-05-23"
-      ],
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "J4lZPnBTQ7s"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "test",
-      "possibleDates": [
-        "2026-05-13",
-        "2026-05-16",
         "2026-05-30",
-        "2026-05-27"
+        "2026-05-31",
+        "2026-06-01"
       ],
       "votes": {
-        "2026-05-13": [],
-        "2026-05-16": [],
-        "2026-05-30": [],
-        "2026-05-27": []
-      },
-      "expectedPlayers": 5,
-      "createdAt": "2026-05-28",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "-B4rIZ4DZ-c"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "test",
-      "possibleDates": [
-        "2026-05-05",
-        "2026-05-19",
-        "2026-05-20",
-        "2026-05-21"
-      ],
-      "votes": {
-        "2026-05-05": [
-          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+        "2026-05-30": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
         ],
-        "2026-05-19": [
-          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
+        "2026-05-31": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
         ],
-        "2026-05-20": [
-          "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-        ],
-        "2026-05-21": []
-      },
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
-      "status": "open",
-      "players": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "p39Cb6rBL40"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "TestingTesting",
-      "possibleDates": [
-        "2026-05-15",
-        "2026-05-12"
-      ],
-      "votes": {
-        "2026-05-15": [],
-        "2026-05-12": []
-      },
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "6264396b-0a1f-4b3c-9980-c10cde88b4e1"
-      ],
-      "id": "cVyIS97h9UE"
-    },
-    {
-      "initiatorId": "ccb7d193-0765-435d-94ec-5615e0c37cad",
-      "cafe": "New trip",
-      "possibleDates": [
-        "2026-05-23",
-        "2026-05-20"
-      ],
-      "votes": {
-        "2026-05-23": [],
-        "2026-05-20": []
+        "2026-06-01": [
+          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
+        ]
       },
       "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "ccb7d193-0765-435d-94ec-5615e0c37cad"
+      "createdAt": "2026-05-29",
+      "players": [
+        {
+          "playerId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
+          "email": "keanu.plysier@gmail.com",
+          "username": "Kp",
+          "score": 10
+        },
+        {
+          "playerId": "016dd152-18ef-4385-ac75-bc0e3f945e2f",
+          "email": "plysier.voetbalist@gmail.com",
+          "username": "kp2",
+          "score": 0
+        }
       ],
-      "id": "8REC7N3XPg4"
-    },
-    {
-      "initiatorId": "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
-      "cafe": "testing ",
-      "possibleDates": [
-        "2026-06-19",
-        "2026-06-20",
-        "2026-06-24"
-      ],
-      "votes": {
-        "2026-06-19": [
-          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
-        ],
-        "2026-06-20": [
-          "016dd152-18ef-4385-ac75-bc0e3f945e2f"
-        ],
-        "2026-06-24": []
-      },
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
       "voters": [
         "6264396b-0a1f-4b3c-9980-c10cde88b4e1",
         "016dd152-18ef-4385-ac75-bc0e3f945e2f"
       ],
-      "id": "JDUNNLWQVMA"
-    },
-    {
-      "initiatorId": "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2",
-      "cafe": "Bryan",
-      "possibleDates": [
-        "2026-05-22",
-        "2026-05-23"
-      ],
-      "votes": {
-        "2026-05-22": [],
-        "2026-05-23": []
-      },
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2"
-      ],
-      "id": "BevvqOSC3rE"
-    },
-    {
-      "initiatorId": "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2",
-      "cafe": "Bryan",
-      "possibleDates": [
-        "2026-05-22",
-        "2026-05-23"
-      ],
-      "votes": {
-        "2026-05-22": [],
-        "2026-05-23": []
-      },
-      "expectedPlayers": 4,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "50bce8e7-9a7a-4b7f-90f6-da0c12a125c2"
-      ],
-      "id": "FVFWrNVcG1M"
-    },
-    {
-      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-      "cafe": "testingTest",
-      "possibleDates": [
-        "2026-05-15",
-        "2026-05-16",
-        "2026-05-23"
-      ],
-      "votes": {
-        "2026-05-15": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-16": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-23": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-      ],
-      "id": "STg9IBI4VbY"
-    },
-    {
-      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-      "cafe": "testMail",
-      "possibleDates": [
-        "2026-05-05",
-        "2026-05-09",
-        "2026-05-16",
-        "2026-05-23",
-        "2026-05-08",
-        "2026-05-15",
-        "2026-05-22"
-      ],
-      "votes": {
-        "2026-05-05": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-09": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-16": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-23": [],
-        "2026-05-08": [],
-        "2026-05-15": [],
-        "2026-05-22": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-      ],
-      "id": "qxoBUhko6YQ"
-    },
-    {
-      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-      "cafe": "testingMail",
-      "possibleDates": [
-        "2026-05-05",
-        "2026-05-06"
-      ],
-      "votes": {
-        "2026-05-05": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-06": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-      ],
-      "id": "7rv6ae0jN3o"
-    },
-    {
-      "initiatorId": "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-      "cafe": "testingEmail",
-      "possibleDates": [
-        "2026-05-13",
-        "2026-05-14"
-      ],
-      "votes": {
-        "2026-05-13": [
-          "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-        ],
-        "2026-05-14": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c95d9d3a-c480-4b77-b299-e0c2d9dbaace",
-        "d8dc0234-debf-4848-a4e6-ee0e0c663041"
-      ],
-      "id": "T2-YFHykwt8"
-    },
-    {
-      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-      "cafe": "EmailTest",
-      "possibleDates": [
-        "2026-04-29",
-        "2026-04-09",
-        "2026-04-16"
-      ],
-      "votes": {
-        "2026-04-29": [
-          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-        ],
-        "2026-04-09": [
-          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-        ],
-        "2026-04-16": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-      ],
-      "id": "ogru3eZapic"
-    },
-    {
-      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-      "cafe": "testingEMAIL",
-      "possibleDates": [
-        "2026-05-16",
-        "2026-05-30",
-        "2026-05-23"
-      ],
-      "votes": {
-        "2026-05-16": [
-          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-        ],
-        "2026-05-30": [
-          "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-        ],
-        "2026-05-23": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-      ],
-      "id": "-qc71Q0VuXs"
-    },
-    {
-      "initiatorId": "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-      "cafe": "EmailTest",
-      "possibleDates": [
-        "2026-04-29",
-        "2026-04-09",
-        "2026-04-16"
-      ],
-      "votes": {
-        "2026-04-29": [],
-        "2026-04-09": [],
-        "2026-04-16": []
-      },
-      "expectedPlayers": 2,
-      "createdAt": "2026-05-28",
-      "voters": [
-        "c1c400ae-7dbe-4378-bd0a-b43e04f9765a",
-        "8326c9fd-d024-43f3-a9b9-ab51f11a2074"
-      ],
-      "id": "Me3cNsBXDoc"
+      "id": "jiGNCddXZL8",
+      "status": "open"
     }
   ],
   "players": [

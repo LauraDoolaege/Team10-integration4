@@ -5,10 +5,16 @@ const GROUND_OFFSET = 126;
 const MIN_GAP = 450;
 const MAX_GAP = 1050;
 
+// jump tuning
+const JUMP_VELOCITY = -18;     // fixed jump strength
+const EARLY_RELEASE_MULT = 0.4; // how much jump is cut when releasing early
+
+// input state
+let spaceHeld = false;
+
 // Dummy feedback functions
 const gameOverFeedback = () => { };
 const scoreFeedback = () => { };
-
 const levelUpFlash = () => { };
 
 // Images
@@ -63,7 +69,6 @@ const resizeCanvas = () => {
   canvas.height = window.innerHeight;
 };
 
-
 // Assets
 const loadAssets = () => {
   duckImg.src = '../assets/duck.png';
@@ -76,67 +81,73 @@ const loadAssets = () => {
 };
 
 // Collision
-const checkCollision = (
-  playerX,
-  playerY,
-  playerWidth,
-  playerHeight,
-  obstacleX,
-  obstacleY,
-  obstacleWidth,
-  obstacleHeight
-) => {
-  return (//check if squares overlap?
-    playerX < obstacleX + obstacleWidth &&
-    playerX + playerWidth > obstacleX &&
-    playerY < obstacleY + obstacleHeight &&
-    playerY + playerHeight > obstacleY
+const checkCollision = (px, py, pw, ph, ox, oy, ow, oh) => { //check if squares overlap?
+  return (
+    px < ox + ow &&
+    px + pw > ox &&
+    py < oy + oh &&
+    py + ph > oy
   );
 };
 
-// Input
+
+
 const handleKeyDown = (e) => {
-  //check if space bar is tapped via the condition setting it to true or false
   const isSpace = e.code === 'Space' || e.key === ' ';
 
   if (
-    isSpace && //space is pressed
-    !isJumping && //is not jumping
-    playerY >= groundY - GROUND_OFFSET - 5 && //player is almost basically on the ground with margin of 5px
-    !gameOver //game is not over yet
+    isSpace &&
+    !isJumping &&
+    playerY >= groundY - GROUND_OFFSET - 5 &&
+    !gameOver
   ) {
-    velocityY = -18; //setting velocity of player on Y access
+    // instant jump impulse
+    velocityY = JUMP_VELOCITY;
     isJumping = true;
 
-    jumpStartY = playerY; //records jump start point
+    spaceHeld = true;
 
-    jumpCounter++; //counts jumps to know when a salto should occur.
+    jumpStartY = playerY;
+    jumpCounter++;
 
     if (jumpCounter === nextSaltoJump) {
-      isSaltoJump = true; 
-      nextSaltoJump = jumpCounter + 5 + Math.floor(Math.random() * 5);//resets new random amount of jumps before a salto
+      isSaltoJump = true;
+      nextSaltoJump = jumpCounter + 5 + Math.floor(Math.random() * 5);
     }
-
   }
 
   if (isSpace && gameOver) {
-    location.reload(); //reloads the entire webpage to reset the entire game. Might want to change this.
+    location.reload();
   }
 };
 
-// Player
-const updatePlayer = () => {
-  playerY += velocityY; //update playerY with the velocity from the jump (-18)
 
-  if (playerY < groundY - GROUND_OFFSET) { //if the player is higher than the ground
-    velocityY += 0.6; //the velocity of the jump lowers
+const handleKeyUp = (e) => {
+  const isSpace = e.code === 'Space' || e.key === ' ';
+
+  if (isSpace) {
+    spaceHeld = false;
+
+    // only affect upward motion
+    if (velocityY < 0) { //player is still going up
+      velocityY *= EARLY_RELEASE_MULT; //kill momentum and start falling
+    }
+  }
+};
+
+
+const updatePlayer = () => {
+  playerY += velocityY;
+
+  if (playerY < groundY - GROUND_OFFSET) {
+    velocityY += 0.6; // gravity
   } else {
-    playerY = groundY - GROUND_OFFSET; //if player Y is smaller or equal to ground level it snaps to ground
+    playerY = groundY - GROUND_OFFSET;
     velocityY = 0;
     isJumping = false;
 
     if (isSaltoJump) {
-      isSaltoJump = false; //salt become false
+      isSaltoJump = false;
     }
   }
 };
@@ -147,82 +158,61 @@ const drawPlayer = () => {
 
   const duckY = isDashing ? playerY + 61 : playerY;
 
-  const currentDuckImg = isDashing
-    ? duckDashImg
-    : isJumping
-      ? duckJumpImg
-      : duckImg;
+  const currentDuckImg =
+    isDashing ? duckDashImg :
+      isJumping ? duckJumpImg :
+        duckImg;
 
   let rotationAngle = 0;
 
   if (isSaltoJump && isJumping) {
-    if (velocityY < 0) { //still going up?
-      const verticalDistance = Math.abs(jumpStartY - playerY);//how far has he jumped?
-
-      rotationAngle = Math.min((verticalDistance / 270) * 360, 360); //calc angle
+    if (velocityY < 0) {
+      const verticalDistance = Math.abs(jumpStartY - playerY);
+      rotationAngle = Math.min((verticalDistance / 270) * 360, 360);
     } else {
       rotationAngle = 360;
     }
   }
 
   if (rotationAngle > 0) {
-    ctx.save(); //save current transformations 
+    ctx.save();
 
-    const centerX = 80 + duckWidth / 2; //get center point 
-    const centerY = duckY + duckHeight / 2; //get center point
+    const centerX = 80 + duckWidth / 2;
+    const centerY = duckY + duckHeight / 2;
 
-    ctx.translate(centerX, centerY); //translating the 0 point.
+    ctx.translate(centerX, centerY);
+    ctx.rotate((rotationAngle * Math.PI) / 180);
 
-    ctx.rotate((rotationAngle * Math.PI) / 180); //rotate canvas by converting degrees into radians
-
-    ctx.drawImage( 
+    ctx.drawImage(
       currentDuckImg,
-      -duckWidth / 2, //to center point of image
-      -duckHeight / 2, //to center point of imag 
+      -duckWidth / 2,
+      -duckHeight / 2,
       duckWidth,
       duckHeight
     );
 
-    ctx.restore(); //restore the previous transformation settings from before saving.
+    ctx.restore();
   } else {
-    ctx.drawImage(currentDuckImg, 80, duckY, duckWidth, duckHeight);//draw normal image.
+    ctx.drawImage(currentDuckImg, 80, duckY, duckWidth, duckHeight);
   }
 };
 
-// Obstacles
+
+
 const spawnObstacle = () => {
-  const rand = Math.random(); //set a random value
+  const rand = Math.random();
 
-  const obstacleType =
-    rand < 0.33
-      ? 1
-      : rand < 0.67
-        ? 2
-        : 3; //use this type of dice roll method
+  const obstacleType =//use this type of dice roll method
+    rand < 0.33 ? 1 :
+      rand < 0.67 ? 2 : 3;
 
+  let imgRef = //set an obstacle based on the random value
+    obstacleType === 1 ? obstacleImg1 :
+      obstacleType === 2 ? obstacleImg2 :
+        obstacleImg3;
 
-  let imgRef;
-
-  if (obstacleType === 1) { //set an obstacle based on the random value
-    imgRef = obstacleImg1;
-  } else if (obstacleType === 2) {
-    imgRef = obstacleImg2;
-  } else {
-    imgRef = obstacleImg3;
-  }
-
-  const originalWidth = //“If the image has loaded correctly and has a width bigger than 0, use the image width.Otherwise use 50.”
-    imgRef.complete && imgRef.width > 0
-      ? imgRef.width
-      : 50;
-
-  const originalHeight =
-    imgRef.complete && imgRef.height > 0
-      ? imgRef.height
-      : 100;
-
-  const width = originalWidth / 1.5;
-  const height = originalHeight / 1.5;
+  const width = (imgRef.width || 50) / 1.5; //“If the image has loaded correctly and has a width bigger than 0, use the image width.Otherwise use 50.”
+  const height = (imgRef.height || 100) / 1.5;
 
   const obstacleY = //because zero point is in upper left corner of the obstacle.
     obstacleType === 3
@@ -243,151 +233,90 @@ const spawnObstacle = () => {
 };
 
 const updateObstacles = () => {
-  let shouldSpawn = false;
+  let shouldSpawn = obstacles.length === 0;
 
-  if (obstacles.length === 0) {
-    shouldSpawn = true;
-  } else {
-    const lastObstacle = obstacles[obstacles.length - 1]; //grab the last obstacle
-
-    const distanceFromRightEdge = canvas.width - lastObstacle.x; //check the distance between the obstacle and the right edge
-
-    if (distanceFromRightEdge > targetGap) {//check if the distance from the right edge is larger thn the targetgap
-      shouldSpawn = true; 
-    }
+  if (!shouldSpawn) {
+    const last = obstacles[obstacles.length - 1];  //grab the last obstacle
+    const dist = canvas.width - last.x;//check the distance between the obstacle and the right edge
+    shouldSpawn = dist > targetGap; //check if the distance from the right edge is larger thn the targetgap
   }
 
-  if (shouldSpawn) {
-    spawnObstacle(); //spawn Obstacle
-  }
+  if (shouldSpawn) spawnObstacle();
 
   const baseSpeed = Math.min(6 + score * 0.15, 14); //updates gamespeed when score gets higher with a max of 14
+  const speed = isSpeedBoost ? baseSpeed * 1.3 : baseSpeed;  //increase speed when there is a speedboost.
 
-  const obstacleSpeed = isSpeedBoost 
-    ? baseSpeed * 1.3 //increase speed when there is a speedboost.
-    : baseSpeed;
+  for (let i = obstacles.length - 1; i >= 0; i--) {//go over all obstacles
+    const o = obstacles[i];//grab an obstacle out of the array
 
-  for (let i = obstacles.length - 1; i >= 0; i--) { //go over all obstacles
-    const obstacle = obstacles[i]; //grab an obstacle out of the array
-
-    if (playerY < groundY - GROUND_OFFSET - 10) { //when the object is on screen and the player is in the air, he get's a score which doesnt really make sense but who cares.
-      obstacle.wasJumpedOver = true;
+    if (playerY < groundY - GROUND_OFFSET - 10) {//when the object is on screen and the player is in the air, he get's a score which doesnt really make sense but who cares.
+      o.wasJumpedOver = true;
     }
 
-    obstacle.x -= obstacleSpeed; //move the object to the left
+    o.x -= speed;//move the object to the left
 
-    if (obstacle.x + obstacle.width < 0) {// is off screen?
-      if (obstacle.wasJumpedOver) { // has been jumped over?
+    if (o.x + o.width < 0) { // is off screen?
+      if (o.wasJumpedOver) {//has been jumped over ?
         score += isSpeedBoost ? 3 : 1; //if there was a speedboost 
-
-        document.querySelector('#score').textContent = score; 
-
+        document.querySelector('#score').textContent = score;
         scoreFeedback();
 
-        if (
-          score % 10 === 0 && //if score is a jump of 10 a speedboost occurs for 3 seconds
-          score > lastLevelUpScore
-        ) {
+        if (score % 10 === 0 && score > lastLevelUpScore) {//if score is a jump of 10 a speedboost occurs for 3 seconds
           lastLevelUpScore = score;
-
           levelUpFlash();
 
           isSpeedBoost = true;
-
-          setTimeout(() => {
-            isSpeedBoost = false;
-          }, 3000);
+          setTimeout(() => isSpeedBoost = false, 3000);
         }
       }
 
-      obstacles.splice(i, 1); //removes 1 obstacle starting at index
+      obstacles.splice(i, 1);//removes 1 obstacle starting at index
     }
   }
 };
 
 const drawObstacles = () => {
-  for (const obstacle of obstacles) {
-    let img;
-
-    if (obstacle.type === 1) {
-      img = obstacleImg1;
-    } else if (obstacle.type === 2) {
-      img = obstacleImg2;
-    } else {
-      img = obstacleImg3;
-    }
+  for (const o of obstacles) {
+    let img =
+      o.type === 1 ? obstacleImg1 :
+        o.type === 2 ? obstacleImg2 :
+          obstacleImg3;
 
     if (img.complete) {
-      ctx.drawImage(
-        img,
-        obstacle.x,
-        obstacle.y,
-        obstacle.width,
-        obstacle.height
-      );
+      ctx.drawImage(img, o.x, o.y, o.width, o.height);
     }
   }
 };
 
-// Game
+
 const checkGameOver = () => {
-  const playerWidth = isDashing ? 180 : 126;
-  const playerHeight = isDashing ? 65 : 126;
+  const w = isDashing ? 180 : 126;
+  const h = isDashing ? 65 : 126;
 
-  const hitboxY = isDashing //dashing is sliding
-    ? playerY + 61 //lower hitbox
-    : playerY;
+  const hitY = isDashing ? playerY + 61 : playerY; //lower hitbox if dashing
 
-  for (const obstacle of obstacles) { //for each obstacle
-    if (
-      checkCollision(
-        80, //duck never moves horizontally, and is fixed at 80px from canvas.
-        hitboxY,
-        playerWidth,
-        playerHeight,
-        obstacle.x,
-        obstacle.y,
-        obstacle.width,
-        obstacle.height
-      )
-    ) {
+  for (const o of obstacles) {
+    if (checkCollision(80, hitY, w, h, o.x, o.y, o.width, o.height)) {
       gameOver = true;
-
       gameOverFeedback();
     }
   }
 };
 
 const drawGround = () => {
-  ctx.fillStyle = '#ffffff';
-
-  ctx.fillRect(
-    0,
-    groundY,
-    canvas.width,
-    1
-  );
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, groundY, canvas.width, 1);
 };
 
 const drawBackground = () => {
   ctx.fillStyle = '#1a1a1a';
-
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 };
 
 const showGameOverModal = () => {
   if (gameOver && !gameOverShown) {
     document.querySelector('#finalScore').textContent = score;
-
-    document
-      .querySelector('#gameOverModal')
-      ?.classList.remove('hidden');
-
+    document.querySelector('#gameOverModal')?.classList.remove('hidden');
     gameOverShown = true;
   }
 };
@@ -395,16 +324,16 @@ const showGameOverModal = () => {
 const update = () => { //checks if game is over and updates the player and the obstacles
   if (gameOver) return;
 
+  groundY = canvas.height / 2;
+
   updatePlayer();
   updateObstacles();
-
   checkGameOver();
 };
 
 const render = () => {
   drawBackground();
 
-  groundY = canvas.height / 2;
 
   if (!playerInitialized) {
     playerY = groundY - GROUND_OFFSET;
@@ -412,45 +341,34 @@ const render = () => {
   }
 
   drawGround();
-
   drawPlayer();
-
   drawObstacles();
-
   showGameOverModal();
 };
 
 const gameLoop = () => {
-  const settingsPanel = document.querySelector('#settingsPanel');
+  const panel = document.querySelector('#settingsPanel');
 
-  if (
-    settingsPanel &&
-    !settingsPanel.classList.contains('hidden') //if settingspannel is vissible thn the game is just set to paused and returns (no update and render, but does use request animation frame so that it can pick up where it left, when pannel is closed)
-  ) {
-    requestAnimationFrame(gameLoop);
+  if (panel && !panel.classList.contains('hidden')) {
+    requestAnimationFrame(gameLoop); //if settingspannel is vissible thn the game is just set to paused and returns (no update and render, but does use request animation frame so that it can pick up where it left, when pannel is closed)
     return;
   }
 
   update();
-
   render();
 
   requestAnimationFrame(gameLoop);
 };
 
-// Setup
+
 const setupEventListeners = () => {
   window.addEventListener('resize', resizeCanvas);//rezizing with window resizing
 
-  document.addEventListener('keydown', handleKeyDown);//
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
 
-  document
-    .querySelector('#settingsBtn')
-    ?.addEventListener('click', openSettings);
-
-  document
-    .querySelector('#closeSettingsBtn')
-    ?.addEventListener('click', closeSettings);
+  document.querySelector('#settingsBtn')?.addEventListener('click', openSettings);
+  document.querySelector('#closeSettingsBtn')?.addEventListener('click', closeSettings);
 };
 
 const init = () => {
@@ -461,8 +379,6 @@ const init = () => {
 };
 
 document.addEventListener('DOMContentLoaded', init);
-
-
 
 
 

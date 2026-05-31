@@ -24,6 +24,15 @@
 
             <div id="date-options"></div>
 
+                <label>
+                    username:
+                    <input type="text" name="username" id="possibleDates" required>
+                </label>
+                <label>
+                    email:
+                    <input type="email" name="email" required>
+                </label>
+
             <button type="submit">Submit Vote</button>
         </form>
         <p id="message"></p>
@@ -47,6 +56,7 @@
             if (!playerId) {
                 playerId = crypto.randomUUID();
                 localStorage.setItem("playerId", playerId);
+
             }
 
             socket = io.connect('/');
@@ -110,6 +120,10 @@
         const handleVote = (e) => {
             e.preventDefault();
 
+            const formData = new FormData(tripForm);
+            const username = formData.get("username");
+            const email = formData.get("email");
+
             const selectedDates = Array.from(
                 document.querySelectorAll("input[name='dates']:checked") //all input fields with name 'dates' currently checked
             ).map(cb => cb.value); //only return the value of those checkboxes
@@ -117,7 +131,9 @@
             socket.emit("playerVotes", {
                 tripId,
                 playerId,
-                selectedDates
+                selectedDates,
+                email,
+                username,
             });
 
             console.log("Voted:", selectedDates);

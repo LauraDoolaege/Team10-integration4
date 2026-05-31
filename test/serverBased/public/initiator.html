@@ -29,6 +29,16 @@
                 Expected Players:
                 <input type="number" name="expectedPlayers" required min="1" value="4">
             </label>
+            <label>
+                username:
+                <input type="text" name="username" id="username" required>
+            </label>
+            <label>
+                email:
+                <input type="email" name="email" required>
+            </label>
+        
+
             <button type="submit">Create Trip</button>
         </form>
         <div id="trip-result"></div>
@@ -64,6 +74,7 @@
                 console.log(`Connected: ${socket.id}`);
                 socket.emit("identify", { playerId });
             });
+            
             socket.on('clients', (data) => {
                 console.log('clients:', data.clients);
                 console.log('liveClients:', data.liveClients);
@@ -134,34 +145,45 @@
         }
 
     const handleSubmitForm = async (e) => {
-        e.preventDefault();
+            e.preventDefault();
 
-        const formData = new FormData(tripForm);
+            const formData = new FormData(tripForm);
 
-        const rawDates = formData.get('possibleDates') //example: "2024-10-01, 2024-10-02, 2024-10-03"
-            .split(',')//return array of date strings instead of on string
-            .map(d => d.trim()); //remove whitespace
+            const rawDates = formData.get('possibleDates')
+                .split(',')//devide large string into array devided by comma 
+                .map(d => d.trim());//remove whitespace
 
-        const votes = {};
+            const votes = {};
 
-        rawDates.forEach(date => {
-            votes[date] = [];//each date now has it's own array of playerIds who voted for that date    
-        });
+            rawDates.forEach(date => {
+                votes[date] = [];
+            });
 
-        const trip = {
-            initiatorId: playerId,
-            cafe: formData.get('cafe'),
-            possibleDates: rawDates,
-            votes, 
-            expectedPlayers: Number(formData.get('expectedPlayers')),
-            createdAt: new Date().toISOString().slice(0, 10),
-            voters: [playerId],
+
+            const players = [
+            {
+                playerId: playerId,
+                email: formData.get('email') || "",
+                username: formData.get('username') || "",
+                score: 10
+            }
+        ];
+
+            const trip = {
+                initiatorId: playerId,
+                cafe: formData.get('cafe'),
+                possibleDates: rawDates,
+                votes,
+                expectedPlayers: Number(formData.get('expectedPlayers')),
+                createdAt: new Date().toISOString().slice(0, 10),
+                players,
+                voters: [playerId]
+            };
+
+            socket.emit("newTrip", trip);
+
+            tripResult.innerText = `Trip created for ${trip.cafe}`;
         };
-
-        socket.emit("newTrip", trip);
-
-        tripResult.innerText = `Trip created for ${trip.cafe}`;
-    };
 
         init();
     </script>
