@@ -1,6 +1,6 @@
-const API_BASE_URL = process.env.API_BASE_URL;
+ const API_BASE_URL = 'http://localhost:3001 //process.env.API_BASE_URL;
 
-/**
+/** 
  * TRIPS CRUD Operations
  */
 

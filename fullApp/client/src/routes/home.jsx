@@ -1,4 +1,5 @@
 import QRCode from "qrcode-generator";
+import "../styles/government.css";
 
 export default function Home() {
   const url = `${window.location.origin}/initiator`;
@@ -16,11 +17,16 @@ export default function Home() {
       </header>
 
       <main>
-        <a href={url} target="_blank" rel="noreferrer">
-          {url}
-        </a>
-
-        <div dangerouslySetInnerHTML={{ __html: qrImg }} />
+        <div className="card">
+          <h2>Scan or Click to Create a Trip</h2>
+          <p>Share this QR code or link with your friends to invite them to vote:</p>
+          <a href={url} target="_blank" rel="noreferrer" className="button">
+            {url}
+          </a>
+          <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
+            {qrImg && <div dangerouslySetInnerHTML={{ __html: qrImg }} />}
+          </div>
+        </div>
       </main>
     </>
   );

@@ -1,57 +1,43 @@
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-/**
- * Trips Service - Fetches data from external API server
- */
+const __dir = path.dirname(fileURLToPath(import.meta.url));
+const dbPath = path.join(__dir, '../db/trips.json');
 
-export const getTrips = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/trips`);
-    if (!response.ok) throw new Error('Failed to fetch trips');
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching trips:', error);
-    throw error;
-  }
+const readTrips = () => JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+const writeTrips = (data) => fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+
+export const getTrips = () => readTrips();
+
+export const getTripById = (id) => {
+  const trips = readTrips();
+  return trips.find((t) => t.id === id);
 };
 
-export const getTripById = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/trips/${id}`);
-    if (!response.ok) throw new Error('Trip not found');
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching trip:', error);
-    throw error;
-  }
+export const createTrip = (tripData) => {
+  const trips = readTrips();
+  const newTrip = {
+    id: Date.now().toString(),
+    cafe: tripData.cafe || '',
+    possibleDates: tripData.possibleDates || [],
+    expectedPlayers: tripData.expectedPlayers || 0,
+    status: 'open',
+    players: [],
+    voters: [],
+    votes: {},
+    createdAt: new Date().toISOString()
+  };
+  trips.push(newTrip);
+  writeTrips(trips);
+  return newTrip;
 };
 
-export const createTrip = async (tripData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/trips`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tripData)
-    });
-    if (!response.ok) throw new Error('Failed to create trip');
-    return await response.json();
-  } catch (error) {
-    console.error('Error creating trip:', error);
-    throw error;
-  }
-};
-
-export const updateTrip = async (id, tripData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/trips/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tripData)
-    });
-    if (!response.ok) throw new Error('Failed to update trip');
-    return await response.json();
-  } catch (error) {
-    console.error('Error updating trip:', error);
-    throw error;
-  }
+export const updateTrip = (id, updates) => {
+  const trips = readTrips();
+  const index = trips.findIndex((t) => t.id === id);
+  if (index === -1) throw new Error('Trip not found');
+  trips[index] = { ...trips[index], ...updates };
+  writeTrips(trips);
+  return trips[index];
 };

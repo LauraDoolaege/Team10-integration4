@@ -1,8 +1,10 @@
 import { Form, useActionData } from "react-router";
+import { createTrip } from "../services/services";
 import { io } from "socket.io-client";
 import { useEffect, useRef, useState } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import "../styles/government.css";
 
 let socket;
 
@@ -44,25 +46,35 @@ export async function clientAction({ request }) {
     ],
     voters: [playerId],
   };
-
-  socket?.emit("newTrip", trip);
+   
+  const createdTrip = await createTrip(trip);
 
   return {
     success: true,
-    cafe: trip.cafe,
+    cafe: createdTrip.cafe,
+    tripId: createdTrip.id,
   };
 }
 
 export default function Initiator() {
   const actionData = useActionData();
+  console.log("Action data:", actionData);
 
   const [shareLink, setShareLink] = useState("");
 
   const dateInputRef = useRef(null);
 
   useEffect(() => {
-    let playerId = localStorage.getItem("playerId");
+  if (actionData?.tripId) {
+    setShareLink(
+      `${window.location.origin}/friend/${actionData.tripId}`
+    );
+  }
+}, [actionData]);
 
+  useEffect(() => {
+    let playerId = localStorage.getItem("playerId");
+    
     if (!playerId) {
       playerId = crypto.randomUUID();
       localStorage.setItem("playerId", playerId);
