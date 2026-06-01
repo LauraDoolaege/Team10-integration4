@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 import { Form, useLoaderData, useActionData } from "react-router-dom";
+import { getTrip } from "../services/services.js";
 import { io } from "socket.io-client";
 import "../styles/government.css";
 
 let socket;
 
-// ✅ Loader: only route-related data (tripId)
+
 export async function loader({ params }) {
-  return {
-    tripId: params.tripId,
-  };
+   const tripId = params.tripId;
+   const playerId = localStorage.getItem("playerId");
+    if (!playerId) {
+        const playerId = crypto.randomUUID();
+        localStorage.setItem("playerId", newPlayerId);
+    }
+
+  const receivedTrip = await getTrip(tripId, playerId);
+
+  return {receivedTrip, playerId};
 }
 
 // ✅ Action: handles vote submission
 export async function action({ request }) {
   const formData = await request.formData();
-
   const selectedDates = formData.getAll("dates");
   const tripId = formData.get("tripId");
   const playerId = formData.get("playerId");
@@ -32,52 +39,51 @@ export async function action({ request }) {
 }
 
 export default function Trip() {
-  const { tripId } = useLoaderData();
+  const { receivedTrip, playerId } = useLoaderData();
+  console.log("Loader data:", { receivedTrip});
   const actionData = useActionData();
 
-  const [trip, setTrip] = useState(null);
   const [message, setMessage] = useState("");
 
-  // ✅ playerId handled in component (not loader)
-  const [playerId] = useState(() => {
-    let id = localStorage.getItem("playerId");
+  const alreadyVoted = receivedTrip?.alreadyVoted;
+  const trip = receivedTrip?.trip;
 
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("playerId", id);
-    }
+  const tripId = trip?.id;
 
-    return id;
-  });
-
-  // ✅ socket lifecycle
   useEffect(() => {
-    socket = io("/");
-
-    socket.on("connect", () => {
-      socket.emit("identify", { playerId });
-      socket.emit("getTrip", { tripId, playerId });
-
-    });
-
-    socket.on("giveTrip", (tripData) => {
-    console.log("Received trip data:", tripData);
-      setTrip(tripData);
-    });
-
-    socket.on("alreadyVoted", () => {
+    if (alreadyVoted) {
       setMessage("You already voted for this trip.");
-    });
+    }
+  }, [alreadyVoted]);
 
-    socket.on("voteSubmitted", () => {
-      setMessage("Your selected dates have been submitted!");
-    });
+//   // ✅ socket lifecycle
+//   useEffect(() => {
+//     socket = io("/");
 
-    return () => {
-      socket.disconnect();
-      socket = null;
-    };
-  }, [tripId, playerId]);
+//     socket.on("connect", () => {
+//       socket.emit("identify", { playerId });
+//       socket.emit("getTrip", { tripId, playerId });
+
+//     });
+
+//     socket.on("giveTrip", (tripData) => {
+//     console.log("Received trip data:", tripData);
+//       setTrip(tripData);
+//     });
+
+//     socket.on("alreadyVoted", () => {
+//       setMessage("You already voted for this trip.");
+//     });
+
+//     socket.on("voteSubmitted", () => {
+//       setMessage("Your selected dates have been submitted!");
+//     });
+
+//     return () => {
+//       socket.disconnect();
+//       socket = null;
+//     };
+//   }, [tripId, playerId]);
 
   return (
     <main>
@@ -87,8 +93,9 @@ export default function Trip() {
       <h3>{trip ? trip.cafe : "Loading trip..."}</h3>
 
       {message && <p>{message}</p>}
-
-      {trip && !message && (
+      
+      
+      {trip && !message &&  (
         <Form method="post">
           {/* hidden fields for action */}
           <input type="hidden" name="tripId" value={tripId} />

@@ -15,7 +15,7 @@ export async function createTrip(data) {
 }
 
 export async function getTrip(tripId, playerId) {
-  const res = await fetch(`${window.location.origin}/api/trips/${tripId}?playerId=${playerId}`);
+  const res = await fetch(`${window.location.origin}/api/trips/${tripId}/${playerId}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch trip");

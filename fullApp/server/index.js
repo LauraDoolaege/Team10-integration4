@@ -23,7 +23,7 @@ app.use(express.json());
  * LOGGING (DEBUG)
  */
 app.use((req, res, next) => {
-  console.log("➡️", req.method, req.url);
+  console.log("->", req.method, req.url);
   next();
 });
 
@@ -39,9 +39,16 @@ app.post("/api/trips", async (req, res) => {
   res.json(trip);
 });
 
-app.get("/api/trips/:id", async (req, res) => {
+
+app.get("/api/trips/:id/:playerId", async (req, res) => {
   const trip = await getTripById(req.params.id);
-  res.json(trip);
+
+  const alreadyVoted = (trip.voters || []).includes(req.params.playerId); //alreadyvoted is true or false
+
+  res.json({
+    alreadyVoted,
+    trip
+  });
 });
 
 app.get("/api/health", (req, res) => {
