@@ -10,3 +10,4 @@ test/serverBased/certs/
 .DS_Store
 # VSCode settings
 .vscode/
+.vite

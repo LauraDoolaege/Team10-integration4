@@ -1,0 +1,97 @@
+{
+  "trips": [
+    {
+      "id": "trip-1",
+      "initiatorId": "player-1",
+      "cafe": "Cafe Central",
+      "possibleDates": [
+        "2024-06-01",
+        "2024-06-02"
+      ],
+      "expectedPlayers": 4,
+      "createdAt": "2024-05-27",
+      "status": "open",
+      "players": []
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "testOnWindows",
+      "possibleDates": [
+        "2026-06-03",
+        "2026-06-04"
+      ],
+      "votes": {
+        "2026-06-03": [],
+        "2026-06-04": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-06-01",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "keanu.plysier@gmail.com",
+          "username": "Test ",
+          "score": 10
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941"
+      ],
+      "id": "OKBIVidZe1U"
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "Testing",
+      "possibleDates": [
+        "2026-06-04",
+        "2026-06-05"
+      ],
+      "votes": {
+        "2026-06-04": [],
+        "2026-06-05": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-06-01",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "plysier.voetbalist@gmail.com",
+          "username": "Test ",
+          "score": 10
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941"
+      ],
+      "id": "I0qzWy7UCkw"
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "Test ",
+      "possibleDates": [
+        "2026-06-03",
+        "2026-06-04"
+      ],
+      "votes": {
+        "2026-06-03": [],
+        "2026-06-04": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-06-01",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "plysier.voetbalist@gmail.com",
+          "username": "Test ",
+          "score": 10
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941"
+      ],
+      "id": "wYVt1kpe3VU"
+    }
+  ],
+  "cafes": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}

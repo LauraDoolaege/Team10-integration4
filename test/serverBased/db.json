@@ -54,6 +54,68 @@
       ],
       "id": "jiGNCddXZL8",
       "status": "open"
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "testOnWindows",
+      "possibleDates": [
+        "2026-05-15",
+        "2026-05-16"
+      ],
+      "votes": {
+        "2026-05-15": [],
+        "2026-05-16": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-31",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "plysier.voetbalist@gmail.com",
+          "username": "kp",
+          "score": 10
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941"
+      ],
+      "id": "1e2Z6I2vZ5Q"
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "testOnWindows",
+      "possibleDates": [
+        "2026-05-14",
+        "2026-05-16"
+      ],
+      "votes": {
+        "2026-05-14": [
+          "e3fb66a0-eb93-4043-a4f5-586764510a1c"
+        ],
+        "2026-05-16": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-05-31",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "keanu.plysier@gmail.com",
+          "username": "kp",
+          "score": 10
+        },
+        {
+          "playerId": "e3fb66a0-eb93-4043-a4f5-586764510a1c",
+          "email": "luna.rotstejn@gmail.com",
+          "username": "Luna",
+          "score": 0
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941",
+        "e3fb66a0-eb93-4043-a4f5-586764510a1c"
+      ],
+      "id": "j1IaKjny49M",
+      "status": "open"
     }
   ],
   "players": [

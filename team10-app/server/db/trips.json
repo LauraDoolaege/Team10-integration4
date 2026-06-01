@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1",
+    "cafe": "Sample Cafe",
+    "possibleDates": ["2026-06-15", "2026-06-22"],
+    "expectedPlayers": 3,
+    "status": "open",
+    "players": [],
+    "voters": [],
+    "votes": {},
+    "createdAt": "2026-05-31T00:00:00Z"
+  }
+]

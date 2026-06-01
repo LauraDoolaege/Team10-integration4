@@ -1,0 +1,32 @@
+{
+  "name": "team10-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js",
+    "server:dev": "nodemon server/index.js",
+    "json-server": "json-server server/db/db.json --port 3001",
+    "client:build": "vite build",
+    "client:dev": "vite",
+    "dev": "concurrently \"npm run json-server\" \"npm run server:dev\""
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "json-server": "^1.0.0-beta.5",
+    "nodemailer": "^6.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.0",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^8.2.0",
+    "nodemon": "^2.0.22",
+    "vite": "^4.3.9"
+  }
+}
