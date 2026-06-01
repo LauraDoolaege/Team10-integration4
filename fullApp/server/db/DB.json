@@ -611,8 +611,12 @@
         "2026-06-19"
       ],
       "votes": {
-        "2026-06-18": [],
-        "2026-06-19": []
+        "2026-06-18": [
+          "13823389-d182-4e49-a5b5-9db933591f98"
+        ],
+        "2026-06-19": [
+          "13823389-d182-4e49-a5b5-9db933591f98"
+        ]
       },
       "expectedPlayers": 1,
       "createdAt": "2026-06-01",
@@ -622,12 +626,62 @@
           "email": "plysier.voetbalist@gmail.com",
           "username": "kp",
           "score": 10
+        },
+        {
+          "playerId": "13823389-d182-4e49-a5b5-9db933591f98",
+          "email": "keanu.plysier@student.howest.be",
+          "username": "KeanuPlysier",
+          "score": 0
         }
       ],
       "voters": [
-        "25fedee3-6efb-4167-b774-187c46ce3941"
+        "25fedee3-6efb-4167-b774-187c46ce3941",
+        "13823389-d182-4e49-a5b5-9db933591f98"
       ],
-      "id": "udx8SRVNV1s"
+      "id": "udx8SRVNV1s",
+      "status": "closed"
+    },
+    {
+      "initiatorId": "25fedee3-6efb-4167-b774-187c46ce3941",
+      "cafe": "wowieCoolCafe",
+      "possibleDates": [
+        "2026-06-03",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-06"
+      ],
+      "votes": {
+        "2026-06-03": [
+          "e3fb66a0-eb93-4043-a4f5-586764510a1c"
+        ],
+        "2026-06-04": [
+          "e3fb66a0-eb93-4043-a4f5-586764510a1c"
+        ],
+        "2026-06-05": [],
+        "2026-06-06": []
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-06-01",
+      "status": "closed",
+      "players": [
+        {
+          "playerId": "25fedee3-6efb-4167-b774-187c46ce3941",
+          "email": "keanu.plysier@gmail.com",
+          "username": "Test ",
+          "score": 10
+        },
+        {
+          "playerId": "e3fb66a0-eb93-4043-a4f5-586764510a1c",
+          "email": "luna.rotstejn@gmail.com",
+          "username": "luna",
+          "score": 0
+        }
+      ],
+      "voters": [
+        "25fedee3-6efb-4167-b774-187c46ce3941",
+        "e3fb66a0-eb93-4043-a4f5-586764510a1c"
+      ],
+      "id": "4514cYpnzLg"
     }
   ],
   "cafes": [],

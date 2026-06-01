@@ -36,6 +36,7 @@ export async function clientAction({ request }) {
     votes,
     expectedPlayers: Number(formData.get("expectedPlayers")),
     createdAt: new Date().toISOString().slice(0, 10),
+    status: "open",
     players: [
       {
         playerId,

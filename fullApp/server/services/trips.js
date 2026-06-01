@@ -81,8 +81,49 @@ const getLeaderboard = async (tripId) => {
     }
 };
 
+
+
+//AI generated function to determine finale date based on votes and tie breaking rules
+const getFinalDate = (trip) => {
+  const { votes = {}, possibleDates = [] } = trip;
+
+  let highestCount = -1;
+  let candidates = [];
+
+  possibleDates.forEach((date) => {
+    const count = (votes[date] || []).length;
+
+    if (count > highestCount) {
+      highestCount = count;
+      candidates = [date];
+    } else if (count === highestCount) {
+      candidates.push(date);
+    }
+  });
+
+  if (candidates.length === 1) return candidates[0];
+
+  const today = new Date();
+
+  let closestDate = candidates[0];
+  let smallestDiff = Infinity;
+
+  candidates.forEach((date) => {
+    const diff = Math.abs(new Date(date) - today);
+
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestDate = date;
+    }
+  });
+
+  return closestDate;
+};
+
+
 module.exports = {
     // Trips
+    getFinalDate,
     getAllTrips,
     getTripById,
     createTrip,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, useLoaderData, useActionData } from "react-router-dom";
-import { getTrip } from "../services/services.js";
+import { getTrip, createTripVote } from "../services/services.js";
 import { io } from "socket.io-client";
 import "../styles/government.css";
 
@@ -23,17 +23,23 @@ export async function loader({ params }) {
 // ✅ Action: handles vote submission
 export async function action({ request }) {
   const formData = await request.formData();
-  const selectedDates = formData.getAll("dates");
+  const selectedDates = formData.getAll("dates"); // Get all selected dates as an array
   const tripId = formData.get("tripId");
   const playerId = formData.get("playerId");
-
-  socket?.emit("playerVotes", {
+  const email = formData.get("email");
+  const username = formData.get("username");
+  
+    const trip = {
     tripId,
     playerId,
     selectedDates,
-    email: formData.get("email"),
-    username: formData.get("username"),
-  });
+    email,
+    username
+  };
+
+
+  const vote = await createTripVote(trip)
+  console.log("Vote response:", vote);
 
   return { success: true };
 }
