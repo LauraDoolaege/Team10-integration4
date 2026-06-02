@@ -2,6 +2,147 @@
   "trips": [
     
   ],
-  "cafes": [],
+  "cafes": [
+    {
+      "id": "1",
+      "name": "Brouwers Vojta",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Popular beer café with Belgian craft brews and lively atmosphere"
+    },
+    {
+      "id": "2",
+      "name": "De Koninck Brewery Café",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Historic brewery café serving Antwerp's famous De Koninck beer"
+    },
+    {
+      "id": "3",
+      "name": "Café Slaghuis",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Traditional Antwerp café with Belgian beer selection"
+    },
+    {
+      "id": "4",
+      "name": "The Distillery",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Historic pub in the city center with craft beers and spirits"
+    },
+    {
+      "id": "5",
+      "name": "Puur Cocktail Bar",
+      "location": "Antwerp",
+      "mood": "cocktails, darling",
+      "description": "Craft cocktail bar with inventive drinks and minimalist design"
+    },
+    {
+      "id": "6",
+      "name": "Bar Bohem",
+      "location": "Antwerp",
+      "mood": "cocktails, darling",
+      "description": "Bohemian cocktail bar with creative mixology and eclectic vibe"
+    },
+    {
+      "id": "7",
+      "name": "Café de Pelgrom",
+      "location": "Antwerp",
+      "mood": "cocktails, darling",
+      "description": "Historic café-bar with cocktails and vintage atmosphere"
+    },
+    {
+      "id": "8",
+      "name": "The Shelter",
+      "location": "Antwerp",
+      "mood": "cocktails, darling",
+      "description": "Underground speakeasy-style cocktail bar with craft drinks"
+    },
+    {
+      "id": "9",
+      "name": "Vinoteca",
+      "location": "Antwerp",
+      "mood": "wine & refined",
+      "description": "Wine bar with curated selection and knowledgeable staff"
+    },
+    {
+      "id": "10",
+      "name": "Wijnbar Bacchus",
+      "location": "Antwerp",
+      "mood": "wine & refined",
+      "description": "Elegant wine bar with fine selections and tapas pairings"
+    },
+    {
+      "id": "11",
+      "name": "Château Rouge",
+      "location": "Antwerp",
+      "mood": "wine & refined",
+      "description": "Refined wine lounge with French-inspired ambiance"
+    },
+    {
+      "id": "12",
+      "name": "De Groote Witte Arend",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Traditional Belgian beer hall with rustic charm"
+    },
+    {
+      "id": "13",
+      "name": "Motley",
+      "location": "Antwerp",
+      "mood": "mocktails & chill",
+      "description": "Trendy café with creative non-alcoholic drinks and laid-back vibe"
+    },
+    {
+      "id": "14",
+      "name": "Juice Lab",
+      "location": "Antwerp",
+      "mood": "mocktails & chill",
+      "description": "Health-focused juice bar with smoothies and wellness drinks"
+    },
+    {
+      "id": "15",
+      "name": "Café Pelgrom",
+      "location": "Antwerp",
+      "mood": "mocktails & chill",
+      "description": "Cozy café serving herbal teas and fresh juices"
+    },
+    {
+      "id": "16",
+      "name": "Het Fornuis",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Casual neighbourhood bar with Belgian beers and pub atmosphere"
+    },
+    {
+      "id": "17",
+      "name": "Café Local",
+      "location": "Antwerp",
+      "mood": "beer & banter",
+      "description": "Authentic local bar with craft beer focus and friendly crowd"
+    },
+    {
+      "id": "18",
+      "name": "The Lab",
+      "location": "Antwerp",
+      "mood": "cocktails, darling",
+      "description": "Modern cocktail laboratory with experimental drinks"
+    },
+    {
+      "id": "19",
+      "name": "Terra Wines",
+      "location": "Antwerp",
+      "mood": "wine & refined",
+      "description": "Natural wine bar with organic selections and intimate setting"
+    },
+    {
+      "id": "20",
+      "name": "Zen Café",
+      "location": "Antwerp",
+      "mood": "mocktails & chill",
+      "description": "Peaceful sanctuary with herbal teas and wellness focus"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
