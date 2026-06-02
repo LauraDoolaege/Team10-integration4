@@ -8,7 +8,7 @@
   --color-bg-dark: #1a1a1a;
   --color-bg-darker: #080808;
   --color-box: #222;
-  
+
   /* Text Colors */
   --color-text-primary: #EEEEEE;
   --color-text-secondary: #626262;
@@ -16,27 +16,27 @@
   --color-text-muted: #999;
   --color-text-dimmed: #666;
   --color-text-light-gray: #aaa;
-  
+
   /* Game Colors */
   --color-score: #00ff00;
   --color-gravity: #ffa500;
-  
+
   /* Button Colors */
   --color-button-bg: #373737;
   --color-button-close: #f44336;
   --color-button-close-hover: #da190b;
   --color-button-error: #ff6b6b;
-  
+
   /* Overlay Colors */
   --color-overlay-dark: rgba(0, 0, 0, 0.8);
   --color-overlay-darker: rgba(0, 0, 0, 0.9);
-  
+
   /* Shadows */
   --shadow-box: 0 0 20px rgba(0, 0, 0, 0.9);
 }
 
-body { 
-  font-family: Helvetica, Arial, sans-serif; 
+body {
+  font-family: Helvetica, Arial, sans-serif;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -45,7 +45,7 @@ body {
 }
 
 
-header{
+header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -59,18 +59,20 @@ header{
   z-index: 500;
   padding-top: 2rem;
 }
-.score__container p{
+
+.score__container p {
   font-size: 2rem;
   color: var(--color-text-secondary);
   font-weight: bold;
 }
+
 #heading {
   z-index: 200;
   width: 25rem;
   height: auto;
 }
 
-canvas { 
+canvas {
   display: block;
   position: fixed;
   top: 30vh;
@@ -81,17 +83,17 @@ canvas {
   z-index: 1;
 }
 
-button { 
-  font-size: 2rem; 
-  font-weight: bold; 
-  cursor: pointer; 
+button {
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
   text-decoration: underline;
   color: var(--color-text-secondary);
   background-color: transparent;
   border: none;
 }
 
-button:hover { 
+button:hover {
   background-color: var(--color-bg-darker);
 }
 
