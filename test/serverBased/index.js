@@ -1,4 +1,5 @@
 require('dotenv').config();
+const os = require("os");
 const { createTrip, getTripById, updateTrip} = require('./services');
 const { sendTripEmail } = require('./mailer');
 

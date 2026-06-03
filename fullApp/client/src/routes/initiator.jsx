@@ -17,6 +17,8 @@ export async function clientAction({ request }) {
     votes[date] = [];
   });
 
+  const tripId = crypto.randomUUID();
+
   let playerId = localStorage.getItem("playerId");
 
   if (!playerId) {
@@ -25,9 +27,12 @@ export async function clientAction({ request }) {
   }
 
   const trip = {
+    id: tripId,
     initiatorId: playerId,
     cafe: formData.get("cafe"),
     possibleDates: rawDates,
+    budget: Number(formData.get("expectedPlayers")),
+    mood: formData.get("mood"),
     votes,
     expectedPlayers: Number(formData.get("expectedPlayers")),
     createdAt: new Date().toISOString().slice(0, 10),
@@ -47,7 +52,7 @@ export async function clientAction({ request }) {
 
   return {
     success: true,
-    cafe: createdTrip.cafe,
+    cafeId: createdTrip.cafeId,
     tripId: createdTrip.id,
   };
 }

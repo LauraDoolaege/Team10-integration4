@@ -4,10 +4,27 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const express = require("express");
+const os = require("os");
 
 const { Server } = require("socket.io");
 
-const { createTrip, getTripById, updateTrip, getFinalDate } = require("./services/trips");
+const {
+  getAllTrips,
+  getTripById,
+  createTrip,
+  updateTrip,
+  deleteTrip,
+  getLeaderboard,
+  getFinalDate,
+  addPlayerToTrip,
+  checkVoted,
+  placeVote,
+  setAsVoter,
+  getVoterAmount,
+  closeTrip,
+  getPlayersDetailsByTripId,
+  getDateVotesByTripId, } = require("./services/trips");
+
 const { sendTripEmail } = require("./services/mailer");
 
 const app = express();
@@ -32,13 +49,29 @@ app.use((req, res, next) => {
  * API ROUTES (MUST COME BEFORE VITE)
  * ----------------------------
  */
-app.post("/api/trips", async (req, res) => {
-  console.log("🔥 HIT /api/trips");
+app.post("/api/trip", async (req, res) => {
+  try {
+    console.log("🔥 HIT /api/trip");
+    console.log("BODY:", req.body);
 
-  const trip = await createTrip(req.body);
-  res.json(trip);
+    const trip = await createTrip(req.body);
+
+    res.json(trip);
+  } catch (error) {
+    console.error(" Error creating trip:", error);
+
+    res.status(500).json({
+      error: "Failed to create trip",
+      details: error.message,
+    });
+  }
 });
 
+app.get("/api/trips", async (req, res) => {
+  console.log("🔥 HIT /api/trips");
+  const trips = await getAllTrips();
+  res.json(trips);
+});
 
 app.post("/api/trips/vote", async (req, res) => {
   const {
@@ -47,80 +80,128 @@ app.post("/api/trips/vote", async (req, res) => {
     selectedDates = [],
     email = "",
     username = ""
-  } = req.body; //grab data from body 
+  } = req.body;
 
   const trip = await getTripById(tripId);
- 
-  if (!trip.votes) trip.votes = {};
-  if (!trip.voters) trip.voters = [];
-  if (!trip.players) trip.players = [];
-  if (!trip.status) trip.status = "open";
 
-  if (trip.status === "closed") return;
- 
-  const alreadyVoted = trip.voters.includes(playerId);
+  if (trip.trip.status !== "open") {
+    return res.json({ error: "closed" });
+  }
 
-  const existingPlayer = trip.players.find(p => p.playerId === playerId);
+  await addPlayerToTrip(playerId, tripId, email, username, 10);
 
-    if (!existingPlayer) {
-      trip.players.push({ playerId, email, username, score: 0 });
-    }
+  const alreadyVoted = await checkVoted(playerId, tripId);
 
-    // add voter
-    if (!trip.voters.includes(playerId)) {
-      trip.voters.push(playerId);
-    }
+  if (!alreadyVoted) {
+    await placeVote(playerId, tripId, selectedDates);
+    await setAsVoter(playerId, tripId);
 
-    // init votes
-    trip.possibleDates.forEach(date => {
-      if (!trip.votes[date]) trip.votes[date] = [];
-    });
+    const voterCount = await getVoterAmount(tripId);
 
-    // apply votes
-    selectedDates.forEach(date => {
-      if (!trip.votes[date].includes(playerId)) {
-        trip.votes[date].push(playerId);
-      }
-    });
+    if (voterCount >= trip.trip.expected_players) {
+      await closeTrip(tripId);
 
-    console.log("Updated trip after vote:", trip);
-    
-   const updatedTrip = await updateTrip(tripId, trip);
+      const players = await getPlayersDetailsByTripId(tripId);
+      const votes = await getDateVotesByTripId(tripId);
 
-    const everyoneVoted = updatedTrip.voters.length >= trip.expectedPlayers;
-
-    if (everyoneVoted) {
-      updatedTrip.status = "closed";
-      const finalDate = getFinalDate(updatedTrip);
-
-      updatedTrip.players.forEach(player => {
-        sendTripEmail(
-          player.email || "test@example.com",
-          {
-            cafe: updatedTrip.cafe,
-            finalDate
-          }
-        );
+      const finalDate = getFinalDate({
+        votes,
+        possibleDates: trip.trip.possibleDates
       });
 
-      await updateTrip(tripId, updatedTrip);
+      for (const player of players) {
+        sendTripEmail(player.email, {
+          cafe: trip.trip.cafe_name,
+          finalDate
+        });
+      }
     }
+  }
 
-      res.json({
-    alreadyVoted,
-    updatedTrip
-  });
-  });
+  res.json({ success: true, alreadyVoted });
+});
+
+// app.post("/api/trips/vote", async (req, res) => {
+//   const {
+//     tripId,
+//     playerId,
+//     selectedDates = [],
+//     email = "",
+//     username = ""
+//   } = req.body; //grab data from body 
+
+//   const trip = await getTripById(tripId);
+
+//   if (!trip.votes) trip.votes = {};
+//   if (!trip.voters) trip.voters = [];
+//   if (!trip.players) trip.players = [];
+//   if (!trip.status) trip.status = "open";
+
+//   if (trip.status === "closed") return;
+
+//   const alreadyVoted = trip.voters.includes(playerId);
+
+//   const existingPlayer = trip.players.find(p => p.playerId === playerId);
+
+//   if (!existingPlayer) {
+//     trip.players.push({ playerId, email, username, score: 0 });
+//   }
+
+//   // add voter
+//   if (!trip.voters.includes(playerId)) {
+//     trip.voters.push(playerId);
+//   }
+
+//   // init votes
+//   trip.possibleDates.forEach(date => {
+//     if (!trip.votes[date]) trip.votes[date] = [];
+//   });
+
+//   // apply votes
+//   selectedDates.forEach(date => {
+//     if (!trip.votes[date].includes(playerId)) {
+//       trip.votes[date].push(playerId);
+//     }
+//   });
+
+//   console.log("Updated trip after vote:", trip);
+
+//   const updatedTrip = await updateTrip(tripId, trip);
+
+//   const everyoneVoted = updatedTrip.voters.length >= trip.expectedPlayers;
+
+//   if (everyoneVoted) {
+//     updatedTrip.status = "closed";
+//     const finalDate = getFinalDate(updatedTrip);
+
+//     updatedTrip.players.forEach(player => {
+//       sendTripEmail(
+//         player.email || "test@example.com",
+//         {
+//           cafe: updatedTrip.cafe,
+//           finalDate
+//         }
+//       );
+//     });
+
+//     await updateTrip(tripId, updatedTrip);
+//   }
+
+//   res.json({
+//     alreadyVoted,
+//     updatedTrip
+//   });
+// });
 
 
 app.get("/api/trips/:id/:playerId", async (req, res) => {
-  const trip = await getTripById(req.params.id);
+  const trip = await getTripById(req.params.id, req.params.playerId);
 
-  const alreadyVoted = (trip.voters || []).includes(req.params.playerId); //alreadyvoted is true or false
+  console.log(trip);
 
   res.json({
-    alreadyVoted,
-    trip
+    alreadyVoted: trip.alreadyVoted,
+    trip: trip.trip,
   });
 });
 
@@ -205,32 +286,43 @@ async function start() {
   app.use(vite.middlewares);
 
   // fallback LAST OF ALL
-app.use(async (req, res, next) => {
-  // Let API routes pass through
-  if (req.url.startsWith("/api")) return next();
+  app.use(async (req, res, next) => {
+    // Let API routes pass through
+    if (req.url.startsWith("/api")) return next();
 
-  // Only handle page navigation (GET requests)
-  if (req.method !== "GET") return next();
+    // Only handle page navigation (GET requests)
+    if (req.method !== "GET") return next();
 
-  try {
-    const template = fs.readFileSync(
-      path.resolve(__dirname, "../client/index.html"),
-      "utf-8"
-    );
+    try {
+      const template = fs.readFileSync(
+        path.resolve(__dirname, "../client/index.html"),
+        "utf-8"
+      );
 
-    const html = await vite.transformIndexHtml(req.originalUrl, template);
+      const html = await vite.transformIndexHtml(req.originalUrl, template);
 
-    res.status(200).set({ "Content-Type": "text/html" }).end(html);
-  } catch (e) {
-    next(e);
-  }
-});
+      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+    } catch (e) {
+      next(e);
+    }
+  });
 
   /**
    * START SERVER
    */
-  server.listen(443, "0.0.0.0", () => {
-    console.log("Server running on https://192.168.0.96");
+
+  server.listen(process.env.PORT, () => {
+    const networkInterfaces = os.networkInterfaces();
+
+    console.log("cmd+click ↓");
+
+    for (const interfaceName in networkInterfaces) {
+      for (const iface of networkInterfaces[interfaceName] || []) {
+        if (iface.family === "IPv4" && !iface.internal) {
+          console.log(`https://${iface.address}:${process.env.PORT}\n`);
+        }
+      }
+    }
   });
 }
 

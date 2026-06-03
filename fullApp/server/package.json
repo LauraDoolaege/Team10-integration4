@@ -2,13 +2,14 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "json-server": "json-server db/DB.json --port 3001",
+        "json-server": "json-server db/DB.json --port 3000",
         "dev": "concurrently \"npm run json-server\" \"npm run start\""
     },
     "dependencies": {
         "dotenv": "^17.4.2",
         "express": "^5.2.1",
         "json-server": "^1.0.0-beta.15",
+        "mysql2": "^3.22.4",
         "nodemailer": "^8.0.10",
         "socket.io": "^4.8.3",
         "vite": "^8.0.14"

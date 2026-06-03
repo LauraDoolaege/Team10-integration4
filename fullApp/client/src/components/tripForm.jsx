@@ -18,6 +18,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
   const alreadyVoted = receivedTrip?.alreadyVoted;
   const trip = receivedTrip?.trip;
   const tripId = trip?.id;
+  const cafe = receivedTrip.trip.cafe
 
   useEffect(() => {
     if (alreadyVoted) {
@@ -86,7 +87,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
     <>
       <h1>Official Trip Competition Portal</h1>
       <h2>Friend Invite Page</h2>
-      <h3>{trip ? trip.cafe : "Loading trip..."}</h3>
+      <h3>{trip ? cafe.name : "Loading trip..."}</h3>
 
       {message && <p>{message}</p>}
       

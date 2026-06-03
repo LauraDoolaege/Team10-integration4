@@ -1,10 +1,11 @@
 import { useLoaderData, useActionData } from "react-router-dom";
-import { getTrip, createTripVote } from "../services/services.js";
+import { getTrip, createTripVote} from "../services/services.js";
 import "../styles/government.css";
 import TripForm from "../components/tripForm";
 
 export async function loader({ params }) {
    const tripId = params.tripId;
+   console.log(tripId);
    let playerId = localStorage.getItem("playerId");
     if (!playerId) {
         playerId = crypto.randomUUID();
@@ -12,6 +13,7 @@ export async function loader({ params }) {
     }
 
   const receivedTrip = await getTrip(tripId, playerId);
+
 
   return {receivedTrip, playerId};
 }
@@ -40,7 +42,8 @@ export async function action({ request }) {
 }
 
 export default function Trip() {
-  const { receivedTrip, playerId } = useLoaderData();
+  const { receivedTrip, playerId, allTrips } = useLoaderData();
+  console.log("all trips:",{allTrips});
   console.log("Loader data:", { receivedTrip});
   const actionData = useActionData();
 
