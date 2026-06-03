@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 let socket;
 
 export default function InitiatorForm({ actionData }) {
+  console.log(actionData?.cafeId);
   const moods = [
     "Beer & Banter",
     "Cocktails, darling",
