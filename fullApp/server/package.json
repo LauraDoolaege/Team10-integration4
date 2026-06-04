@@ -11,6 +11,7 @@
         "json-server": "^1.0.0-beta.15",
         "mysql2": "^3.22.4",
         "nodemailer": "^8.0.10",
+        "qrcode": "^1.5.4",
         "socket.io": "^4.8.3",
         "vite": "^8.0.14"
     },
