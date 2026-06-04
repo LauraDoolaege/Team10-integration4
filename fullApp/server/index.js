@@ -9,6 +9,7 @@ const os = require("os");
 const { Server } = require("socket.io");
 
 const {
+  redeemCoupon,
   getAllTrips,
   getTripById,
   createTrip,
@@ -17,15 +18,18 @@ const {
   getLeaderboard,
   getFinalDate,
   addPlayerToTrip,
+  getCoupon,
+  createCoupon,
   checkVoted,
   placeVote,
   setAsVoter,
   getVoterAmount,
   closeTrip,
   getPlayersDetailsByTripId,
-  getDateVotesByTripId, } = require("./services/trips");
+  getDateVotesByTripId,
+  getHighestTripScore, } = require("./services/trips");
 
-const { sendTripEmail } = require("./services/mailer");
+const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
 
 const app = express();
 
@@ -67,6 +71,30 @@ app.post("/api/trip", async (req, res) => {
   }
 });
 
+// const res = await fetch(`${window.location.origin}/api/trips/${couponId}`);
+app.get("/api/coupon/redeem/:couponId", async (req, res) => {
+  try {
+    console.log("🔥 HIT /api/coupon/redeem/:couponId");
+    await redeemCoupon(req.params.couponId);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error fetching coupon:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch coupon" });
+  }
+});
+
+app.get("/api/coupon/:couponId", async (req, res) => {
+  try {
+    console.log("🔥 HIT /api/coupon/:couponId");
+    const couponData = await getCoupon(req.params.couponId);
+    res.json(couponData);
+  } catch (error) {
+    console.error("Error fetching coupon:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch coupon" });
+  }
+});
+
+
 app.get("/api/trips", async (req, res) => {
   console.log("🔥 HIT /api/trips");
   const trips = await getAllTrips();
@@ -100,6 +128,8 @@ app.post("/api/trips/vote", async (req, res) => {
 
     if (voterCount >= trip.trip.expected_players) {
       await closeTrip(tripId);
+      const couponId = crypto.randomUUID();
+      await createCoupon(couponId,tripId);
 
       const players = await getPlayersDetailsByTripId(tripId);
       const votes = await getDateVotesByTripId(tripId);
@@ -110,10 +140,15 @@ app.post("/api/trips/vote", async (req, res) => {
       });
 
       for (const player of players) {
-        sendTripEmail(player.email, {
+        sendTripDetails(player.email, {
           cafe: trip.trip.cafe_name,
           finalDate
         });
+      }
+
+      const highestScorer = await getHighestTripScore(tripId);
+      if (highestScorer && highestScorer.email) {
+        sendTripCoupon(highestScorer.email, couponId, trip.trip.cafe_name, finalDate);
       }
     }
   }
@@ -240,27 +275,7 @@ io.on("connection", (socket) => {
     socket.emit("tripCreated", tripObject);
   });
 
-  socket.on("getTrip", async ({ tripId, playerId }) => {
-    const tripObject = await getTripById(tripId);
-
-    if ((tripObject.voters || []).includes(playerId)) {
-      socket.emit("alreadyVoted", tripObject);
-      return;
-    }
-
-    socket.emit("giveTrip", tripObject);
-  });
-
-  socket.on("playerVotes", async (data) => {
-    const trip = await getTripById(data.tripId);
-
-    const updatedTrip = await updateTrip(data.tripId, {
-      ...trip,
-    });
-
-    socket.emit("voteSubmitted", updatedTrip);
-  });
-});
+})
 
 /**
  * ----------------------------

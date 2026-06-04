@@ -3,7 +3,7 @@ import { getTrip, createTripVote} from "../services/services.js";
 import "../styles/government.css";
 import TripForm from "../components/tripForm";
 
-export async function loader({ params }) {
+export async function tripLoader({ params }) {
    const tripId = params.tripId;
    console.log(tripId);
    let playerId = localStorage.getItem("playerId");
@@ -19,7 +19,7 @@ export async function loader({ params }) {
 }
 
 // ✅ Action: handles vote submission
-export async function action({ request }) {
+export async function tripAction({ request }) {
   const formData = await request.formData();
   const selectedDates = formData.getAll("dates"); // Get all selected dates as an array
   const tripId = formData.get("tripId");

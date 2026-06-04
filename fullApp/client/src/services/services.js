@@ -25,6 +25,26 @@ export async function getAllTrips() {
 }
 
 
+export async function getCoupon(couponId) {
+  const res = await fetch(`${window.location.origin}/api/coupon/${couponId}`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch coupon");
+  }
+
+  return await res.json();
+}
+
+
+export async function redeemCoupon(couponId) {
+  const res = await fetch(`${window.location.origin}/api/coupon/redeem/${couponId}`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch coupon");
+  }
+  return await res.json();
+}
+
+
+
 export async function getTrip(tripId, playerId) {
   const res = await fetch(`${window.location.origin}/api/trips/${tripId}/${playerId}`);
 

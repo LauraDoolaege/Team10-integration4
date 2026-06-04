@@ -3,7 +3,7 @@ import { createTrip } from "../services/services";
 import "../styles/government.css";
 import InitiatorForm from "../components/initiatorForm";
 
-export async function clientAction({ request }) {
+export async function initiatorAction({ request }) {
   const formData = await request.formData();
 
   const rawDates = (formData.get("possibleDates") || "")

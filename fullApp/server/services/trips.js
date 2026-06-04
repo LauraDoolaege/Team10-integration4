@@ -8,6 +8,88 @@ const db = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
+//redeem Coupon
+const redeemCoupon = async (couponId) => {
+    await db.query(
+        `
+        UPDATE coupons
+        SET status = 'redeemed'
+        WHERE id = ?
+        `,
+        [couponId]
+    );
+};
+
+const getCoupon = async (couponId) => {
+    const [couponRows] = await db.query(
+        `SELECT * FROM coupons WHERE id = ?`,
+        [couponId]
+    );
+
+    const coupon = couponRows[0];
+    const tripId = coupon.trip_id;
+
+    const [tripRows] = await db.query(
+        `
+        SELECT 
+            t.*,
+            c.name AS cafe_name,
+            c.location,
+            c.description
+        FROM trips t
+        JOIN cafes c ON c.id = t.cafe_id
+        WHERE t.id = ?
+        `,
+        [tripId]
+    );
+
+    if (tripRows.length === 0) {
+        throw new Error("Trip not found");
+    }
+
+    const trip = tripRows[0];
+
+    return {
+        ...coupon,
+        trip: {
+            ...trip,
+            cafe: {
+                id: trip.cafe_id,
+                name: trip.cafe_name,
+                location: trip.location,
+                description: trip.description,
+            },
+        },
+    };
+};
+
+async function createCoupon(couponId, tripId) {
+    await db.query(
+        `
+    INSERT IGNORE INTO coupons (id, trip_id)
+    VALUES (?, ?)
+    `,
+        [couponId, tripId]
+    );
+}
+
+async function getHighestTripScore(tripId) {
+    // Fetch the player details for the player with the highest score in the given trip.
+    const [rows] = await db.query(
+        `
+    SELECT player_id, email, username, score
+    FROM trip_players
+    WHERE trip_id = ?
+    ORDER BY score DESC
+    LIMIT 1
+    `,
+        [tripId]
+    );
+
+    return rows[0] || null;
+}
+
+
 async function addPlayerToTrip(playerId, tripId, email = "", username = "", score = 10) {
     // Insert the player into the trip_players table if they are not already linked to this trip, while storing their email, username, and starting score.
     await db.query(
@@ -373,7 +455,7 @@ const createTrip = async (tripData) => {
 
         // 5. Add creator to trip
         const creator = (tripData.players && tripData.players[0]) || {};
-        const initiatorEmail = creator.email || tripData.email || "";
+        const initiatorEmail = creator.email || tripData.email || ""; //We look for the nested player email first. If it isn't there, we look for the root-level email
         const initiatorUsername = creator.username || tripData.username || "";
 
 
@@ -394,7 +476,7 @@ const createTrip = async (tripData) => {
                 tripData.initiatorId,
                 initiatorEmail,
                 initiatorUsername,
-                10,
+                100,
             ]
         );
 
@@ -550,8 +632,9 @@ const getFinalDate = (trip) => {
 
 
 module.exports = {
-
-
+    getCoupon, 
+    redeemCoupon,
+    createCoupon,
     getFinalDate,
     getAllTrips,
     getTripById,
@@ -567,4 +650,5 @@ module.exports = {
     closeTrip,
     getPlayersDetailsByTripId,
     getDateVotesByTripId,
+    getHighestTripScore,
 };
