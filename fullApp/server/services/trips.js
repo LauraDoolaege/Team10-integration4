@@ -74,13 +74,13 @@ async function createCoupon(couponId, tripId) {
 }
 
 async function getHighestTripScore(tripId) {
-    // Fetch the player details for the player with the highest score in the given trip.
+    //fetch player with hgihest score and fastest response time as tiebreaker.
     const [rows] = await db.query(
         `
-    SELECT player_id, email, username, score
+    SELECT player_id, email, username, score, created_at
     FROM trip_players
     WHERE trip_id = ?
-    ORDER BY score DESC
+    ORDER BY score DESC, created_at ASC
     LIMIT 1
     `,
         [tripId]
@@ -457,6 +457,7 @@ const createTrip = async (tripData) => {
         const creator = (tripData.players && tripData.players[0]) || {};
         const initiatorEmail = creator.email || tripData.email || ""; //We look for the nested player email first. If it isn't there, we look for the root-level email
         const initiatorUsername = creator.username || tripData.username || "";
+        const initiatorScore = creator.score || tripData.score || "";
 
 
         // Insert the trip creator into trip_players so they are registered as a participant in the new trip.
@@ -476,7 +477,7 @@ const createTrip = async (tripData) => {
                 tripData.initiatorId,
                 initiatorEmail,
                 initiatorUsername,
-                100,
+                initiatorScore,
             ]
         );
 

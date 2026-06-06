@@ -1,16 +1,17 @@
 import { useActionData } from "react-router";
+import { useState, useEffect } from "react";
 import { createTrip } from "../services/services";
 import "../styles/government.css";
 import InitiatorForm from "../components/initiatorForm";
+import Game from "../components/game";
+import Camera from "../components/camera";
 
 export async function initiatorAction({ request }) {
   const formData = await request.formData();
 
   const rawDates = (formData.get("possibleDates") || "")
-      .split(',')//devide large string into array devided by comma 
-      .map(d => d.trim());//remove whitespace
-
-  console.log("Raw dates:", rawDates);
+    .split(",")
+    .map((d) => d.trim());
 
   const votes = {};
   rawDates.forEach((date) => {
@@ -42,13 +43,16 @@ export async function initiatorAction({ request }) {
         playerId,
         email: formData.get("email"),
         username: formData.get("username"),
-        score: 10,
+        score: formData.get("score"),
       },
     ],
     voters: [playerId],
   };
 
   const createdTrip = await createTrip(trip);
+
+
+  localStorage.removeItem("attempts");
 
   return {
     success: true,
@@ -60,5 +64,55 @@ export async function initiatorAction({ request }) {
 export default function Initiator() {
   const actionData = useActionData();
 
-  return <InitiatorForm actionData={actionData} />;
+  const [score, setScore] = useState(0);
+  const [initiatorState, setInitiatorState] = useState(0);
+
+  // load attempts from localStorage
+  const [attempts, setAttempts] = useState(() => {
+    return Number(localStorage.getItem("attempts") || 0);
+  });
+
+  // persist attempts
+  useEffect(() => {
+    localStorage.setItem("attempts", String(attempts));
+  }, [attempts]);
+
+  // advance to score overview when attempts are maxed out
+  useEffect(() => {
+    if (initiatorState === 1 && attempts >= 3) {
+      setInitiatorState(2);
+    }
+  }, [initiatorState, attempts]);
+
+  return (
+    <>
+      {initiatorState === 0 && (
+        <Camera setState={() => setInitiatorState(1)} />
+      )}
+
+      {initiatorState === 1 && attempts < 3 && (
+        <Game
+          attempt={attempts + 1}
+          onGameOver={(gameScore) => {
+            setScore((prev) => Math.max(prev, gameScore));
+            setAttempts((prev) => Math.min(prev + 1, 3));
+          }}
+        />
+      )}
+
+      {initiatorState === 2 && (
+        <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "2rem" }}>
+          <h2>All attempts completed!</h2>
+          <p>Your final score: {score}</p>
+          <button className="button-primary" onClick={() => setInitiatorState(3)}>
+            Continue to planning
+          </button>
+        </div>
+      )}
+
+      {initiatorState === 3 && (
+        <InitiatorForm score={score} actionData={actionData} />
+      )}
+    </>
+  );
 }

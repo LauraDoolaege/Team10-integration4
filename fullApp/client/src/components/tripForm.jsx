@@ -2,6 +2,7 @@ import { Form } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import Game from "../components/game";
 
 export default function TripForm({ receivedTrip, playerId, actionData }) {
   const [message, setMessage] = useState("");
@@ -20,6 +21,22 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
   const tripId = trip?.id;
   const cafe = receivedTrip.trip.cafe
 
+  const [attempts, setAttempts] = useState(() => {
+    return Number(localStorage.getItem("attempts") || 0);
+  });
+
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    if (formState === 3 && attempts >= 3) {
+      setFormState((prev) => prev + 1);
+    }
+  }, [formState, attempts]);
+
+  useEffect(() => {
+    localStorage.setItem("attempts", String(attempts));
+  }, [attempts]);
+
   useEffect(() => {
     if (alreadyVoted) {
       setMessage("You already voted for this trip.");
@@ -28,7 +45,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
   useEffect(() => {
     if (!dateInputRef.current || !trip?.possibleDates) return;
-    
+
     const fp = flatpickr(dateInputRef.current, {
       inline: true,
       mode: "multiple",
@@ -39,7 +56,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
         // dayElem.dateObj contains the actual Date object for the cell being rendered
         const date = dayElem.dateObj;
         if (!date) return;
-        
+
         // Format the date into YYYY-MM-DD to match the format in trip.possibleDates
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -52,7 +69,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
           dayElem.classList.add("possible-date");
         }
       },
-      
+
       // onChange fires when a user selects or deselects a date
       onChange: (selectedDates, dateStr) => {
         // dateStr is a comma-separated string of selected dates. 
@@ -90,7 +107,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
       <h3>{trip ? cafe.name : "Loading trip..."}</h3>
 
       {message && <p>{message}</p>}
-      
+
       {trip && !message && !actionData?.success && (
         <Form method="post">
           <input type="hidden" name="tripId" value={tripId} />
@@ -102,10 +119,12 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
           <input type="hidden" name="username" value={formData.username} />
           <input type="hidden" name="email" value={formData.email} />
+          <input type="hidden" name="score" value={score} />
 
           {formState === 0 && (
             <>
-              <label>Join the trip!</label>
+              <h2>Join the trip!</h2>
+              <p>Challenge your friends after selecting your preffered dates! </p>
               <button
                 type="button"
                 onClick={() => setFormState(1)}
@@ -164,20 +183,38 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                   if (canGoNext()) setFormState((s) => Math.min(3, s + 1));
                 }}
               >
-                Next
+                {formState === 2 ? "submit" : "Next"}
+
               </button>
             </div>
           )}
 
           {formState === 3 && (
-            <button type="submit" className="submit__btn button-primary">
-              Submit Vote
-            </button>
+            <Game attempt={attempts + 1} onGameOver={(gameScore) => {
+              setScore((prev) => Math.max(prev, gameScore));
+              setAttempts((prev) => Math.min(prev + 1, 3));
+            }}
+            />
+          )}
+
+
+          {formState === 4 && (
+            <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "2rem" }}>
+              <h2>All attempts completed!</h2>
+              <p>Your highest score: {score}</p>
+              <button type="submit" className="submit__btn button-primary">
+                Submit Vote
+              </button>
+            </div>
           )}
         </Form>
       )}
 
-      {actionData?.success && <p>Your vote has been submitted!</p>}
+      {actionData?.success && (
+        <>
+          <p>Your vote has been submitted!</p>
+        </>
+      )}
     </>
-  );
+  )
 }

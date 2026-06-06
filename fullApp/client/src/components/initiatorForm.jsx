@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 
 let socket;
 
-export default function InitiatorForm({ actionData }) {
+export default function InitiatorForm({ actionData, score }) {
   console.log(actionData?.cafeId);
   const moods = [
     "Beer & Banter",
@@ -337,6 +337,13 @@ export default function InitiatorForm({ actionData }) {
           name="expectedPlayers"
           value={formData.expectedPlayers}
         />
+
+        <input
+          type="hidden"
+          name="score"
+          value={score}
+        />
+
 
         <input
           type="hidden"

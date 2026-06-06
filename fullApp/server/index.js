@@ -33,26 +33,16 @@ const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
 
 const app = express();
 
-/**
- * ----------------------------
- * CORE MIDDLEWARE (FIRST)
- * ----------------------------
- */
+//CORE MIDDLEWARE (FIRST)
 app.use(express.json());
 
-/**
- * LOGGING (DEBUG)
- */
+// LOGGING (DEBUG)
 app.use((req, res, next) => {
   console.log("->", req.method, req.url);
   next();
 });
 
-/**
- * ----------------------------
- * API ROUTES (MUST COME BEFORE VITE)
- * ----------------------------
- */
+// API ROUTES 
 app.post("/api/trip", async (req, res) => {
   try {
     console.log("🔥 HIT /api/trip");
@@ -107,7 +97,8 @@ app.post("/api/trips/vote", async (req, res) => {
     playerId,
     selectedDates = [],
     email = "",
-    username = ""
+    username = "",
+    score,
   } = req.body;
 
   const trip = await getTripById(tripId);
@@ -116,7 +107,7 @@ app.post("/api/trips/vote", async (req, res) => {
     return res.json({ error: "closed" });
   }
 
-  await addPlayerToTrip(playerId, tripId, email, username, 10);
+  await addPlayerToTrip(playerId, tripId, email, username, score);
 
   const alreadyVoted = await checkVoted(playerId, tripId);
 
@@ -244,11 +235,9 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
 
-/**
- * ----------------------------
- * HTTPS SERVER
- * ----------------------------
- */
+
+ //HTTPS SERVER
+
 const server = https.createServer(
   {
     key: fs.readFileSync(process.env.SSL_KEY),
@@ -257,18 +246,17 @@ const server = https.createServer(
   app
 );
 
-/**
- * ----------------------------
- * SOCKET.IO
- * ----------------------------
- */
+
+ //SOCKET.IO
+
+
 const io = new Server(server, {
   cors: { origin: true },
 });
 
-/**
- * SOCKET LOGIC (UNCHANGED)
- */
+
+ //SOCKET LOGIC (UNCHANGED)
+ 
 io.on("connection", (socket) => {
   socket.on("newTrip", async (trip) => {
     const tripObject = await createTrip(trip);
@@ -277,11 +265,9 @@ io.on("connection", (socket) => {
 
 })
 
-/**
- * ----------------------------
- * VITE (MUST BE LAST MIDDLEWARE)
- * ----------------------------
- */
+
+
+ //VITE Middleware for dev.
 async function start() {
   const { createServer: createViteServer } = require("vite");
 
@@ -322,9 +308,9 @@ async function start() {
     }
   });
 
-  /**
-   * START SERVER
-   */
+  
+   //START SERVER
+   
 
   server.listen(process.env.PORT, () => {
     const networkInterfaces = os.networkInterfaces();
