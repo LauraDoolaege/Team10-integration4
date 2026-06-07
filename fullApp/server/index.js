@@ -5,6 +5,7 @@ const path = require("path");
 const https = require("https");
 const express = require("express");
 const os = require("os");
+const crypto = require("crypto");
 
 const { Server } = require("socket.io");
 
@@ -62,6 +63,16 @@ app.post("/api/trip", async (req, res) => {
     });
   }
 });
+// `${window.location.origin}/api/leaderboards/${tripId}`
+app.get("/api/leaderboards/:tripId" , async (req, res) =>{
+  try {
+    console.log("🔥 HIT /api/leaderboards/:tripId");
+    const leaderboardData = await getLeaderboard(req.params.tripId);
+    res.json(leaderboardData);
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch leaderboard" });
+  }});
 
 // const res = await fetch(`${window.location.origin}/api/trips/${couponId}`);
 app.get("/api/coupon/redeem/:couponId", async (req, res) => {

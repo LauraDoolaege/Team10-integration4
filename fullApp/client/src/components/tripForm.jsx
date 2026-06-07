@@ -1,4 +1,4 @@
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -6,28 +6,28 @@ import Game from "../components/game";
 import Camera from "../components/camera";
 
 export default function TripForm({ receivedTrip, playerId, actionData }) {
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   
-  // Load attempts from localStorage
+  // Load attempts from sessionStorage
   const [attempts, setAttempts] = useState(() => {
-    return Number(localStorage.getItem("attempts") || 0);
+    return Number(sessionStorage.getItem("attempts") || 0);
   });
 
-  // Load score from localStorage
+  // Load score from sessionStorage
   const [score, setScore] = useState(() => {
-    return Number(localStorage.getItem("score") || 0);
+    return Number(sessionStorage.getItem("score") || 0);
   });
 
-  // Load image from localStorage
+  // Load image from sessionStorage
   const [image, setImage] = useState(() => {
-    return localStorage.getItem("capturedImage") || null;
+    return sessionStorage.getItem("capturedImage") || null;
   });
 
   // Derive initial state based on attempts: 
   // If 3 or more attempts, go to score summary (5). 
   // Otherwise, start with intro (0).
   const [formState, setFormState] = useState(() => {
-    const savedAttempts = Number(localStorage.getItem("attempts") || 0);
+    const savedAttempts = Number(sessionStorage.getItem("attempts") || 0);
     return savedAttempts >= 3 ? 5 : 0;
   });
 
@@ -44,20 +44,20 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
   const tripId = trip?.id;
   const cafe = receivedTrip?.trip?.cafe;
 
-  // Persist attempts to localStorage
+  // Persist attempts to sessionStorage
   useEffect(() => {
-    localStorage.setItem("attempts", String(attempts));
+    sessionStorage.setItem("attempts", String(attempts));
   }, [attempts]);
 
-  // Persist score to localStorage
+  // Persist score to sessionStorage
   useEffect(() => {
-    localStorage.setItem("score", String(score));
+    sessionStorage.setItem("score", String(score));
   }, [score]);
 
-  // Persist image to localStorage
+  // Persist image to sessionStorage
   useEffect(() => {
     if (image) {
-      localStorage.setItem("capturedImage", image);
+      sessionStorage.setItem("capturedImage", image);
     }
   }, [image]);
 
@@ -69,10 +69,10 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
   }, [formState, attempts]);
 
   useEffect(() => {
-    if (alreadyVoted) {
-      setMessage("You already voted for this trip.");
+    if (alreadyVoted && tripId) {
+      navigate(`/leaderboard/${tripId}`);
     }
-  }, [alreadyVoted]);
+  }, [alreadyVoted, tripId, navigate]);
 
   useEffect(() => {
     if (!dateInputRef.current || !trip?.possibleDates || formState !== 1) return;
@@ -124,10 +124,6 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
   if (actionData?.success) {
     return <p>Your vote has been submitted!</p>;
-  }
-
-  if (alreadyVoted || message) {
-    return <p>{message || "You have already voted."}</p>;
   }
 
   return (

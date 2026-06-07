@@ -4,6 +4,7 @@ import { createTrip } from "../services/services";
 import InitiatorForm from "../components/initiatorForm";
 import Game from "../components/game";
 import Camera from "../components/camera";
+import { redirect } from 'react-router';
 
 export async function initiatorAction({ request }) {
   const formData = await request.formData();
@@ -11,7 +12,7 @@ export async function initiatorAction({ request }) {
   const rawDates = (formData.get("possibleDates") || "")
     .split(",")
     .map((d) => d.trim());
-
+    
   const votes = {};
   rawDates.forEach((date) => {
     votes[date] = [];
@@ -52,55 +53,57 @@ export async function initiatorAction({ request }) {
   const createdTrip = await createTrip(trip);
 
 
-  localStorage.removeItem("attempts");
+  sessionStorage.removeItem("attempts");
 
-  return {
-    success: true,
-    cafeId: createdTrip.cafeId,
-    tripId: createdTrip.id,
-  };
+  return redirect(`/leaderboard/${createdTrip.id}`);
+
+  // return {
+  //   success: true,
+  //   cafeId: createdTrip.cafeId,
+  //   tripId: createdTrip.id,
+  // };
 }
 
 export default function Initiator() {
   const actionData = useActionData();
 
-  // Load attempts from localStorage
+  // Load attempts from sessionStorage
   const [attempts, setAttempts] = useState(() => {
-    return Number(localStorage.getItem("attempts") || 0);
+    return Number(sessionStorage.getItem("attempts") || 0);
   });
 
-  // Load score from localStorage
+  // Load score from sessionStorage
   const [score, setScore] = useState(() => {
-    return Number(localStorage.getItem("score") || 0);
+    return Number(sessionStorage.getItem("score") || 0);
   });
 
-  // Load image from localStorage
+  // Load image from sessionStorage
   const [image, setImage] = useState(() => {
-    return localStorage.getItem("capturedImage") || null;
+    return sessionStorage.getItem("capturedImage") || null;
   });
 
   // Derive initial state based on attempts: 
   // If 3 or more attempts, go to score summary (2). 
   // Otherwise, start with camera (0).
   const [initiatorState, setInitiatorState] = useState(() => {
-    const savedAttempts = Number(localStorage.getItem("attempts") || 0);
+    const savedAttempts = Number(sessionStorage.getItem("attempts") || 0);
     return savedAttempts >= 3 ? 2 : 0;
   });
 
-  // Persist attempts to localStorage
+  // Persist attempts to sessionStorage
   useEffect(() => {
-    localStorage.setItem("attempts", String(attempts));
+    sessionStorage.setItem("attempts", String(attempts));
   }, [attempts]);
 
-  // Persist score to localStorage
+  // Persist score to sessionStorage
   useEffect(() => {
-    localStorage.setItem("score", String(score));
+    sessionStorage.setItem("score", String(score));
   }, [score]);
 
-  // Persist image to localStorage
+  // Persist image to sessionStorage
   useEffect(() => {
     if (image) {
-      localStorage.setItem("capturedImage", image);
+      sessionStorage.setItem("capturedImage", image);
     }
   }, [image]);
 

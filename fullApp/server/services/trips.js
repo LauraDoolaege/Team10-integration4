@@ -8,6 +8,9 @@ const db = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
+
+
+
 //redeem Coupon
 const redeemCoupon = async (couponId) => {
     await db.query(
@@ -175,10 +178,10 @@ async function closeTrip(tripId) {
 
 
 async function getPlayersDetailsByTripId(tripId) {
-    // Fetch all players attached to this trip, returning their player id, email, username, and score from trip_players.
+    // Fetch all players attached to this trip, returning their player id, email, username, score and image from trip_players.
     const [rows] = await db.query(
         `
-    SELECT tp.player_id AS id, tp.email, tp.username, tp.score
+    SELECT tp.player_id AS playerId, tp.email, tp.username, tp.score, tp.image
     FROM trip_players tp
     WHERE tp.trip_id = ?
     `,
@@ -576,7 +579,28 @@ const deleteTrip = async (tripId) => {
 const getLeaderboard = async (tripId) => {
     try {
         const players = await getPlayersDetailsByTripId(tripId);
-        return players.sort((a, b) => b.score - a.score);
+        
+        const [tripRows] = await db.query(
+            `
+            SELECT t.initiator_id, c.name AS cafe_name
+            FROM trips t
+            JOIN cafes c ON c.id = t.cafe_id
+            WHERE t.id = ?
+            `,
+            [tripId]
+        );
+
+        if (tripRows.length === 0) {
+            throw new Error("Trip not found");
+        }
+
+        return {
+            players: players.sort((a, b) => b.score - a.score),
+            trip: {
+                initiatorId: tripRows[0].initiator_id,
+                cafe: tripRows[0].cafe_name
+            }
+        };
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
         throw error;

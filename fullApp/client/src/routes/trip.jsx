@@ -2,7 +2,8 @@ import { useLoaderData, useActionData } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getTrip, createTripVote } from "../services/services.js";
 import TripForm from "../components/tripForm";
-import Game from "../components/game";
+import { redirect } from 'react-router';
+
 
 export async function tripLoader({ params }) {
   const tripId = params.tripId;
@@ -14,6 +15,7 @@ export async function tripLoader({ params }) {
   }
 
   const receivedTrip = await getTrip(tripId, playerId);
+
 
 
   return { receivedTrip, playerId };
@@ -43,10 +45,10 @@ export async function tripAction({ request }) {
   const vote = await createTripVote(trip)
   console.log("Vote response:", vote);
 
-  localStorage.removeItem("attempts");
+  sessionStorage.removeItem("attempts");
 
-
-  return { success: true };
+  return redirect(`/leaderboard/${tripId}`);
+  // return { success: true };
 }
 
 export default function Trip() {
@@ -58,9 +60,7 @@ export default function Trip() {
 
   return (
     <>
-     
         <TripForm  receivedTrip={receivedTrip} playerId={playerId} actionData={actionData} />
-   
     </>
 
   );

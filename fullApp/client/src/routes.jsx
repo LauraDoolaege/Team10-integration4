@@ -15,6 +15,10 @@ import Coupon, {
   couponAction
 } from "./routes/coupon.jsx";
 
+import Leaderboard, {
+  LeaderboardLoader
+} from "./routes/leaderboard.jsx";
+
 export default [
   {
     path: "/",
@@ -40,6 +44,11 @@ export default [
         element: <Coupon />,
         loader: couponLoader,
         action: couponAction
+      },
+      {
+        path: "leaderboard/:tripId",
+        element: <Leaderboard />,
+        loader: LeaderboardLoader
       }
     ]
   }
