@@ -1,7 +1,6 @@
 import { useLoaderData, useActionData } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getTrip, createTripVote } from "../services/services.js";
-import "../styles/government.css";
 import TripForm from "../components/tripForm";
 import Game from "../components/game";
 
@@ -28,7 +27,8 @@ export async function tripAction({ request }) {
   const playerId = formData.get("playerId");
   const email = formData.get("email");
   const username = formData.get("username");
-  const score = formData.get("score")
+  const score = formData.get("score");
+  const image = formData.get("image");
 
   const trip = {
     tripId,
@@ -36,7 +36,8 @@ export async function tripAction({ request }) {
     selectedDates,
     email,
     username,
-    score
+    score,
+    image
   };
 
   const vote = await createTripVote(trip)

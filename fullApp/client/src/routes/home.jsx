@@ -1,5 +1,4 @@
 import QRCode from "qrcode-generator";
-import "../styles/government.css";
 
 export default function Home() {
   const url = `${window.location.origin}/initiator`;

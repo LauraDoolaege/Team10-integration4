@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 
 let socket;
 
-export default function InitiatorForm({ actionData, score }) {
+export default function InitiatorForm({ actionData, score, image }) {
   console.log(actionData?.cafeId);
   const moods = [
     "Beer & Banter",
@@ -344,6 +344,11 @@ export default function InitiatorForm({ actionData, score }) {
           value={score}
         />
 
+        <input
+          type="hidden"
+          name="image"
+          value={image}
+        />
 
         <input
           type="hidden"

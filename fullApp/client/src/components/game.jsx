@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "./game.css";
 import duckImgSrc from "../assets/game/run.png";
 import duckJumpImgSrc from "../assets/game/jump.png";
 import duckDashImgSrc from "../assets/game/duck3.png";
@@ -9,7 +8,7 @@ import obstacleImg3Src from "../assets/game/obstacle3.png";
 import floorImgSrc from "../assets/game/floor.png";
 import building1src from "../assets/game/building1.png";
 
-export default function Game({ onGameOver, attempt }) {
+export default function Game({ onGameOver, attempt, image }) {
     // React References and States
     const canvasRef = useRef(null);
     const restartRef = useRef(null);
@@ -81,6 +80,7 @@ export default function Game({ onGameOver, attempt }) {
         const buildingImg1 = new Image();
         const buildingImg2 = new Image();
         const buildingImg3 = new Image();
+        const faceImg = new Image(); // Stores the captured face image
 
         const canDrawImage = (img) => img && img.complete && img.naturalWidth > 0;
 
@@ -103,9 +103,11 @@ export default function Game({ onGameOver, attempt }) {
             obstacleImg3.src = obstacleImg3Src;
             floorImg.src = floorImgSrc;
             buildingImg1.src = building1src;
-            // Add other building sources here when ready:
-            // buildingImg2.src = building2src;
-            // buildingImg3.src = building3src;
+            
+            // If an image was captured, set its source
+            if (image) {
+                faceImg.src = image;
+            }
         };
 
         // Helper to check if two rectangular bounding boxes overlap
@@ -453,6 +455,7 @@ export default function Game({ onGameOver, attempt }) {
                 ctx.translate(centerX, centerY);
                 ctx.rotate((rotationAngle * Math.PI) / 180);
 
+                // Draw the body first
                 ctx.drawImage(
                     currentDuckImg,
                     -duckWidth / 2,
@@ -460,10 +463,48 @@ export default function Game({ onGameOver, attempt }) {
                     duckWidth,
                     duckHeight
                 );
+
+                // If face image exists, draw it on the head (inline, no nested functions)
+                if (canDrawImage(faceImg)) {
+                    const offsetX = -duckWidth / 2;
+                    const offsetY = -duckHeight / 2;
+                    
+                    // The face image is 400x400 with a 300px circular head.
+                    // Scale it so the 300px circular part fits the duck's head size (~55px wide normal, ~35px dashing)
+                    const faceScale = (isDashing ? 15 : 37) / 300;
+                    const drawSize = 400 * faceScale;
+                    
+                    // Position relative to the character's top-left corner
+                    const fx = isDashing 
+                        ? offsetX + duckWidth * 0.55 - drawSize / 2 
+                        : offsetX + duckWidth * 0.55 - drawSize / 2;
+                    const fy = isDashing 
+                        ? offsetY + duckHeight * 0.2 - drawSize / 2 
+                        : offsetY + duckHeight * 0.2 - drawSize / 2;
+
+                    ctx.drawImage(faceImg, fx, fy, drawSize, drawSize);
+                }
+
                 ctx.restore();
             } else {
                 // Normal draw without rotation
                 ctx.drawImage(currentDuckImg, 80, duckY, duckWidth, duckHeight);
+                
+                // Overlay face if it exists
+                if (canDrawImage(faceImg)) {
+                    // Scaling logic same as above
+                    const faceScale = (isDashing ? 15 : 37) / 300;
+                    const drawSize = 400 * faceScale;
+
+                    const fx = isDashing 
+                        ? 80 + duckWidth * 0.55 - drawSize / 2 
+                        : 80 + duckWidth * 0.547 - drawSize / 2;
+                    const fy = isDashing 
+                        ? duckY + duckHeight * 0.2 - drawSize / 2 
+                        : duckY + duckHeight * 0.18 - drawSize / 2;
+
+                    ctx.drawImage(faceImg, fx, fy, drawSize, drawSize);
+                }
             }
         };
 
@@ -605,7 +646,7 @@ export default function Game({ onGameOver, attempt }) {
             $canvas.removeEventListener("pointerup", handleKeyUp);
             $canvas.removeEventListener("pointercancel", handleKeyUp);
         };
-    }, []);
+    }, [image]);
 
     //React JSX UI
     return (

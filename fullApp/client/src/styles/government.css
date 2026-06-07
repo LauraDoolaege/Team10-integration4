@@ -33,6 +33,8 @@ body {
   object-fit: cover;
 }
 
+
+
 .camera-overlay {
   position: absolute;
   inset: 0;

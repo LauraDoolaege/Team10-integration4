@@ -1,7 +1,6 @@
 import { useActionData } from "react-router";
 import { useState, useEffect } from "react";
 import { createTrip } from "../services/services";
-import "../styles/government.css";
 import InitiatorForm from "../components/initiatorForm";
 import Game from "../components/game";
 import Camera from "../components/camera";
@@ -35,6 +34,7 @@ export async function initiatorAction({ request }) {
     budget: Number(formData.get("expectedPlayers")),
     mood: formData.get("mood"),
     votes,
+    image: formData.get("image"),
     expectedPlayers: Number(formData.get("expectedPlayers")),
     createdAt: new Date().toISOString().slice(0, 10),
     status: "open",
@@ -64,20 +64,47 @@ export async function initiatorAction({ request }) {
 export default function Initiator() {
   const actionData = useActionData();
 
-  const [score, setScore] = useState(0);
-  const [initiatorState, setInitiatorState] = useState(0);
-
-  // load attempts from localStorage
+  // Load attempts from localStorage
   const [attempts, setAttempts] = useState(() => {
     return Number(localStorage.getItem("attempts") || 0);
   });
 
-  // persist attempts
+  // Load score from localStorage
+  const [score, setScore] = useState(() => {
+    return Number(localStorage.getItem("score") || 0);
+  });
+
+  // Load image from localStorage
+  const [image, setImage] = useState(() => {
+    return localStorage.getItem("capturedImage") || null;
+  });
+
+  // Derive initial state based on attempts: 
+  // If 3 or more attempts, go to score summary (2). 
+  // Otherwise, start with camera (0).
+  const [initiatorState, setInitiatorState] = useState(() => {
+    const savedAttempts = Number(localStorage.getItem("attempts") || 0);
+    return savedAttempts >= 3 ? 2 : 0;
+  });
+
+  // Persist attempts to localStorage
   useEffect(() => {
     localStorage.setItem("attempts", String(attempts));
   }, [attempts]);
 
-  // advance to score overview when attempts are maxed out
+  // Persist score to localStorage
+  useEffect(() => {
+    localStorage.setItem("score", String(score));
+  }, [score]);
+
+  // Persist image to localStorage
+  useEffect(() => {
+    if (image) {
+      localStorage.setItem("capturedImage", image);
+    }
+  }, [image]);
+
+  // Handle the transition to state 2 if attempts are maxed out while in the game state
   useEffect(() => {
     if (initiatorState === 1 && attempts >= 3) {
       setInitiatorState(2);
@@ -86,12 +113,15 @@ export default function Initiator() {
 
   return (
     <>
+      {/* State 0: Camera - Skip if attempts are already used up */}
       {initiatorState === 0 && (
-        <Camera setState={() => setInitiatorState(1)} />
+        <Camera image={image} setImage={setImage} setState={() => setInitiatorState(1)} />
       )}
 
+      {/* State 1: Game - Only accessible if attempts are under 3 */}
       {initiatorState === 1 && attempts < 3 && (
         <Game
+          image={image}
           attempt={attempts + 1}
           onGameOver={(gameScore) => {
             setScore((prev) => Math.max(prev, gameScore));
@@ -100,6 +130,10 @@ export default function Initiator() {
         />
       )}
 
+      {/* 
+          State 2: Score Summary / Game Over 
+          Shown when attempts are maxed out (either on mount or during play)
+      */}
       {initiatorState === 2 && (
         <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "2rem" }}>
           <h2>All attempts completed!</h2>
@@ -110,8 +144,9 @@ export default function Initiator() {
         </div>
       )}
 
+      {/* State 3: Final Form */}
       {initiatorState === 3 && (
-        <InitiatorForm score={score} actionData={actionData} />
+        <InitiatorForm image={image} score={score} actionData={actionData} />
       )}
     </>
   );

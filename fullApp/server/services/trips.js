@@ -90,14 +90,14 @@ async function getHighestTripScore(tripId) {
 }
 
 
-async function addPlayerToTrip(playerId, tripId, email = "", username = "", score = 10) {
-    // Insert the player into the trip_players table if they are not already linked to this trip, while storing their email, username, and starting score.
+async function addPlayerToTrip(playerId, tripId, email = "", username = "", score = 10, image = null) {
+    // Insert the player into the trip_players table if they are not already linked to this trip, while storing their email, username, starting score, and captured image.
     await db.query(
         `
-    INSERT IGNORE INTO trip_players (trip_id, player_id, email, username, score)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT IGNORE INTO trip_players (trip_id, player_id, email, username, score, image)
+    VALUES (?, ?, ?, ?, ?, ?)
     `,
-        [tripId, playerId, email, username, score]
+        [tripId, playerId, email, username, score, image]
     );
 }
 
@@ -468,9 +468,10 @@ const createTrip = async (tripData) => {
         player_id,
         email,
         username,
-        score
+        score,
+        image
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
       `,
             [
                 tripData.id,
@@ -478,6 +479,7 @@ const createTrip = async (tripData) => {
                 initiatorEmail,
                 initiatorUsername,
                 initiatorScore,
+                tripData.image
             ]
         );
 

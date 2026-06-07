@@ -33,8 +33,10 @@ const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
 
 const app = express();
 
-//CORE MIDDLEWARE (FIRST)
-app.use(express.json());
+// CORE MIDDLEWARE (FIRST)
+// Increase payload limit to handle base64 face images
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // LOGGING (DEBUG)
 app.use((req, res, next) => {
@@ -99,6 +101,7 @@ app.post("/api/trips/vote", async (req, res) => {
     email = "",
     username = "",
     score,
+    image,
   } = req.body;
 
   const trip = await getTripById(tripId);
@@ -107,7 +110,7 @@ app.post("/api/trips/vote", async (req, res) => {
     return res.json({ error: "closed" });
   }
 
-  await addPlayerToTrip(playerId, tripId, email, username, score);
+  await addPlayerToTrip(playerId, tripId, email, username, score, image);
 
   const alreadyVoted = await checkVoted(playerId, tripId);
 
