@@ -3,7 +3,7 @@
 
 ## Basic info
 ### Team member
-- Keanu PLYSIER (UX - Code)
+- Keanu PLYSIER (Code)
 - Dmytro ANASTASIY (UX - Visual)
 - Laura DOOLAEGE (UX - Visual)
 - Huyen PHAM (UX - Visual - Manager)
