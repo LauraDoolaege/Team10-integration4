@@ -1,3 +1,11 @@
+export async function getLeaderboard(tripId){
+  const res = await fetch(`${window.location.origin}/api/leaderboards/${tripId}`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch leaderboard");
+  } 
+  return await res.json();
+}
+
 export async function createTrip(data) {
   const res = await fetch(`${window.location.origin}/api/trip`, {
     method: "POST",

@@ -5,6 +5,7 @@ const path = require("path");
 const https = require("https");
 const express = require("express");
 const os = require("os");
+const crypto = require("crypto");
 
 const { Server } = require("socket.io");
 
@@ -33,26 +34,18 @@ const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
 
 const app = express();
 
-/**
- * ----------------------------
- * CORE MIDDLEWARE (FIRST)
- * ----------------------------
- */
-app.use(express.json());
+// CORE MIDDLEWARE (FIRST)
+// Increase payload limit to handle base64 face images
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-/**
- * LOGGING (DEBUG)
- */
+// LOGGING (DEBUG)
 app.use((req, res, next) => {
   console.log("->", req.method, req.url);
   next();
 });
 
-/**
- * ----------------------------
- * API ROUTES (MUST COME BEFORE VITE)
- * ----------------------------
- */
+// API ROUTES 
 app.post("/api/trip", async (req, res) => {
   try {
     console.log("🔥 HIT /api/trip");
@@ -70,6 +63,16 @@ app.post("/api/trip", async (req, res) => {
     });
   }
 });
+// `${window.location.origin}/api/leaderboards/${tripId}`
+app.get("/api/leaderboards/:tripId" , async (req, res) =>{
+  try {
+    console.log("🔥 HIT /api/leaderboards/:tripId");
+    const leaderboardData = await getLeaderboard(req.params.tripId);
+    res.json(leaderboardData);
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch leaderboard" });
+  }});
 
 // const res = await fetch(`${window.location.origin}/api/trips/${couponId}`);
 app.get("/api/coupon/redeem/:couponId", async (req, res) => {
@@ -107,7 +110,9 @@ app.post("/api/trips/vote", async (req, res) => {
     playerId,
     selectedDates = [],
     email = "",
-    username = ""
+    username = "",
+    score,
+    image,
   } = req.body;
 
   const trip = await getTripById(tripId);
@@ -116,7 +121,7 @@ app.post("/api/trips/vote", async (req, res) => {
     return res.json({ error: "closed" });
   }
 
-  await addPlayerToTrip(playerId, tripId, email, username, 10);
+  await addPlayerToTrip(playerId, tripId, email, username, score, image);
 
   const alreadyVoted = await checkVoted(playerId, tripId);
 
@@ -142,7 +147,7 @@ app.post("/api/trips/vote", async (req, res) => {
       for (const player of players) {
         sendTripDetails(player.email, {
           cafe: trip.trip.cafe_name,
-          finalDate
+          finalDate, players
         });
       }
 
@@ -155,78 +160,6 @@ app.post("/api/trips/vote", async (req, res) => {
 
   res.json({ success: true, alreadyVoted });
 });
-
-// app.post("/api/trips/vote", async (req, res) => {
-//   const {
-//     tripId,
-//     playerId,
-//     selectedDates = [],
-//     email = "",
-//     username = ""
-//   } = req.body; //grab data from body 
-
-//   const trip = await getTripById(tripId);
-
-//   if (!trip.votes) trip.votes = {};
-//   if (!trip.voters) trip.voters = [];
-//   if (!trip.players) trip.players = [];
-//   if (!trip.status) trip.status = "open";
-
-//   if (trip.status === "closed") return;
-
-//   const alreadyVoted = trip.voters.includes(playerId);
-
-//   const existingPlayer = trip.players.find(p => p.playerId === playerId);
-
-//   if (!existingPlayer) {
-//     trip.players.push({ playerId, email, username, score: 0 });
-//   }
-
-//   // add voter
-//   if (!trip.voters.includes(playerId)) {
-//     trip.voters.push(playerId);
-//   }
-
-//   // init votes
-//   trip.possibleDates.forEach(date => {
-//     if (!trip.votes[date]) trip.votes[date] = [];
-//   });
-
-//   // apply votes
-//   selectedDates.forEach(date => {
-//     if (!trip.votes[date].includes(playerId)) {
-//       trip.votes[date].push(playerId);
-//     }
-//   });
-
-//   console.log("Updated trip after vote:", trip);
-
-//   const updatedTrip = await updateTrip(tripId, trip);
-
-//   const everyoneVoted = updatedTrip.voters.length >= trip.expectedPlayers;
-
-//   if (everyoneVoted) {
-//     updatedTrip.status = "closed";
-//     const finalDate = getFinalDate(updatedTrip);
-
-//     updatedTrip.players.forEach(player => {
-//       sendTripEmail(
-//         player.email || "test@example.com",
-//         {
-//           cafe: updatedTrip.cafe,
-//           finalDate
-//         }
-//       );
-//     });
-
-//     await updateTrip(tripId, updatedTrip);
-//   }
-
-//   res.json({
-//     alreadyVoted,
-//     updatedTrip
-//   });
-// });
 
 
 app.get("/api/trips/:id/:playerId", async (req, res) => {
@@ -244,11 +177,9 @@ app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
 
-/**
- * ----------------------------
- * HTTPS SERVER
- * ----------------------------
- */
+
+ //HTTPS SERVER
+
 const server = https.createServer(
   {
     key: fs.readFileSync(process.env.SSL_KEY),
@@ -257,18 +188,17 @@ const server = https.createServer(
   app
 );
 
-/**
- * ----------------------------
- * SOCKET.IO
- * ----------------------------
- */
+
+ //SOCKET.IO
+
+
 const io = new Server(server, {
   cors: { origin: true },
 });
 
-/**
- * SOCKET LOGIC (UNCHANGED)
- */
+
+ //SOCKET LOGIC (UNCHANGED)
+ 
 io.on("connection", (socket) => {
   socket.on("newTrip", async (trip) => {
     const tripObject = await createTrip(trip);
@@ -277,11 +207,9 @@ io.on("connection", (socket) => {
 
 })
 
-/**
- * ----------------------------
- * VITE (MUST BE LAST MIDDLEWARE)
- * ----------------------------
- */
+
+
+ //VITE Middleware for dev.
 async function start() {
   const { createServer: createViteServer } = require("vite");
 
@@ -322,9 +250,9 @@ async function start() {
     }
   });
 
-  /**
-   * START SERVER
-   */
+  
+   //START SERVER
+   
 
   server.listen(process.env.PORT, () => {
     const networkInterfaces = os.networkInterfaces();

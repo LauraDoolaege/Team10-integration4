@@ -8,6 +8,9 @@ const db = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
+
+
+
 //redeem Coupon
 const redeemCoupon = async (couponId) => {
     await db.query(
@@ -74,13 +77,13 @@ async function createCoupon(couponId, tripId) {
 }
 
 async function getHighestTripScore(tripId) {
-    // Fetch the player details for the player with the highest score in the given trip.
+    //fetch player with hgihest score and fastest response time as tiebreaker.
     const [rows] = await db.query(
         `
-    SELECT player_id, email, username, score
+    SELECT player_id, email, username, score, created_at
     FROM trip_players
     WHERE trip_id = ?
-    ORDER BY score DESC
+    ORDER BY score DESC, created_at ASC
     LIMIT 1
     `,
         [tripId]
@@ -90,14 +93,14 @@ async function getHighestTripScore(tripId) {
 }
 
 
-async function addPlayerToTrip(playerId, tripId, email = "", username = "", score = 10) {
-    // Insert the player into the trip_players table if they are not already linked to this trip, while storing their email, username, and starting score.
+async function addPlayerToTrip(playerId, tripId, email = "", username = "", score = 10, image = null) {
+    // Insert the player into the trip_players table if they are not already linked to this trip, while storing their email, username, starting score, and captured image.
     await db.query(
         `
-    INSERT IGNORE INTO trip_players (trip_id, player_id, email, username, score)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT IGNORE INTO trip_players (trip_id, player_id, email, username, score, image)
+    VALUES (?, ?, ?, ?, ?, ?)
     `,
-        [tripId, playerId, email, username, score]
+        [tripId, playerId, email, username, score, image]
     );
 }
 
@@ -175,10 +178,10 @@ async function closeTrip(tripId) {
 
 
 async function getPlayersDetailsByTripId(tripId) {
-    // Fetch all players attached to this trip, returning their player id, email, username, and score from trip_players.
+    // Fetch all players attached to this trip, returning their player id, email, username, score and image from trip_players.
     const [rows] = await db.query(
         `
-    SELECT tp.player_id AS id, tp.email, tp.username, tp.score
+    SELECT tp.player_id AS playerId, tp.email, tp.username, tp.score, tp.image
     FROM trip_players tp
     WHERE tp.trip_id = ?
     `,
@@ -457,6 +460,7 @@ const createTrip = async (tripData) => {
         const creator = (tripData.players && tripData.players[0]) || {};
         const initiatorEmail = creator.email || tripData.email || ""; //We look for the nested player email first. If it isn't there, we look for the root-level email
         const initiatorUsername = creator.username || tripData.username || "";
+        const initiatorScore = creator.score || tripData.score || "";
 
 
         // Insert the trip creator into trip_players so they are registered as a participant in the new trip.
@@ -467,16 +471,18 @@ const createTrip = async (tripData) => {
         player_id,
         email,
         username,
-        score
+        score,
+        image
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
       `,
             [
                 tripData.id,
                 tripData.initiatorId,
                 initiatorEmail,
                 initiatorUsername,
-                100,
+                initiatorScore,
+                tripData.image
             ]
         );
 
@@ -573,7 +579,28 @@ const deleteTrip = async (tripId) => {
 const getLeaderboard = async (tripId) => {
     try {
         const players = await getPlayersDetailsByTripId(tripId);
-        return players.sort((a, b) => b.score - a.score);
+        
+        const [tripRows] = await db.query(
+            `
+            SELECT t.initiator_id, c.name AS cafe_name
+            FROM trips t
+            JOIN cafes c ON c.id = t.cafe_id
+            WHERE t.id = ?
+            `,
+            [tripId]
+        );
+
+        if (tripRows.length === 0) {
+            throw new Error("Trip not found");
+        }
+
+        return {
+            players: players.sort((a, b) => b.score - a.score),
+            trip: {
+                initiatorId: tripRows[0].initiator_id,
+                cafe: tripRows[0].cafe_name
+            }
+        };
     } catch (error) {
         console.error('Error fetching leaderboard:', error);
         throw error;
