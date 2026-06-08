@@ -27,7 +27,6 @@ export default function InitiatorForm({ actionData, score, image }) {
     cafe: "",
   });
 
-  const [shareLink, setShareLink] = useState("");
   const dateInputRef = useRef(null);
 
   const updateField = (field, value) => {
@@ -78,14 +77,6 @@ export default function InitiatorForm({ actionData, score, image }) {
   }, [formData]);
 
   useEffect(() => {
-    if (actionData?.tripId) {
-      setShareLink(
-        `${window.location.origin}/friend/${actionData.tripId}`
-      );
-    }
-  }, [actionData]);
-
-  useEffect(() => {
     let playerId = localStorage.getItem("playerId");
 
     if (!playerId) {
@@ -121,16 +112,6 @@ export default function InitiatorForm({ actionData, score, image }) {
 
     return () => fp.destroy();
   }, [formState]);
-
-  async function handleShare() {
-    if (!shareLink) return;
-
-    await navigator.share({
-      title: "Hey, come and compete for a drink!",
-      text: "Let's all meet up and compete for a drink.",
-      url: shareLink,
-    });
-  }
 
   return (
     <>
@@ -383,15 +364,6 @@ export default function InitiatorForm({ actionData, score, image }) {
 
       {actionData?.success && (
         <p>Trip created for {actionData.cafe}</p>
-      )}
-
-      {shareLink && (
-        <>
-          <a href={shareLink}>{shareLink}</a>
-          <button onClick={handleShare}>
-            Share
-          </button>
-        </>
       )}
     </>
   );

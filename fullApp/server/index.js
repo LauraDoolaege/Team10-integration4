@@ -147,7 +147,7 @@ app.post("/api/trips/vote", async (req, res) => {
       for (const player of players) {
         sendTripDetails(player.email, {
           cafe: trip.trip.cafe_name,
-          finalDate
+          finalDate, players
         });
       }
 
@@ -160,78 +160,6 @@ app.post("/api/trips/vote", async (req, res) => {
 
   res.json({ success: true, alreadyVoted });
 });
-
-// app.post("/api/trips/vote", async (req, res) => {
-//   const {
-//     tripId,
-//     playerId,
-//     selectedDates = [],
-//     email = "",
-//     username = ""
-//   } = req.body; //grab data from body 
-
-//   const trip = await getTripById(tripId);
-
-//   if (!trip.votes) trip.votes = {};
-//   if (!trip.voters) trip.voters = [];
-//   if (!trip.players) trip.players = [];
-//   if (!trip.status) trip.status = "open";
-
-//   if (trip.status === "closed") return;
-
-//   const alreadyVoted = trip.voters.includes(playerId);
-
-//   const existingPlayer = trip.players.find(p => p.playerId === playerId);
-
-//   if (!existingPlayer) {
-//     trip.players.push({ playerId, email, username, score: 0 });
-//   }
-
-//   // add voter
-//   if (!trip.voters.includes(playerId)) {
-//     trip.voters.push(playerId);
-//   }
-
-//   // init votes
-//   trip.possibleDates.forEach(date => {
-//     if (!trip.votes[date]) trip.votes[date] = [];
-//   });
-
-//   // apply votes
-//   selectedDates.forEach(date => {
-//     if (!trip.votes[date].includes(playerId)) {
-//       trip.votes[date].push(playerId);
-//     }
-//   });
-
-//   console.log("Updated trip after vote:", trip);
-
-//   const updatedTrip = await updateTrip(tripId, trip);
-
-//   const everyoneVoted = updatedTrip.voters.length >= trip.expectedPlayers;
-
-//   if (everyoneVoted) {
-//     updatedTrip.status = "closed";
-//     const finalDate = getFinalDate(updatedTrip);
-
-//     updatedTrip.players.forEach(player => {
-//       sendTripEmail(
-//         player.email || "test@example.com",
-//         {
-//           cafe: updatedTrip.cafe,
-//           finalDate
-//         }
-//       );
-//     });
-
-//     await updateTrip(tripId, updatedTrip);
-//   }
-
-//   res.json({
-//     alreadyVoted,
-//     updatedTrip
-//   });
-// });
 
 
 app.get("/api/trips/:id/:playerId", async (req, res) => {

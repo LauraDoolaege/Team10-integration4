@@ -11,20 +11,87 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendTripDetails = async (to, trip = { cafe: "test café", finalDate: "tommorow" }) => {
-    const { cafe, finalDate } = trip;
+// const sendTripDetails = async (to, trip = { cafe: "test café", finalDate: "tommorow", players=[]}) => {
+//     const { cafe, finalDate } = trip;
+
+//     await transporter.sendMail({
+//         from: process.env.EMAIL_USER,
+//         to,
+//         subject: "Trip confirmed!",
+//         html: `
+//         <h2> Café: ${trip.cafe} <h2>
+        
+
+// Winning date: ${trip.finalDate}
+
+// See you there!
+// `
+//     });
+// };
+
+const sendTripDetails = async (
+    to,
+    trip = {
+        cafe: "test café",
+        finalDate: "tomorrow",
+        players: [],
+    }
+) => {
+    const { cafe, finalDate, players } = trip;
+
+    const attachments = players.map((player, index) => {
+        // convert Base64 → Buffer (same idea as QR code)
+        const base64Data = player.image.replace(/^data:image\/png;base64,/, "");//remove base64 prefix
+        const buffer = Buffer.from(base64Data, "base64");//convert to binary -> better form email services img tags did not seem to work
+
+        return {
+            filename: `player-${index}.png`,
+            content: buffer,
+            cid: `player${index}`, // unique CID per player (to reference in the html below)
+        };
+    });
+
+    const playersHtml = players
+        .map(
+            (player, index) => `
+        <div style="display:inline-block; text-align:center; margin:10px;">
+          <img
+            src="cid:player${index}" 
+            width="50"
+            height="50"
+            style="
+              border-radius:50%;
+              object-fit:cover;
+              display:block;
+              border:4px solid #FFF;
+            "
+          />
+          <p style="font-size:12px; margin-top:5px;">
+            ${player.username}
+          </p>
+        </div>
+      `
+        )
+        .join(""); //merges all prevent array seperation with ","
 
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to,
         subject: "Trip confirmed!",
-        text: `
-Café: ${trip.cafe}
+        html: `
+      <h2>Café: ${cafe}</h2>
 
-Winning date: ${trip.finalDate}
+      <p><strong>Winning date:</strong> ${finalDate}</p>
 
-See you there!
-`
+      <hr />
+
+      <h3>Players</h3>
+
+      <div style="text-align:center;">
+        ${playersHtml}
+      </div>
+    `,
+        attachments,
     });
 };
 
@@ -50,9 +117,7 @@ const sendTripCoupon = async (to, couponId, cafe, finalDate) => {
 
             <p>Show this QR code at the bar to claim your drink:</p>
 
-            <!-- 4. Reference the attachment below using 'cid:qrcode' -->
             <img src="cid:qrcode" alt="QR Code" />
-
             <p>
                 Or open directly:
                 <a href="${url}">${url}</a>
