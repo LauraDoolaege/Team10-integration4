@@ -1,15 +1,4 @@
 import { useLoaderData } from "react-router";
-import { getLeaderboard } from "../services/services";
-
-
-export async function LeaderboardLoader({params}) {
-    const tripId = params.tripId;
-    const leaderboard = await getLeaderboard(tripId);
-                                               
-
-    return {tripId,leaderboard}
-
- }
 
 export default function Leaderboard() {
     const {tripId, leaderboard} = useLoaderData();

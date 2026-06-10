@@ -44,6 +44,13 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
   const tripId = trip?.id;
   const cafe = receivedTrip?.trip?.cafe;
 
+  const updateField = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   // Persist attempts to sessionStorage
   useEffect(() => {
     sessionStorage.setItem("attempts", String(attempts));
@@ -60,13 +67,6 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
       sessionStorage.setItem("capturedImage", image);
     }
   }, [image]);
-
-  // Handle the transition to summary state if attempts are maxed out while in the game state
-  useEffect(() => {
-    if (formState === 4 && attempts >= 3) {
-      setFormState(5);
-    }
-  }, [formState, attempts]);
 
   useEffect(() => {
     if (alreadyVoted && tripId) {
@@ -103,13 +103,6 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
     return () => fp.destroy();
   }, [formState, trip?.possibleDates]);
-
-  const updateField = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
 
   const canGoNext = () => {
     switch (formState) {
@@ -225,8 +218,13 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
           image={image}
           attempt={attempts + 1} 
           onGameOver={(gameScore) => {
-            setScore((prev) => Math.max(prev, gameScore));
-            setAttempts((prev) => Math.min(prev + 1, 3));
+            const nextScore = Math.max(score, gameScore);
+            const nextAttempts = Math.min(attempts + 1, 3);
+            setScore(nextScore);
+            setAttempts(nextAttempts);
+            if (nextAttempts >= 3) {
+              setFormState(5);
+            }
           }}
         />
       )}

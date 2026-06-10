@@ -9,8 +9,6 @@ const db = mysql.createPool({
 });
 
 
-
-
 //redeem Coupon
 const redeemCoupon = async (couponId) => {
     await db.query(

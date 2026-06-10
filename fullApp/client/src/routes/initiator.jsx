@@ -1,68 +1,9 @@
 import { useActionData } from "react-router";
 import { useState, useEffect } from "react";
-import { createTrip } from "../services/services";
 import InitiatorForm from "../components/initiatorForm";
 import Game from "../components/game";
 import Camera from "../components/camera";
-import { redirect } from 'react-router';
-
-export async function initiatorAction({ request }) {
-  const formData = await request.formData();
-
-  const rawDates = (formData.get("possibleDates") || "")
-    .split(",")
-    .map((d) => d.trim());
-    
-  const votes = {};
-  rawDates.forEach((date) => {
-    votes[date] = [];
-  });
-
-  const tripId = crypto.randomUUID();
-
-  let playerId = localStorage.getItem("playerId");
-
-  if (!playerId) {
-    playerId = crypto.randomUUID();
-    localStorage.setItem("playerId", playerId);
-  }
-
-  const trip = {
-    id: tripId,
-    initiatorId: playerId,
-    cafe: formData.get("cafe"),
-    possibleDates: rawDates,
-    budget: Number(formData.get("expectedPlayers")),
-    mood: formData.get("mood"),
-    votes,
-    image: formData.get("image"),
-    expectedPlayers: Number(formData.get("expectedPlayers")),
-    createdAt: new Date().toISOString().slice(0, 10),
-    status: "open",
-    players: [
-      {
-        playerId,
-        email: formData.get("email"),
-        username: formData.get("username"),
-        score: formData.get("score"),
-      },
-    ],
-    voters: [playerId],
-  };
-
-  const createdTrip = await createTrip(trip);
-
-
-  sessionStorage.removeItem("attempts");
-
-  return redirect(`/leaderboard/${createdTrip.id}`);
-
-  // return {
-  //   success: true,
-  //   cafeId: createdTrip.cafeId,
-  //   tripId: createdTrip.id,
-  // };
-}
+import InitiatorOnboarding from "../components/initiatorOnboarding";
 
 export default function Initiator() {
   const actionData = useActionData();
@@ -84,10 +25,12 @@ export default function Initiator() {
 
   // Derive initial state based on attempts: 
   // If 3 or more attempts, go to score summary (2). 
-  // Otherwise, start with camera (0).
+  // Otherwise, start with onboarding (-1).
   const [initiatorState, setInitiatorState] = useState(() => {
     const savedAttempts = Number(sessionStorage.getItem("attempts") || 0);
-    return savedAttempts >= 3 ? 2 : 0;
+    if (savedAttempts >= 3) return 2;
+    if (savedAttempts > 0) return 1;
+    return -1;
   });
 
   // Persist attempts to sessionStorage
@@ -107,15 +50,21 @@ export default function Initiator() {
     }
   }, [image]);
 
-  // Handle the transition to state 2 if attempts are maxed out while in the game state
-  useEffect(() => {
-    if (initiatorState === 1 && attempts >= 3) {
-      setInitiatorState(2);
+  const handleOnboardingComplete = (takePhoto) => {
+    if (takePhoto) {
+      setInitiatorState(0);
+    } else {
+      setInitiatorState(1);
     }
-  }, [initiatorState, attempts]);
+  };
 
   return (
     <>
+      {/* State -1: Onboarding */}
+      {initiatorState === -1 && (
+        <InitiatorOnboarding onComplete={handleOnboardingComplete} />
+      )}
+
       {/* State 0: Camera - Skip if attempts are already used up */}
       {initiatorState === 0 && (
         <Camera image={image} setImage={setImage} setState={() => setInitiatorState(1)} />
@@ -127,8 +76,13 @@ export default function Initiator() {
           image={image}
           attempt={attempts + 1}
           onGameOver={(gameScore) => {
-            setScore((prev) => Math.max(prev, gameScore));
-            setAttempts((prev) => Math.min(prev + 1, 3));
+            const nextScore = Math.max(score, gameScore);
+            const nextAttempts = Math.min(attempts + 1, 3);
+            setScore(nextScore);
+            setAttempts(nextAttempts);
+            if (nextAttempts >= 3) {
+                setInitiatorState(2);
+            }
           }}
         />
       )}

@@ -13,12 +13,16 @@ export default function Game({ onGameOver, attempt, image }) {
     const canvasRef = useRef(null);
     const restartRef = useRef(null);
     const countdownTimerRef = useRef(null);
+    const onGameOverRef = useRef(onGameOver);
 
     const [score, setScore] = useState(0);
     const [gameOverState, setGameOver] = useState(false);
     const [countDown, setCountDown] = useState(true);
     const [count, setCount] = useState(3);
     
+    useEffect(() => {
+        onGameOverRef.current = onGameOver;
+    }, [onGameOver]);
 
     useEffect(() => {//should not be hit by re-renders
         const $canvas = canvasRef.current;
@@ -37,7 +41,6 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Game State Variables 
         let animationId;
-        let spaceHeld = false;
         let groundY = window.innerHeight * 0.85;
         let playerY = 0;
         let velocityY = 0;
@@ -57,6 +60,9 @@ export default function Game({ onGameOver, attempt, image }) {
         let currentSpeed = 0;
         let backgroundOffset = 0;
         let buildings = [];
+
+        // Input state to prevent auto-repeat
+        let spaceHeld = false;
 
         // Salto logic for visual flair
         let jumpCounter = 0;
@@ -128,6 +134,11 @@ export default function Game({ onGameOver, attempt, image }) {
                 e.key === " " ||
                 e.type === "pointerdown";
 
+            if (isJumpInput && e.type === "keydown") {
+                if (spaceHeld) return;
+                spaceHeld = true;
+            }
+
             if (isCountingDown) return;
 
             // If player initiates a jump and is on the ground
@@ -140,7 +151,6 @@ export default function Game({ onGameOver, attempt, image }) {
             ) { //if all the above conditions are true, then the player can jump
                 velocityY = JUMP_VELOCITY; //set the velocity of the player to the jump velocity
                 isJumping = true; //set the player to jumping
-                spaceHeld = true; //set the space held to true
                 jumpStartY = playerY; //set the jump start y to the player y
                 jumpCounter++; //increment the jump counter
 
@@ -164,10 +174,13 @@ export default function Game({ onGameOver, attempt, image }) {
                 e.type === "pointerup" ||
                 e.type === "pointercancel";
 
+            if (isJumpRelease) {
+                spaceHeld = false;
+            }
+
             if (isCountingDown) return;
             // If player releases jump early, cut their upward momentum
             if (isJumpRelease) {
-                spaceHeld = false;
                 if (velocityY < 0) {
                     velocityY *= EARLY_RELEASE_MULT;
                 }
@@ -325,6 +338,7 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Determines if the player has collided with any obstacles
         const checkGameOver = () => {
+            if (isCountingDown) return; // Defensive check
             const w = isDashing ? 159 : 86;
             const h = isDashing ? 65 : 126;
             const hitY = isDashing ? playerY + 61 : playerY;
@@ -349,7 +363,7 @@ export default function Game({ onGameOver, attempt, image }) {
                     isGameOver = true;
                     setGameOver(true); // Notify React to show modal
                     gameOverFeedback();
-                    onGameOver?.(currentScore);
+                    onGameOverRef.current?.(currentScore);
                     break;
                 }
             }
@@ -612,6 +626,14 @@ export default function Game({ onGameOver, attempt, image }) {
         const init = () => {
             resizeCanvas();
             loadAssets();
+            
+            // Ensure player starts on the ground
+            playerY = groundY - GROUND_OFFSET;
+            playerInitialized = true;
+
+            setGameOver(false);
+            setScore(0);
+
             restartRef.current = restart;
             window.addEventListener("resize", resizeCanvas);
 
