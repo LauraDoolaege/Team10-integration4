@@ -29,9 +29,10 @@ export default function FaceCapture({ setState, image, setImage }) {
 
    //stop camera when faceCapture unmounts
     useEffect(() => {
+        const videoElement = videoRef.current;
         return () => {
-            if (videoRef.current && videoRef.current.srcObject) {
-                const stream = videoRef.current.srcObject;
+            if (videoElement && videoElement.srcObject) {
+                const stream = videoElement.srcObject;
                 stream.getTracks().forEach((track) => track.stop());//stop stream
             }
         };
@@ -127,7 +128,7 @@ export default function FaceCapture({ setState, image, setImage }) {
                     />
                 </div>
 
-                <div style={{ marginTop: "1rem" }}>
+                <div style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}>
                     {!cameraStarted ? (
                         // Step 1: start camera
                         <button type="button" className="button-primary" onClick={startCamera}>
@@ -139,6 +140,9 @@ export default function FaceCapture({ setState, image, setImage }) {
                             Take Picture
                         </button>
                     )}
+                    <button type="button" className="button-secondary" onClick={() => setState && setState()}>
+                        continue without photo
+                    </button>
                 </div>
             </div>
 

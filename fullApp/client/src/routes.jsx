@@ -1,23 +1,27 @@
 import Root from "./root.jsx";
 import HomePage from "./routes/home.jsx";
 
-import TripPage, {
+import TripPage from "./routes/trip.jsx";
+import {
   tripLoader,
   tripAction
-} from "./routes/trip.jsx";
+} from "./routes/trip.data.js";
 
-import Initiator, {
+import Initiator from "./routes/initiator.jsx";
+import {
   initiatorAction
-} from "./routes/initiator.jsx";
+} from "./routes/initiator.data.js";
 
-import Coupon, {
+import Coupon from "./routes/coupon.jsx";
+import {
   couponLoader,
   couponAction
-} from "./routes/coupon.jsx";
+} from "./routes/coupon.data.js";
 
-import Leaderboard, {
+import Leaderboard from "./routes/leaderboard.jsx";
+import {
   LeaderboardLoader
-} from "./routes/leaderboard.jsx";
+} from "./routes/leaderboard.data.js";
 
 export default [
   {

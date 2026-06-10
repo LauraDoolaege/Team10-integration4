@@ -1,3 +1,73 @@
+@font-face {
+  font-family: 'Antwerpen';
+  src: url('./assets/fonts/Antwerpen-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Antwerpen SmallCaps';
+  src: url('./assets/fonts/AntwerpenSmallCaps-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpen';
+  src: url('./assets/fonts/SunAntwerpen_300.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpen';
+  src: url('./assets/fonts/SunAntwerpen_500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpen';
+  src: url('./assets/fonts/SunAntwerpen_700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpen';
+  src: url('./assets/fonts/SunAntwerpen_800.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpenCd';
+  src: url('./assets/fonts/SunAntwerpenCd_300.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpenCd';
+  src: url('./assets/fonts/SunAntwerpenCd_500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpenCd';
+  src: url('./assets/fonts/SunAntwerpenCd_700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SunAntwerpenCd';
+  src: url('./assets/fonts/SunAntwerpenCd_800.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -11,8 +81,8 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'SunAntwerpen', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Antwerpen', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
