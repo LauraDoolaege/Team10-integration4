@@ -41,5 +41,6 @@ export async function tripAction({ request }) {
 
   sessionStorage.removeItem("attempts");
 
+
   return redirect(`/leaderboard/${tripId}`);
 }

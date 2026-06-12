@@ -1,6 +1,39 @@
 {
   "trips": [
-    
+    {
+      "initiatorId": "90cce863-14df-4f67-be9f-085e77039dd6",
+      "cafe": "test",
+      "possibleDates": [
+        "2026-06-06"
+      ],
+      "votes": {
+        "2026-06-06": [
+          "6e5c147b-c22e-49be-90c7-d52901b23a7d"
+        ]
+      },
+      "expectedPlayers": 2,
+      "createdAt": "2026-06-02",
+      "status": "closed",
+      "players": [
+        {
+          "playerId": "90cce863-14df-4f67-be9f-085e77039dd6",
+          "email": "keanu.plysier@gmail.com",
+          "username": "keanu ",
+          "score": 10
+        },
+        {
+          "playerId": "6e5c147b-c22e-49be-90c7-d52901b23a7d",
+          "email": "keanu.plysier@gmail.com",
+          "username": "keanu",
+          "score": 0
+        }
+      ],
+      "voters": [
+        "90cce863-14df-4f67-be9f-085e77039dd6",
+        "6e5c147b-c22e-49be-90c7-d52901b23a7d"
+      ],
+      "id": "HDXadCM7EX0"
+    }
   ],
   "cafes": [
     {
