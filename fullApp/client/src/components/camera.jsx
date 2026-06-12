@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export default function FaceCapture({ setState, image, setImage }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const streamRef = useRef(null);
 
     // Tracks whether the camera stream has started
     const [cameraStarted, setCameraStarted] = useState(false);
@@ -16,7 +17,7 @@ export default function FaceCapture({ setState, image, setImage }) {
                 },
             });
 
-        
+            streamRef.current = stream;
             if (videoRef.current) {//if there is a videoRef attach the camera stream to it.
                 videoRef.current.srcObject = stream;
             }
@@ -27,13 +28,18 @@ export default function FaceCapture({ setState, image, setImage }) {
         }
     };
 
+    // Re-attach stream if it exists but video element was re-created (e.g. after retake)
+    useEffect(() => {
+        if (!image && cameraStarted && streamRef.current && videoRef.current && !videoRef.current.srcObject) {
+            videoRef.current.srcObject = streamRef.current;
+        }
+    }, [image, cameraStarted]);
+
    //stop camera when faceCapture unmounts
     useEffect(() => {
-        const videoElement = videoRef.current;
         return () => {
-            if (videoElement && videoElement.srcObject) {
-                const stream = videoElement.srcObject;
-                stream.getTracks().forEach((track) => track.stop());//stop stream
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach((track) => track.stop());
             }
         };
     }, []);
@@ -97,102 +103,70 @@ export default function FaceCapture({ setState, image, setImage }) {
     };
 
     return (
-        <div>
-        
-            <div style={{ display: image ? "none" : "block" }}>
-                <div
-                    style={{
-                        position: "relative",
-                        width: "25rem",
-                        height: "25rem",
-                    }}
-                >
+
+
+        <div className="camera__wrapper">
+            {!image ? (
+                <div className="camera__content">
                     {/* Video feed + overlay container */}
                     <div className="camera-container">
-                        <video ref={videoRef} autoPlay playsInline />
+                        <video className="video" ref={videoRef} autoPlay playsInline />
                         <div className="camera-overlay" />
+                        <div className="camera-instruction" />
                     </div>
 
-                    {/* Visual guide for face positioning */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "3.125rem",
-                            left: "3.125rem",
-                            width: "18.75rem",
-                            height: "18.75rem",
-                            borderRadius: "50%",
-                            border: "0.25rem solid white",
-                            pointerEvents: "none",
-                        }}
-                    />
+                    <div className="camera__text-container">
+                        <h2 className="title camera__title">Say cheese!</h2>
+                        <p className="text">Center your face inside the circle before taking the photo</p>
+                    </div>
+
+                    <div className="camera__button-container">
+                        {!cameraStarted ? (
+                            <button type="button" className="button-primary" onClick={startCamera}>
+                                Start Camera
+                            </button>
+                        ) : (
+                            <button type="button" className="button-primary" onClick={captureImage}>
+                                Take Picture
+                            </button>
+                        )}
+                    </div>
                 </div>
+            ) : (
+                <div className="camera__content">
+                    {/* Preview matching the capture screen layout */}
+                    <div className="camera-container">
+                        <img src={image} alt="Captured face" className="video" style={{ objectFit: 'cover' }} />
+                        <div className="camera-overlay" />
+                        <div className="camera-instruction" />
+                    </div>
 
-                <div style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}>
-                    {!cameraStarted ? (
-                        // Step 1: start camera
-                        <button type="button" className="button-primary" onClick={startCamera}>
-                            Start Camera
-                        </button>
-                    ) : (
-                        // Step 2: take photo
-                        <button type="button" className="button-primary" onClick={captureImage}>
-                            Take Picture
-                        </button>
-                    )}
-                    <button type="button" className="button-secondary" onClick={() => setState && setState()}>
-                        continue without photo
-                    </button>
-                </div>
-            </div>
+                    <div className="camera__text-container">
+                        <h2 className="title camera__title">Looking good!</h2>
+                        <p className="text">Want to use this photo?</p>
+                    </div>
 
-            {/* Hidden canvas used only for processing the image */}
-            <canvas ref={canvasRef} style={{ display: "none" }} />
-
-            {/* CAPTURED IMAGE PREVIEW */}
-            {image && (
-                <div
-                    style={{
-                        marginTop: "1rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                    }}
-                >
-                    {/* Final cropped image preview */}
-                    <img
-                        src={image}
-                        alt="Captured face"
-                        width={300}
-                        style={{
-                            display: "block",
-                            marginBottom: "1rem",
-                            borderRadius: "50%",
-                            border: "0.25rem solid white",
-                        }}
-                    />
-
-                    {/* Retake or continue flow */}
-                    <div style={{ display: "flex", gap: "1rem" }}>
-                        <button
-                            type="button"
-                            className="button-primary"
-                            onClick={() => setImage(null)}
-                        >
-                            Retake Picture
-                        </button>
-
-                        {/* Move to next step in parent component */}
+                    <div className="camera__button-container">
                         <button
                             type="button"
                             className="button-primary"
                             onClick={() => setState && setState()}
                         >
-                            Continue to Game
+                            Looks good!
+                        </button>
+                        <button
+                            type="button"
+                            className="button__underlined"
+                            onClick={() => setImage(null)}
+                        >
+                            Retake Picture
                         </button>
                     </div>
                 </div>
             )}
+
+            {/* Hidden canvas used only for processing the image */}
+            <canvas ref={canvasRef} style={{ display: "none" }} />
         </div>
     );
 }

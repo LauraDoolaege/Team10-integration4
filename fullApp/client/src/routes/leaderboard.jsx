@@ -19,46 +19,34 @@ export default function Leaderboard() {
 
 
     return (
-        <>
-
-        <h1>Leaderboard for trip to {leaderboard.trip.cafe}</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Score</th>
-                    <th>Photo</th>
-                </tr>
-            </thead>
-
-            <tbody>
+        <div className="leaderboard-container">
+            <h1>Leaderboard for trip to {leaderboard.trip.cafe}</h1>
+            
+            <ul className="leaderboard__list">
                 {players.map((player, index) => (
-                    <tr key={player.playerId}>
-                        <td>{index + 1}</td>
-                        <td>{player.username}</td>
-                        <td>{player.score}</td>
-                        <td>
-                            <img
-                                src={player.image}
-                                alt={`${player.username}'s profile`}
-                                width={50}
-                                height={50}
-                            />
-                        </td>
-                    </tr>
+                    <li key={player.playerId} className="leaderboard__player">
+                        <div className="leaderboard__seperator">
+                            <span className="leaderboard__rank">{index + 1}</span>
+                            <span className="leaderboard__username">{player.username}</span>
+                        </div>
+                        <span className="leaderboard__score">{player.score}</span>
+                        <img
+                            src={player.image}
+                            alt={`${player.username}'s profile`}
+                            className="leaderboard__image"
+                        />
+                    </li>
                 ))}
-            </tbody>
-        </table>
+            </ul>
 
-        {initiatorPage &&(
-         <>
-          <a href={url}>{url}</a>
-          <button onClick={handleShare}>
-            Share
-          </button>
-          </>
-        )}
-        </>
+            {initiatorPage && (
+                <div className="leaderboard__share">
+                    <a href={url}>{url}</a>
+                    <button onClick={handleShare} className="button-primary">
+                        Share
+                    </button>
+                </div>
+            )}
+        </div>
     );
 }

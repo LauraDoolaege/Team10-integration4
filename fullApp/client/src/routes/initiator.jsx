@@ -18,7 +18,10 @@ export default function Initiator() {
     return Number(sessionStorage.getItem("score") || 0);
   });
 
-  // Load image from sessionStorage
+  const [nickname, setNickname] = useState(() => {
+    return sessionStorage.getItem("nickname") || "";
+  });
+
   const [image, setImage] = useState(() => {
     return sessionStorage.getItem("capturedImage") || null;
   });
@@ -32,6 +35,11 @@ export default function Initiator() {
     if (savedAttempts > 0) return 1;
     return -1;
   });
+
+  // Persist nickname to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem("nickname", nickname);
+  }, [nickname]);
 
   // Persist attempts to sessionStorage
   useEffect(() => {
@@ -47,33 +55,34 @@ export default function Initiator() {
   useEffect(() => {
     if (image) {
       sessionStorage.setItem("capturedImage", image);
+    } else {
+      sessionStorage.removeItem("capturedImage");
     }
   }, [image]);
 
-  const handleOnboardingComplete = (takePhoto) => {
-    if (takePhoto) {
-      setInitiatorState(0);
-    } else {
-      setInitiatorState(1);
-    }
+  const handleOnboardingComplete = () => {
+    setInitiatorState(1);
   };
 
   return (
     <>
       {/* State -1: Onboarding */}
       {initiatorState === -1 && (
-        <InitiatorOnboarding onComplete={handleOnboardingComplete} />
-      )}
-
-      {/* State 0: Camera - Skip if attempts are already used up */}
-      {initiatorState === 0 && (
-        <Camera image={image} setImage={setImage} setState={() => setInitiatorState(1)} />
+        <InitiatorOnboarding 
+           onComplete={handleOnboardingComplete} 
+           nickname={nickname}
+           setNickname={setNickname}
+           image={image}
+           setImage={setImage}
+        />
       )}
 
       {/* State 1: Game - Only accessible if attempts are under 3 */}
       {initiatorState === 1 && attempts < 3 && (
         <Game
           image={image}
+          nickname={nickname}
+          setNickname={setNickname}
           attempt={attempts + 1}
           onGameOver={(gameScore) => {
             const nextScore = Math.max(score, gameScore);
@@ -87,23 +96,10 @@ export default function Initiator() {
         />
       )}
 
-      {/* 
-          State 2: Score Summary / Game Over 
-          Shown when attempts are maxed out (either on mount or during play)
-      */}
-      {initiatorState === 2 && (
-        <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "2rem" }}>
-          <h2>All attempts completed!</h2>
-          <p>Your final score: {score}</p>
-          <button className="button-primary" onClick={() => setInitiatorState(3)}>
-            Continue to planning
-          </button>
-        </div>
-      )}
 
       {/* State 3: Final Form */}
-      {initiatorState === 3 && (
-        <InitiatorForm image={image} score={score} actionData={actionData} />
+      {initiatorState === 2 && (
+        <InitiatorForm nickname={nickname} image={image} score={score} actionData={actionData} />
       )}
     </>
   );

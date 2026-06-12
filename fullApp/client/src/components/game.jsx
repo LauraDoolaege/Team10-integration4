@@ -32,6 +32,19 @@ export default function Game({ onGameOver, attempt, image }) {
         const ctx = $canvas.getContext("2d");
         if (!ctx) return;
 
+        // ----------------------------
+        // IMAGE SAFETY LOADER
+        // ----------------------------
+
+        const loadImage = (src) =>
+            new Promise((resolve) => {
+                const img = new Image();
+                img.src = src;
+
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+            });
+
         //  Game Constants 
         const GROUND_OFFSET = 126;
         const MIN_GAP = 450;
@@ -52,6 +65,7 @@ export default function Game({ onGameOver, attempt, image }) {
         let gameOverShown = false;
         let isCountingDown = true;
 
+        let assetsReady = false;
         let lastLevelUpScore = 0;
         let playerInitialized = false;
         let obstacles = [];
@@ -76,14 +90,7 @@ export default function Game({ onGameOver, attempt, image }) {
         const levelUpFlash = () => { };
 
         // Image Assets
-        const duckImg = new Image();
-        const duckJumpImg = new Image();
-        const duckDashImg = new Image();
-        const obstacleImg1 = new Image();
-        const obstacleImg2 = new Image();
-        const obstacleImg3 = new Image();
-        const floorImg = new Image();
-        const buildingImg1 = new Image();
+        let duckImg, duckJumpImg, duckDashImg, obstacleImg1, obstacleImg2, obstacleImg3, floorImg, buildingImg1;
         const buildingImg2 = new Image();
         const buildingImg3 = new Image();
         const faceImg = new Image(); // Stores the captured face image
@@ -92,28 +99,34 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Initialization Functions 
 
-        // Adjust canvas dimensions to fill the current window width and height.
-        const resizeCanvas = () => {
-            $canvas.width = window.innerWidth;
-            $canvas.height = window.innerHeight;
-            groundY = $canvas.height * 0.85; // Keep ground at the center
-        };
-
         // Assign sources to image objects so they begin downloading from Vite's bundled paths.
-        const loadAssets = () => {
-            duckImg.src = duckImgSrc;
-            duckJumpImg.src = duckJumpImgSrc;
-            duckDashImg.src = duckDashImgSrc;
-            obstacleImg1.src = obstacleImg1Src;
-            obstacleImg2.src = obstacleImg2Src;
-            obstacleImg3.src = obstacleImg3Src;
-            floorImg.src = floorImgSrc;
-            buildingImg1.src = building1src;
+        const loadAssets = async () => {
+            [
+                duckImg,
+                duckJumpImg,
+                duckDashImg,
+                obstacleImg1,
+                obstacleImg2,
+                obstacleImg3,
+                floorImg,
+                buildingImg1,
+            ] = await Promise.all([
+                loadImage(duckImgSrc),
+                loadImage(duckJumpImgSrc),
+                loadImage(duckDashImgSrc),
+                loadImage(obstacleImg1Src),
+                loadImage(obstacleImg2Src),
+                loadImage(obstacleImg3Src),
+                loadImage(floorImgSrc),
+                loadImage(building1src),
+            ]);
             
             // If an image was captured, set its source
             if (image) {
                 faceImg.src = image;
             }
+
+            assetsReady = true;
         };
 
         // Helper to check if two rectangular bounding boxes overlap
@@ -218,8 +231,8 @@ export default function Game({ onGameOver, attempt, image }) {
                         : obstacleImg3;
 
             // Default dimensions if image is not fully loaded yet
-            const width = (imgRef.width || 50) / 1.5;//rescale the images
-            const height = (imgRef.height || 100) / 1.5;
+            const width = (imgRef?.width || 50) / 1.5;//rescale the images
+            const height = (imgRef?.height || 100) / 1.5;
 
             // Type 3 obstacles are flying, others are grounded
             const obstacleY =
@@ -335,6 +348,19 @@ export default function Game({ onGameOver, attempt, image }) {
             }
 
         }
+
+        // Adjust canvas dimensions to fill the current window width and height.
+        const resizeCanvas = () => {
+            $canvas.width = window.innerWidth;
+            $canvas.height = window.innerHeight;
+            groundY = $canvas.height * 0.85; // Keep ground at the center
+            
+            // Re-calculate buildings on resize to prevent stretching
+            if (assetsReady) {
+                buildings = [];
+                updateBuildings();
+            }
+        };
 
         // Determines if the player has collided with any obstacles
         const checkGameOver = () => {
@@ -547,6 +573,8 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Combines all drawing functions for the current frame
         const render = () => {
+            if (!assetsReady) return;
+
             drawBackground();
 
             // Set initial player height relative to ground once dimensions exist
@@ -623,13 +651,22 @@ export default function Game({ onGameOver, attempt, image }) {
         };
 
         // Setup & Initialization (init) 
-        const init = () => {
+        const init = async () => {
+            // First pass at resizing
             resizeCanvas();
-            loadAssets();
             
-            // Ensure player starts on the ground
-            playerY = groundY - GROUND_OFFSET;
-            playerInitialized = true;
+            await loadAssets();
+            
+            // Second pass at resizing after assets are ready and layout settled
+            setTimeout(() => {
+                resizeCanvas();
+                playerY = groundY - GROUND_OFFSET;
+                playerInitialized = true;
+                
+                // Only start game logic after final stabilized resize
+                updateBuildings();
+                startCountdown();
+            }, 50);
 
             setGameOver(false);
             setScore(0);
@@ -646,8 +683,6 @@ export default function Game({ onGameOver, attempt, image }) {
             $canvas.addEventListener("pointerup", handleKeyUp);
             $canvas.addEventListener("pointercancel", handleKeyUp);
 
-            updateBuildings();
-            startCountdown();
             // Start the game loop
             gameLoop();
         };
