@@ -192,6 +192,14 @@ body {
   font-weight: bold;
 }
 
+.dark {
+  color: var(--color-btn)!important;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
 /* ==========================================
    GOVERNMENT / FORM STYLES
    ========================================== */
@@ -1374,11 +1382,12 @@ form>label,
 }
 
 .onboarding__images-1 img:nth-child(1) {
-  width: 65%;
+  width: 80%;
   height: auto;
   justify-self: start;
-  margin-bottom: 20%;
-  z-index: 1;
+  margin-bottom: -10%;
+  margin-left: -10%;
+  z-index: 2;
 }
 
 .onboarding__images-1 img:nth-child(2) {
@@ -1386,14 +1395,16 @@ form>label,
   height: auto;
   margin-right: -35%;
   justify-self: end;
-  z-index: 2;
+  z-index: 1;
+  filter: brightness(0.4);
+  opacity: 0.8;
   transform: scale(1.1);
 }
 
 .onboarding__images-1 img:nth-child(3) {
   width: 90%;
   height: auto;
-  margin-left: -10%;
+  margin-left: -0%;
   margin-bottom: -10%;
   z-index: 3;
 }
@@ -1450,6 +1461,10 @@ form>label,
   gap: var(--space-lg);
 }
 
+.onboarding__text__section-1-dark{
+  color: var(--color-btn) !important;
+}
+
 .onboarding__subtitle {
   color: var(--color-blue);
   font-family: var(--font-family-heading) !important;
@@ -1497,6 +1512,26 @@ form>label,
   z-index: 100;
   cursor: pointer;
 }
+
+
+.logo {
+  width: auto !important;
+  position: absolute;
+  max-width: 10%;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-lg);
+  background-color: transparent;
+  font-family: 'SunAntwerpen';
+  border: none;
+  color: var(--color-skip);
+  z-index: 100;
+  cursor: pointer;
+}
+
 
 
 .onboarding__balls {
@@ -2044,6 +2079,11 @@ button {
 }
 
 .button__outline{
+  padding: var(--space-md) var(--space-sm);
+  display: flex;
+  gap: .3rem;
+  justify-content: center;
+  align-items: center;
   background-color: transparent;
   color: var(--color-black);
   border: 2px solid var(--color-button) !important;
@@ -2098,6 +2138,8 @@ button:disabled {
   cursor: pointer;
 }
 
+
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -2116,6 +2158,22 @@ background-color: var(--color-blue);
   overflow-y: auto;
 }
 
+.leaderboard__cta-heading {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-xl);
+  gap: var(--space-sm);
+}
+
+
+.leaderboard__cta-heading .title{
+  white-space: nowrap;
+}
+
+.leaderboard__cta-heading p{
+  text-align: left;
+}
+
 .leaderboard-container h1 {
   margin-bottom: var(--space-xl);
   text-align: center;
@@ -2126,17 +2184,109 @@ background-color: var(--color-blue);
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding-bottom: var(--space-xxl);
   width: 100%;
   position: relative;
   z-index: 3; /* Top layer */
+  flex: 1;
+  min-height: 0;
 }
 
-.leaderboard__header .title {
-color: var(--color-white);;
+/* AVAILABILITY CARDS */
+.availability-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-height: 40dvh;
+  overflow-y: auto;
+  padding: 0.75rem;
+  margin-top: var(--space-md);
+  min-height: 0; /* Important for flex child scrolling */
 }
+
+.availability-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.availability-card__most-voted {
+  background-color: var(--color-green);
+  color: var(--color-white);
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.6rem;
+  font-size: 0.65rem;
+  font-weight: bold;
+  position: absolute;
+  top: -8px;
+  left:0;
+  z-index: 5;
+  text-transform: uppercase;
+}
+
+.successImg{
+  width:100%;
+  transform: translateY(10%);
+}
+
+.availability-card:active {
+  transform: scale(0.98);
+}
+
+.availability-card__date {
+  font-family: 'Antwerpen', sans-serif;
+  font-size: 1.35rem;
+  color: var(--primary-black);
+  flex: 1;
+}
+
+.availability-card__votes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+}
+
+.availability-card__count {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--neutral-gray);
+  text-transform: lowercase;
+}
+
+.availability-card__players {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse; /* For overlapping z-index effect */
+}
+
+.availability-card__player-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+  object-fit: cover;
+  margin-left: -10px; /* Overlap effect */
+  background: var(--color-grey);
+}
+
+.availability-card__checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--color-blue);
+  border-radius: 6px;
+}
+
 
 
 .leaderboard__list {
@@ -2146,7 +2296,21 @@ color: var(--color-white);;
   width: 100%;
   align-items: center;
   list-style: none;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--space-md);
+  scrollbar-width: none;
 }
+
+.leaderboard__list li:nth-child(1) {
+    margin-top: var(--space-lg);
+}
+
+.leaderboard__list::-webkit-scrollbar {
+  display: none;
+}
+
+
 
 .leaderboard__player, .leaderboard__player-loser {
   display: flex;
@@ -2156,7 +2320,7 @@ color: var(--color-white);;
   padding: 0.25rem 1.5rem; /* Thin pill */
   border-radius: 6.25rem;
   width: 85%;
-  height: 35%;
+  height: 4.5rem;
   max-width: 45rem;
   flex-shrink: 0;
 }
@@ -2290,6 +2454,45 @@ color: var(--color-white);;
   margin-bottom: 20px;
 }
 
+.succes__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: opacity 0.5s ease-out;
+  color: var(--color-white);
+  gap: var(--space-md);
+}
+
+.succes__container.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.succes__container img {
+    width: 50%;
+    
+}
+
+.succes__container .title {
+    font-size: var(--font-huge);
+    margin: 0;
+    color: var(--color-white);
+}
+
+.succes__container .subtitle {
+    font-size: var(--font-lg);
+    text-align: center;
+    max-width: 80%;
+}
+
 .form__navigation-btn {
   width: 34px;
   height: 34px;
@@ -2331,7 +2534,8 @@ color: var(--color-white);;
   background-color: var(--color-white);
   margin-top: var(--space-lg);
   padding: var(--space-lg) var(--space-xl); /* Added 8rem bottom padding */
-  display: flex;  
+  display: flex; 
+  height:90dvh; 
   width: 100%;
   border-radius:30px 30px 0px 0px;
   flex-direction: column;
@@ -2440,7 +2644,287 @@ color: var(--color-white);;
   align-items: center;
 }
 
-.form__confirmation-buttons button {
+.leaderboard__share {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  align-items: center;
+}
+
+.copy__container {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-white);
+  border: 1px solid var(--color-grey);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.copy__container input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  outline: none;
+  margin-top: 0;
+  box-shadow: none;
+  text-overflow: ellipsis;
+}
+
+.copy__container input:focus {
+    transform: none;
+    border: none;
+}
+
+
+
+.copy__container button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background-color: var(--color-button);
+  color: var(--primary-white);
+  border: none;
+  padding: 0 var(--space-lg);
+  height: 100%;
+  min-height: 2.5rem;
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: auto;
+  border-radius: 0;
+  margin: 0;
+}
+
+.copy__container button:hover {
+  background-color: #333;
+}
+
+.copy__container button.copied {
+  background-color: var(--color-grey);
+}
+
+.copy__container button.uncopied {
+  background-color:var(--primary-white);
+}
+
+.copy__container button svg {
+  flex-shrink: 0;
+}
+
+
+/* --- New Trip Overview Styles --- */
+.form__trip-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
   width: 100%;
 }
 
+.form__trip-data {
+
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 12px 0px;
+  overflow: hidden;
+  position: relative;
+
+}
+
+
+.form__trip-data .icon__wrapper {
+  background-color: var(--primary-white);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* Shifted down to create a "circular bottom look" clipped by the parent overflow:hidden */
+
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form__trip-data .icon__wrapper svg {
+  color: var(--primary-black);
+  width: 24px;
+  height: 24px;
+}
+
+.trip-data__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+ 
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.trip-data__label {
+  color: #999;
+  font-size: 12px;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-family: var(--font-family-sans);
+}
+
+.trip-data__value {
+  color: var(--primary-black);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-family-sans);
+}
+
+/* AVAILABILITY CARDS */
+.availability-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  max-height: 70dvh;
+  overflow-y: auto;
+  padding: 0.75rem 0;
+  margin-top: var(--space-md);
+  min-height: 0;
+}
+
+.availability-list:last-child {
+margin-bottom: var(--space-xl);
+}
+
+.availability-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  margin:  .4rem;
+  border-radius: 1.25rem;
+  background: transparent;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.availability-card:active {
+  
+  transform: scale(0.98);
+}
+
+
+.availability-card__votes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+}
+
+.availability-card__count {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--neutral-gray);
+  text-transform: lowercase;
+}
+
+.availability-card__players {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.availability-card__player-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+  object-fit: cover;
+  margin-left: -10px;
+  background: var(--color-grey);
+}
+
+.availability-card__checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--color-blue);
+  border-radius: 6px;
+}
+
+
+/* AVAILABILITY CARDS */
+
+
+
+
+.availability-card:active {
+  transform: scale(0.98);
+}
+
+.availability-card__date {
+  font-family: 'Antwerpen', sans-serif;
+  font-size: 1.25rem;
+  color: var(--primary-black);
+  flex: 1;
+}
+
+.availability-card__votes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+}
+
+.availability-card__count {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--neutral-gray);
+  text-transform: lowercase;
+}
+
+.availability-card__players {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.availability-card__player-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+  object-fit: cover;
+  margin-left: -10px;
+  background: var(--color-grey);
+}
+
+.availability-card__checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--color-blue);
+  border-radius: 6px;
+}
+
+
+.sadImg{
+  width:100%;
+
+  filter:brightness(1);
+}

@@ -23,6 +23,7 @@ import coffeeSrc from "../assets/images/Planning/step5/coffee.png";
 import wineSrc2 from "../assets/images/Planning/step5/wine.png";
 import diceSrc from "../assets/images/Planning/step5/dice.png";
 
+
 let socket;
 
 export default function InitiatorForm({ actionData, nickname, score, image }) {
@@ -161,7 +162,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
               </div>
                
                   <p className="leaderboard__score">{score}pts</p>
-5
+
 
             </li>
 
@@ -250,7 +251,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
                   
                 }
               >
-                −
+                -
               </button>
 
               <span aria-live="polite" aria-atomic="true" aria-label={`${formData.expectedPlayers} players selected`}>{formData.expectedPlayers}</span>
@@ -304,17 +305,17 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
 
               <div className="budget__container">
               <div className="budget__grid" aria-hidden="true">
-              <img src={pinkStarSrc} alt=""/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 0 ? 'block' : 'none' }}/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 10 ? 'block' : 'none' }}/> 
-              <img src={billSrc} alt="" style={{ display: formData.budget > 20 ? 'block' : 'none' }}/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 30 ? 'block' : 'none' }}/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 40 ? 'block' : 'none' }}/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 50 ? 'block' : 'none' }}/>
-              <img src={billSrc} alt="" style={{ display: formData.budget > 60 ? 'block' : 'none' }}/>
+              <img src={pinkStarSrc} alt="star"/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 0 ? 'block' : 'none' }}/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 10 ? 'block' : 'none' }}/> 
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 20 ? 'block' : 'none' }}/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 30 ? 'block' : 'none' }}/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 40 ? 'block' : 'none' }}/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 50 ? 'block' : 'none' }}/>
+              <img src={billSrc} alt="bill" style={{ display: formData.budget > 60 ? 'block' : 'none' }}/>
 
              
-              <img src={walletSrc} alt=""/>
+              <img src={walletSrc} alt="wallet"/>
                 </div>
 
               <div className="budget-slider-container">
@@ -342,9 +343,6 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
         )}
 
         {formState === 4 && (
-     
-
-
          <div className="form-container"> 
            <fieldset className="form-container-step">
             <legend className="visually-hidden">Step 4: Select bar mood preferences</legend>
@@ -385,7 +383,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
               <img src={diceSrc} alt="" aria-hidden="true" />
               <div className="mood__btn-text"> 
                  <span>
-                  Random bars
+                  Random drinks
                </span>
                
                <span>

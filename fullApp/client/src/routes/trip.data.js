@@ -12,6 +12,16 @@ export async function tripLoader({ params }) {
 
   const receivedTrip = await getTrip(tripId, playerId);
 
+  // If trip is closed, redirect to error/closed
+  if (receivedTrip?.closed) {
+    return redirect(`/error/closed`);
+  }
+
+  // If already voted, redirect to leaderboard immediately
+  if (receivedTrip?.alreadyVoted) {
+    return redirect(`/leaderboard/${tripId}`);
+  }
+
   return { receivedTrip, playerId };
 }
 
@@ -25,6 +35,7 @@ export async function tripAction({ request }) {
   const username = formData.get("username");
   const score = formData.get("score");
   const image = formData.get("image");
+  const joining = formData.get("joining") !== "false"; // Default to true unless explicitly "false"
 
   const trip = {
     tripId,
@@ -33,14 +44,18 @@ export async function tripAction({ request }) {
     email,
     username,
     score,
-    image
+    image,
+    joining
   };
 
   const vote = await createTripVote(trip)
   console.log("Vote response:", vote);
 
   sessionStorage.removeItem("attempts");
-
+ 
+  if(!joining){
+    return redirect(`/notJoining`)
+  }
 
   return redirect(`/leaderboard/${tripId}`);
 }
