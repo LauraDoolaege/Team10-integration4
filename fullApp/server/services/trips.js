@@ -215,6 +215,37 @@ async function getDateVotesByTripId(tripId) {
     return votes;
 }
 
+async function getDateVotesWithImagesByTripId(tripId) {
+    // Fetch every possible date for this trip joined with recorded votes and player images.
+    // Using LEFT JOIN ensures all possible dates from trip_dates are included even if they have zero votes.
+    const [rows] = await db.query(
+        `
+    SELECT DATE_FORMAT(td.date, '%Y-%m-%d') AS date, tp.image
+    FROM trip_dates td
+    LEFT JOIN votes v ON v.trip_id = td.trip_id AND v.date = td.date
+    LEFT JOIN trip_players tp ON tp.player_id = v.player_id AND tp.trip_id = v.trip_id
+    WHERE td.trip_id = ?
+    ORDER BY td.date ASC
+    `,
+        [tripId]
+    );
+
+    const votes = {};
+
+    for (const row of rows) {
+        if (!votes[row.date]) votes[row.date] = [];
+        // Only add to players array if there's actually a vote (image will exist if joined successfully)
+        if (row.image !== null) {
+            votes[row.date].push({ image: row.image });
+        }
+    }
+
+    return Object.keys(votes).map((date) => ({
+        date,
+        players: votes[date],
+    }));
+}
+
 
 const getAllTrips = async () => {
     try {
@@ -253,7 +284,7 @@ const getTripById = async (tripId, playerId) => {
       SELECT 
         t.*,
         c.name AS cafe_name,
-        c.location,
+        c.location, c.address,
         c.description
       FROM trips t
       JOIN cafes c ON c.id = t.cafe_id
@@ -340,13 +371,14 @@ WHERE trip_id = ?
 
 
         const alreadyVoted = voterRows.length > 0;
+        const closed = trip.status !== "open";
 
 
         // 7. Return fully hydrated object
         return {
             alreadyVoted,
-
-
+            closed,
+            
             trip: {
                 ...trip,
 
@@ -355,6 +387,7 @@ WHERE trip_id = ?
                     id: trip.cafe_id,
                     name: trip.cafe_name,
                     location: trip.location,
+                    address: trip.address,
                     description: trip.description,
                 },
 
@@ -675,5 +708,6 @@ module.exports = {
     closeTrip,
     getPlayersDetailsByTripId,
     getDateVotesByTripId,
+    getDateVotesWithImagesByTripId,
     getHighestTripScore,
 };

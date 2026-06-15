@@ -176,7 +176,7 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
                         <button
                             type="button"
                             className="button__arrow"
-                            onClick={() => onComplete(false)}
+                            onClick={() => setOnboardingState(6)}
                         >
                              <span>Continue without photo </span>
                              <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">

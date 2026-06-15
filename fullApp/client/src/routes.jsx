@@ -23,6 +23,13 @@ import {
   LeaderboardLoader
 } from "./routes/leaderboard.data.js";
 
+import Error from "./routes/errorTrip.jsx";
+import {
+  errorLoader
+} from "./routes/errorTrip.data.js";
+
+import NotJoining from "./routes/notJoining.jsx"
+
 export default [
   {
     path: "/",
@@ -53,6 +60,16 @@ export default [
         path: "leaderboard/:tripId",
         element: <Leaderboard />,
         loader: LeaderboardLoader
+      },
+      {
+        path: "error/:error",
+        element: <Error />,
+        loader: errorLoader
+      },
+      {
+        path: "notJoining",
+        element: <NotJoining />,
+       
       }
     ]
   }

@@ -27,7 +27,7 @@ export async function initiatorAction({ request }) {
     initiatorId: playerId,
     cafe: formData.get("cafe"),
     possibleDates: rawDates,
-    budget: Number(formData.get("expectedPlayers")),
+    budget: Number(formData.get("budget")),
     mood: formData.get("mood"),
     votes,
     image: formData.get("image"),

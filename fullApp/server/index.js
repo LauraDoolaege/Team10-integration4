@@ -28,6 +28,8 @@ const {
   closeTrip,
   getPlayersDetailsByTripId,
   getDateVotesByTripId,
+  getDateVotesWithImagesByTripId,
+
   getHighestTripScore, } = require("./services/trips");
 
 const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
@@ -113,6 +115,7 @@ app.post("/api/trips/vote", async (req, res) => {
     username = "",
     score,
     image,
+    joining = true, // Default to true
   } = req.body;
 
   const trip = await getTripById(tripId);
@@ -121,12 +124,18 @@ app.post("/api/trips/vote", async (req, res) => {
     return res.json({ error: "closed" });
   }
 
+  // Always add player details to satisfy foreign key constraints in trip_voters
+  // For opt-outs, this adds a record with empty/default values
   await addPlayerToTrip(playerId, tripId, email, username, score, image);
 
   const alreadyVoted = await checkVoted(playerId, tripId);
 
   if (!alreadyVoted) {
-    await placeVote(playerId, tripId, selectedDates);
+    if (joining) {
+      await placeVote(playerId, tripId, selectedDates);
+    }
+    
+    // Always mark as voter (even if not joining) to count towards participation
     await setAsVoter(playerId, tripId);
 
     const voterCount = await getVoterAmount(tripId);
@@ -136,7 +145,12 @@ app.post("/api/trips/vote", async (req, res) => {
       const couponId = crypto.randomUUID();
       await createCoupon(couponId,tripId);
 
-      const players = await getPlayersDetailsByTripId(tripId);
+      const allPlayers = await getPlayersDetailsByTripId(tripId);
+      // Filter out players who opted out.
+      // Since they have no email, username, or image (they remain as empty strings "" or null),
+      // these "falsy" fallback values will ensure they are excluded from the email list.
+      const confirmedPlayers = allPlayers.filter(p => p.email && p.username && p.image);
+      
       const votes = await getDateVotesByTripId(tripId);
 
       const finalDate = getFinalDate({
@@ -144,10 +158,11 @@ app.post("/api/trips/vote", async (req, res) => {
         possibleDates: trip.trip.possibleDates
       });
 
-      for (const player of players) {
+      for (const player of confirmedPlayers) {
         sendTripDetails(player.email, {
           cafe: trip.trip.cafe_name,
-          finalDate, players
+          finalDate, 
+          players: confirmedPlayers
         });
       }
 
@@ -164,12 +179,15 @@ app.post("/api/trips/vote", async (req, res) => {
 
 app.get("/api/trips/:id/:playerId", async (req, res) => {
   const trip = await getTripById(req.params.id, req.params.playerId);
+  const votesWithImages = await getDateVotesWithImagesByTripId(req.params.id);
 
   console.log(trip);
 
   res.json({
     alreadyVoted: trip.alreadyVoted,
+    closed: trip.closed,
     trip: trip.trip,
+    votesWithImages,
   });
 });
 

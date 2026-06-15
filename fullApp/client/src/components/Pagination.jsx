@@ -1,7 +1,7 @@
 export default function Pagination({ currentStage, setStage }) {
     return (
         <div className="onboarding__balls">
-            {[1, 2, 3, 4].map((stage) => (
+            {[1, 2, 3].map((stage) => (
                 <button
                     key={stage}
                     className={`onboarding__ball ${currentStage === stage ? "active" : ""}`}
