@@ -16,7 +16,16 @@ export async function createTrip(data) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to create trip");
+    let errorMessage = "Failed to create trip";
+    let fieldErrors;
+    
+    const errorData = await res.json();
+    errorMessage = errorData.error || errorMessage;//server error
+    fieldErrors = errorData.errors || [];//validation errors
+    
+    const error = new Error(errorMessage);
+    error.errors = fieldErrors;//add validation errors.
+    throw error;//send to action handler
   }
 
   return await res.json();
@@ -73,10 +82,19 @@ export async function createTripVote(data) {
   });
 
   if (!res.ok) {
-   const errorText = await res.text(); // 👈 IMPORTANT
-    console.error("Vote API failed:", errorText);
-    throw new Error(errorText || "Failed to vote on trip");
+
+    let errorMessage = "Failed to vote for this trip";
+    let fieldErrors;
+
+    const errorData = await res.json();
+    errorMessage = errorData.error || errorMessage;//server error
+    fieldErrors = errorData.errors || [];//validation errors
+
+    const error = new Error(errorMessage);
+    error.errors = fieldErrors;//add validation errors.
+    throw error;//send to action handler
   }
+
 
   return await res.json();
 }

@@ -1,32 +1,34 @@
 import { useState } from "react";
 import Pagination from "./Pagination";
 import Camera from "./camera";
-import starImg from "../assets/images/Onboarding/step1/star.png";
-import buildingImg from "../assets/images/Onboarding/step1/building1.png";
-import womenImg from "../assets/images/Onboarding/step1/women.png";
 
-import coneImg from "../assets/images/Onboarding/step2/cone.png"
-import peopleImg from "../assets/images/Onboarding/step2/people.png"
-import starImg2 from "../assets/images/Onboarding/step2/star.png"
-import drinksImg from "../assets/images/Onboarding/step2/drinks.png"
+import logoImg from "../assets/images/Onboarding/trip/logo.png"
 
-import starImg3 from "../assets/images/Onboarding/step3/star.png"
-import calendarImg from "../assets/images/Onboarding/step3/calendar.png"
+import starImg from "../assets/images/Onboarding/step1/stars.avif";
+import buildingImg from "../assets/images/Onboarding/step1/building.avif";
+import womenImg from "../assets/images/Onboarding/step1/women.avif";
 
-import starImg4 from "../assets/images/Onboarding/step4/pinkStar.png"
-import starImg5 from "../assets/images/Onboarding/step4/greenStar.png"
-import spriteImg from "../assets/images/Onboarding/step4/sprite.png"
+import coneImg from "../assets/images/Onboarding/step2/cone.avif"
+import peopleImg from "../assets/images/Onboarding/step2/people.avif"
+import starImg2 from "../assets/images/Onboarding/step2/star.avif"
+import drinksImg from "../assets/images/Onboarding/step2/drinks.avif"
 
-import buildingsImg from "../assets/images/Onboarding/step5/buildings.png";
+import starImg3 from "../assets/images/Onboarding/step3/star.avif"
+import calendarImg from "../assets/images/Onboarding/step3/calendar.avif"
 
-import spriteImg2 from "../assets/images/Onboarding/step5/leftSprite.png";
-import spriteImg3 from "../assets/images/Onboarding/step5/rightSprite.png";
-import spriteImg4 from "../assets/images/Onboarding/step5/jumpSprite.png";
+import starImg4 from "../assets/images/Onboarding/step4/star.avif"
+import spriteImg from "../assets/images/Onboarding/step4/sprite.avif"
+
+import buildingsImg from "../assets/images/Onboarding/step5/buildings.avif";
+
+import spriteImg2 from "../assets/images/Onboarding/step5/leftSprite.avif";
+import spriteImg3 from "../assets/images/Onboarding/step5/rightSprite.avif";
+import spriteImg4 from "../assets/images/Onboarding/step5/jumpSprite.avif";
 
 
-import spriteImg6 from "../assets/images/Onboarding/step6/run.png";
-import handImg from "../assets/images/Onboarding/step6/hand.png";
-import tapStarImg from "../assets/images/Onboarding/step6/tapStar.png";
+import spriteImg6 from "../assets/images/Onboarding/step6/sprite.avif";
+import handImg from "../assets/images/Onboarding/step6/hand.avif";
+import tapStarImg from "../assets/images/Onboarding/step6/tap.avif";
 
 export default function InitiatorOnboarding({ onComplete, nickname, setNickname, image, setImage }) {
     const [onboardingState, setOnboardingState] = useState(0);
@@ -43,6 +45,7 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
         <div className="onboarding-flow">
             {onboardingState === 0 && (
                 <section key={onboardingState} className="onboarding onboarding-1">
+                    <img className="logo" src={logoImg} alt="logo" />
                     <div className="onboarding__images onboarding__images-1">
                         <img src={starImg} alt="star" />
                         <img src={buildingImg} alt="building" />
@@ -50,8 +53,8 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
                         
                     </div>
                     <div className="onboarding__text__section onboarding__text__section-1 ">
-                        <p className="onboarding__subtitle">welcome to</p>
-                        <h2 className="onboarding__antwerp">Antwerp</h2>
+        
+                        <h2 className="onboarding__antwerp">Your hangout starts here!</h2>
                         <p className="text onboarding__text-1">The city where plans make it out of the groupchat.</p>
                         <button type="button" className="onboarding__button" onClick={handleContinue}>continue</button>
                     </div>
@@ -114,9 +117,8 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
                     </button>
 
                     <div className="onboarding__images onboarding__images-4">
-                        <img src={starImg4} alt="pinkStar" />
-                        <img src={starImg5} alt="greenStar" />
                         <img src={spriteImg} alt="sprite" />
+                        <img src={starImg4} alt="pinkStar" />
                     </div>
                     <div className="onboarding__text__section onboarding__text__section-4">
                         <Pagination currentStage={onboardingState} setStage={setOnboardingState} />
@@ -130,11 +132,15 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
              {onboardingState === 4 && (
                 <section className="onboarding onboarding-5">
                     <div className="onboarding__top">
-                        <h2 className="title">Build your character!</h2>
-
-                        <p className="text onboarding__text-5">
-                            Snap a pic, name your character — everyone gets their own look.
-                        </p>
+                        <h2 className="title no-wrap">Let's get started!</h2>
+                        <ol className="step__list text align-left">
+                            <li>Put your face on your character</li>
+                            <li>Name your character</li>
+                            <li>Play the game</li>
+                            <li>Plan the trip</li>
+                            <li>Share with friends</li>
+                        </ol>
+                     
                     </div>
 
                     <div className="onboarding__scene">
@@ -226,6 +232,8 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
                                 className="form-control"
                                 value={nickname} 
                                 onChange={(e) => setNickname(e.target.value)} 
+                                onFocus={(e) => e.target.scrollIntoView({ behavior: "smooth", block: "center" })}
+                              
                                 placeholder="Enter nickname..."
                             />
                         </label>

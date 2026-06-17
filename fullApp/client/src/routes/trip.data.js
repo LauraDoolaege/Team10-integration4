@@ -48,8 +48,20 @@ export async function tripAction({ request }) {
     joining
   };
 
+  try{
   const vote = await createTripVote(trip)
   console.log("Vote response:", vote);
+  }
+   catch (error) { //when error is trown inside createTrip
+
+    if (error.errors) {
+      // error /: error
+    return redirect(`/error/form`);
+      // errors: error.errors 
+      //field validation errors  status(400+)
+  }
+   return error;
+}
 
   sessionStorage.removeItem("attempts");
  
@@ -58,4 +70,5 @@ export async function tripAction({ request }) {
   }
 
   return redirect(`/leaderboard/${tripId}`);
+
 }

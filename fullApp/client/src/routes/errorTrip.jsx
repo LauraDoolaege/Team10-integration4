@@ -21,6 +21,13 @@ export default function errorTrip (){
                     <p className="text leaderboard__cta-text">This trip has already been fully planned...</p>
                         </>
                     )}
+
+                    {errorCode === "form" && (
+                        <>
+                            <h3 className="title">Something went wrong</h3>
+                            <p className="text leaderboard__cta-text">Something went wrong whilst submitting your details...</p>
+                        </>
+                    )}
                   </div>
                 </div>
         </>
