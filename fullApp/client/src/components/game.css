@@ -42,7 +42,7 @@ body {
     overflow: hidden;
     position: relative;
 
-} 
+}
 
 
 /* header {
@@ -73,54 +73,55 @@ body {
 }
 
 .game__nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2rem;
-  z-index: 20;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .game__pause {
     background-color: #FE7D3C;
-    padding:2.3rem;
-    border-radius:100rem;
+    padding: 2.3rem;
+    border-radius: 100rem;
     border: none;
 }
 
 .game__info {
-  display: flex;
-  flex-direction: column;
-  gap: .1rem;
-  justify-content: center;
-  align-items:end;
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    justify-content: center;
+    align-items: end;
 }
 
 .game__attempt {
-  font-size: 1.5rem;
-  width:fit-content;
-  color: #DFF998 !important;
-  background-color: rgba(0, 0, 0, 0.496);
+    font-size: 1.5rem;
+    width: fit-content;
+    color: #DFF998 !important;
+    background-color: rgba(0, 0, 0, 0.496);
 
-  border: none;
-  padding: .5rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;color: #DFF998 !important;
-  background-color: rgba(0, 0, 0, 0.155);
+    border: none;
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #DFF998 !important;
+    background-color: rgba(0, 0, 0, 0.155);
 }
 
 .game__score {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #DFF998 !important;
-  border: none;
-  padding: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #DFF998 !important;
+    border: none;
+    padding: 0;
 
 }
 
@@ -161,7 +162,7 @@ canvas {
 }
 
 .settings__content {
-    background-color: var(--color-box);
+    background-color: var(--color-white);
     padding: 40px;
     max-width: 500px;
     color: var(--color-text-primary);
@@ -169,9 +170,7 @@ canvas {
 }
 
 .settings__content h2 {
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: var(--color-text-secondary);
+    color: var(--color-btn);
 }
 
 .setting__group {

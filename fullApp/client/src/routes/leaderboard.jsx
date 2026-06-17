@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLoaderData } from "react-router";
 
-import pfpSrc from "../assets/images/Planning/step1/pfp.png";
-import buidlSrc from "../assets/images/Planning/step1/building.png";
+import pfpSrc from "../assets/images/Planning/step1/pfp.avif";
+import buidlSrc from "../assets/images/Planning/step1/building.avif";
 import successSrc from "../assets/images/leaderboard/confirmation.png"
 
 export default function Leaderboard() {

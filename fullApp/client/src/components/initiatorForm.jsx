@@ -6,22 +6,24 @@ import { io } from "socket.io-client";
 
 import InitiatorFormNavigation from "./initiatorFormNavigation";
 
-import pfpSrc from "../assets/images/Planning/step1/pfp.png";
-import buidlSrc from "../assets/images/Planning/step1/building.png";
+import pfpSrc from "../assets/images/Planning/step1/pfp.avif";
+import buidlSrc from "../assets/images/Planning/step1/building.avif";
 
-import tableSrc from "../assets/images/Planning/step3/table.png";
-import beerSrc from "../assets/images/Planning/step3/beer.png";
-import wineSrc from "../assets/images/Planning/step3/wine.png";
+import tableSrc from "../assets/images/Planning/step3/table.avif";
+import beerSrc from "../assets/images/Planning/step3/beer.avif";
+import wineSrc from "../assets/images/Planning/step3/wine.avif";
+import coffeeSrc from "../assets/images/Planning/step3/coffee.avif";
+import lateSrc from "../assets/images/Planning/step3/late.avif";
 
-import pinkStarSrc from "../assets/images/Planning/step4/pinkStar.png";
-import walletSrc from "../assets/images/Planning/step4/wallet.png";
-import billSrc from "../assets/images/Planning/step4/bill.png";
+import pinkStarSrc from "../assets/images/Planning/step4/star.avif";
+import walletSrc from "../assets/images/Planning/step4/wallet.avif";
+import billSrc from "../assets/images/Planning/step4/bill.avif";
 
-import beerSrc2 from "../assets/images/Planning/step5/beer.png";
-import cocktailSrc from "../assets/images/Planning/step5/cocktail.png";
-import coffeeSrc from "../assets/images/Planning/step5/coffee.png";
-import wineSrc2 from "../assets/images/Planning/step5/wine.png";
-import diceSrc from "../assets/images/Planning/step5/dice.png";
+import beerSrc2 from "../assets/images/Planning/step5/beer.avif";
+import cocktailSrc from "../assets/images/Planning/step5/cocktail.avif";
+
+import wineSrc2 from "../assets/images/Planning/step5/wine.avif";
+import diceSrc from "../assets/images/Planning/step5/dice.avif";
 
 
 let socket;
@@ -34,6 +36,8 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
     {mood:"Mocktails & chill", path: coffeeSrc},
     {mood:"Wine & refined", path: wineSrc2},
   ];
+
+
 
   const [formState, setFormState] = useState(0);
 
@@ -48,6 +52,18 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
 
   const dateInputRef = useRef(null);
 
+  useEffect(() => {
+    if (actionData?.errors && actionData.errors.length > 0) {
+      // Find the first formState from errors and jump to it
+      const firstError = actionData.errors[0];
+      setFormState(firstError.formState);
+    } else if (actionData?.error) {
+      // General error: jump back to the last step to show it
+      setFormState(5);
+    }
+  }, [actionData]);
+
+ 
   const updateField = (field, value) => {
     setFormData((prev) => ({ //prev current 
       ...prev,
@@ -77,11 +93,13 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
         return formData.budget !== "";
 
       case 4:
-        return formData.mood.trim().length > 0;
+       return 1 === 1
+        // return formData.mood.trim().length > 0;
 
       case 5:
         return (
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) //regex test for basic email format validation
+          1===1
+         // /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) regex test for basic email format validation
         );
 
       default:
@@ -274,16 +292,16 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
             <div className="stepper__grid" aria-hidden="true">
               <img src={tableSrc} alt=""/>
 
-              <img src={beerSrc} alt=""/>
-              <img src={wineSrc} alt=""/>
-              <img src={beerSrc} alt="" style={{ display: formData.expectedPlayers > 2 ? 'block' : 'none' }}/>
-              <img src={wineSrc} alt="" style={{ display: formData.expectedPlayers > 3 ? 'block' : 'none' }}/>
-              <img src={beerSrc} alt="" style={{ display: formData.expectedPlayers > 4 ? 'block' : 'none' }}/>
-              <img src={wineSrc} alt="" style={{ display: formData.expectedPlayers > 5 ? 'block' : 'none' }}/>
-              <img src={beerSrc} alt="" style={{ display: formData.expectedPlayers > 6 ? 'block' : 'none' }}/>
-              <img src={wineSrc} alt="" style={{ display: formData.expectedPlayers > 7 ? 'block' : 'none' }}/>
-              <img src={beerSrc} alt="" style={{ display: formData.expectedPlayers > 8 ? 'block' : 'none' }}/>
-              <img src={wineSrc} alt="" style={{ display: formData.expectedPlayers > 9 ? 'block' : 'none' }}/>
+              <img src={beerSrc} alt="beer"/>
+              <img src={wineSrc} alt="wine"/>
+              <img src={coffeeSrc} alt="coffee" style={{ display: formData.expectedPlayers > 2 ? 'block' : 'none' }}/>
+              <img src={lateSrc} alt="late" style={{ display: formData.expectedPlayers > 3 ? 'block' : 'none' }}/>
+              <img src={wineSrc} alt="wine" style={{ display: formData.expectedPlayers > 4 ? 'block' : 'none' }}/>
+              <img src={coffeeSrc} alt="coffee" style={{ display: formData.expectedPlayers > 5 ? 'block' : 'none' }}/>
+              <img src={beerSrc} alt="beer" style={{ display: formData.expectedPlayers > 6 ? 'block' : 'none' }}/>
+              <img src={coffeeSrc} alt="coffee" style={{ display: formData.expectedPlayers > 7 ? 'block' : 'none' }}/>
+              <img src={lateSrc} alt="late" style={{ display: formData.expectedPlayers > 8 ? 'block' : 'none' }}/>
+              <img src={wineSrc} alt="wine" style={{ display: formData.expectedPlayers > 9 ? 'block' : 'none' }}/>
             </div>
             </div>
           </fieldset>
@@ -490,39 +508,51 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
 
 
       {formState > 0 && formState < 6 && (
-        <div className="buttons">
-          <button
-            className="button__arrow"
-            type="button"
-            onClick={() =>
-              setFormState((s) => Math.max(0, s - 1))
-            }
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 6C15 6 9 10.4189 9 12C9 13.5812 15 18 15 18" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-
-            <span>previous</span>
-
-          </button>
-
-          <button
-            className="button__arrow-fill"
-            type="button"
-            disabled={!canGoNext()}
-            onClick={() => {
-              if (canGoNext()) {
-                setFormState((s) =>
-                  Math.min(6, s + 1)
-                );
+        <div className="form-navigation-container">
+          {actionData?.errors?.find(err => err.formState === formState) && (
+            <div className="step-error-message">
+              {actionData.errors.find(err => err.formState === formState).error}
+            </div>
+          )}
+          {/* server errors {actionData?.error && formState === 5 && (
+            <div className="step-error-message">
+              {actionData.error}
+            </div>
+          )} */}
+          <div className="buttons">
+            <button
+              className="button__arrow"
+              type="button"
+              onClick={() =>
+                setFormState((s) => Math.max(0, s - 1))
               }
-            }}
-          >
-            <span>next</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 6C15 6 9 10.4189 9 12C9 13.5812 15 18 15 18" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+
+              <span>previous</span>
+
+            </button>
+
+            <button
+              className="button__arrow-fill"
+              type="button"
+              disabled={!canGoNext()}
+              onClick={() => {
+                if (canGoNext()) {
+                  setFormState((s) =>
+                    Math.min(6, s + 1)
+                  );
+                }
+              }}
+            >
+              <span>next</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
 

@@ -31,7 +31,8 @@ export default function Initiator() {
   // Otherwise, start with onboarding (-1).
   const [initiatorState, setInitiatorState] = useState(() => {
     const savedAttempts = Number(sessionStorage.getItem("attempts") || 0);
-    if (savedAttempts >= 3) return 2;
+    if (savedAttempts >= 3
+    ) return 2;
     if (savedAttempts > 0) return 1;
     return -1;
   });
@@ -86,7 +87,7 @@ export default function Initiator() {
           attempt={attempts + 1}
           onGameOver={(gameScore) => {
             const nextScore = Math.max(score, gameScore);
-            const nextAttempts = Math.min(attempts + 1, 3);
+            const nextAttempts = Math.min(attempts + 1, 500);
             setScore(nextScore);
             setAttempts(nextAttempts);
             if (nextAttempts >= 3) {

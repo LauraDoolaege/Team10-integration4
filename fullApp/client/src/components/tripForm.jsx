@@ -1,23 +1,23 @@
-import { Form, useNavigate, useSubmit } from "react-router-dom";
+import { Form, useSubmit } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import Game from "../components/game";
 import Camera from "../components/camera";
 import InitiatorFormNavigation from "./initiatorFormNavigation";
-import successSrc from "../assets/images/Onboarding/trip/success.png"
+import successSrc from "../assets/images/Onboarding/trip/success.avif"
 
-import buildingsImg from "../assets/images/Onboarding/step5/buildings.png";
-import spriteImg2 from "../assets/images/Onboarding/step5/leftSprite.png";
-import spriteImg3 from "../assets/images/Onboarding/step5/rightSprite.png";
-import spriteImg4 from "../assets/images/Onboarding/step5/jumpSprite.png";
-import handImg from "../assets/images/Onboarding/step6/hand.png";
-import tapStarImg from "../assets/images/Onboarding/step6/tapStar.png";
+import buildingsImg from "../assets/images/Onboarding/step5/buildings.avif";
+import spriteImg2 from "../assets/images/Onboarding/step5/leftSprite.avif";
+import spriteImg3 from "../assets/images/Onboarding/step5/rightSprite.avif";
+import spriteImg4 from "../assets/images/Onboarding/step5/jumpSprite.avif";
 
-import spriteImg6 from "../assets/images/Onboarding/step6/run.png";
+import handImg from "../assets/images/Onboarding/step6/hand.avif";
+import tapStarImg from "../assets/images/Onboarding/step6/tap.avif";
 
-import pfpSrc from "../assets/images/Planning/step1/pfp.png";
+import spriteImg6 from "../assets/images/Onboarding/step6/sprite.avif";
+
+import pfpSrc from "../assets/images/Planning/step1/pfp.avif";
 
 export default function TripForm({ receivedTrip, playerId, actionData }) {
-  const navigate = useNavigate();
   const formRef = useRef(null);
   const submit = useSubmit();
   
@@ -67,6 +67,8 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
     }));
   };
 
+
+
   // Persist attempts to sessionStorage
   useEffect(() => {
     sessionStorage.setItem("attempts", String(attempts));
@@ -89,6 +91,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
       case 1:
         return formData.dates.length > 0;
       case 2:
+  
         return (
           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) //regex test for basic email format validation
         );
@@ -332,23 +335,32 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
 
           
-          {formState <= 1 &&(
-            <div className="buttons">
-              <button
-                className="button__outline"
-                type="button"
-                onClick={() =>
-                  setPopupState(true)
-                }
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                  <path d="M6 6L18 18" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-
-                <span className="no-wrap"> {formState===0 ? "no thanks" : "not available" }</span>
-
-              </button>
+          <div className="form-navigation-container">
+              <div className="buttons">
+              {formState <= 1 ? (
+                <button
+                  className="button__outline"
+                  type="button"
+                  onClick={() => setPopupState(true)}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M6 6L18 18" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="no-wrap"> {formState === 0 ? "no thanks" : "not available"}</span>
+                </button>
+              ) : (
+                <button
+                  className="button__arrow"
+                  type="button"
+                  onClick={() => setFormState((s) => Math.max(0, s - 1))}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 6C15 6 9 10.4189 9 12C9 13.5812 15 18 15 18" stroke="#111111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span>previous</span>
+                </button>
+              )}
 
               <button
                 className="button__arrow-fill"
@@ -356,9 +368,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                 disabled={!canGoNext()}
                 onClick={() => {
                   if (canGoNext()) {
-                    setFormState((s) =>
-                      Math.min(6, s + 1)
-                    );
+                    setFormState((s) => Math.min(3, s + 1));
                   }
                 }}
               >
@@ -368,44 +378,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                 </svg>
               </button>
             </div>
-          )}
-
-          {formState > 1 &&(
-            <div className="buttons">
-              <button
-                className="button__arrow"
-                type="button"
-                onClick={() =>
-                  setFormState((s) => Math.max(0, s - 1))
-                }
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15 6C15 6 9 10.4189 9 12C9 13.5812 15 18 15 18" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-
-                <span>previous</span>
-
-              </button>
-
-              <button
-                className="button__arrow-fill"
-                type="button"
-                disabled={!canGoNext()}
-                onClick={() => {
-                  if (canGoNext()) {
-                    setFormState((s) =>
-                      Math.min(6, s + 1)
-                    );
-                  }
-                }}
-              >
-                <span>next</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-          )}
+          </div>
 
         </div>
       )}
@@ -420,7 +393,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
           </div>
    
           <div className="leaderboard__cta">
-            <h3 className="leaderboard__subtitle">Time for the game!</h3>
+            <h3 className="title">Time for the game!</h3>
             <p className="text leaderboard__cta-text">Now that the planning is done  <span className="highlight-bold">it's time for the game!</span></p>
             <button
               type="button"
@@ -535,6 +508,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                                   className="form-control"
                                   value={formData.username} 
                                   onChange={(e) => updateField("username",e.target.value)} 
+                                  onFocus={(e) => e.target.scrollIntoView({ behavior: "smooth", block: "nearest" })}
                                   placeholder="Enter nickname..."
                               />
                           </label>

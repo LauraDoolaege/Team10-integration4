@@ -45,9 +45,16 @@ export async function initiatorAction({ request }) {
     voters: [playerId],
   };
 
-  const createdTrip = await createTrip(trip);
+  try {
+    const createdTrip = await createTrip(trip);
+    sessionStorage.removeItem("attempts");
+    return redirect(`/leaderboard/${createdTrip.id}`);
 
-  sessionStorage.removeItem("attempts");
+  } catch (error) { //when error is trown inside createTrip
 
-  return redirect(`/leaderboard/${createdTrip.id}`);
+    if (error.errors) {
+      return { errors: error.errors };//field validation errors  status(400+)
+    }
+    return { error: error.message }; // server failure status(500+)
+  }
 }

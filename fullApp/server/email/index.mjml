@@ -1,0 +1,439 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Arial" href="https://fonts.googleapis.com/css?family=Arial"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif"></mj-all>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#F7F6EA">
+    <!-- Header -->
+    <mj-section padding="32px 20px" background-color="#5796FF" border-radius="0px 0px 24px 24px">
+      <mj-column>
+        <mj-image 
+          src="assets/logo.png" 
+          alt="Logo"
+          width="45px"
+          align="center">
+        </mj-image>
+        
+        <mj-spacer height="24px"></mj-spacer>
+        
+        <mj-image 
+          src="assets/header.png" 
+          alt="Header"
+          width="300px"
+          padding="0px">
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+    <!-- Leaderboard -->
+    <mj-section background-color="#F7F5EE" padding="40px 24px" border-radius="0px">
+      <mj-column width="100%">
+        <mj-image 
+          src="assets/Leaderboard.png" 
+          width="240px" 
+          align="center" 
+          alt="Leaderboard" 
+          padding="16px 0px 48px 0px">
+        </mj-image>
+
+        <mj-table padding="0px">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+            
+            <!-- ROW 1 -->
+            <tr>
+              <td width="60" align="center" valign="middle">
+                <img src="assets/first-place.png" width="60" alt="1" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td bgcolor="#5796FF" style="border-radius: 18px; padding: 12px 20px;" valign="middle">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td align="left" valign="middle">
+                      <div style="font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">Nickname</div>
+                      <div style="font-family: Arial, sans-serif; font-size: 16px; font-weight: 400; color: #FFFFFF;">65 pts</div>
+                    </td>
+                    <td align="right" width="46" valign="middle">
+                      <img src="assets/avatar-demo.png" width="46" height="46" style="display:block; border-radius: 50%; border: 2px solid #FFFFFF;" alt="User Avatar" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td colspan="3" height="12" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+
+            <!-- ROW 2 -->
+            <tr>
+              <td width="45" align="center" valign="middle" style="font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; color: #333333;">2</td>
+              <td width="16"></td>
+              <td bgcolor="#EAE6D0" style="border-radius: 18px; padding: 12px 20px;" valign="middle">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td align="left" valign="middle">
+                      <div style="font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222222; margin-bottom: 4px;">Nickname</div>
+                      <div style="font-family: Arial, sans-serif; font-size: 16px; font-weight: 400; color: #666666;">45 pts</div>
+                    </td>
+                    <td align="right" width="46" valign="middle">
+                      <img src="assets/avatar-demo.png" width="46" height="46" style="display:block; border-radius: 50%;" alt="User Avatar" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td colspan="3" height="12" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+
+            <!-- ROW 3 -->
+            <tr>
+              <td width="45" align="center" valign="middle" style="font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; color: #333333;">3</td>
+              <td width="16"></td>
+              <td bgcolor="#EAE6D0" style="border-radius: 18px; padding: 12px 20px;" valign="middle">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td align="left" valign="middle">
+                      <div style="font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222222; margin-bottom: 4px;">Nickname</div>
+                      <div style="font-family: Arial, sans-serif; font-size: 16px; font-weight: 400; color: #666666;">39 pts</div>
+                    </td>
+                    <td align="right" width="46" valign="middle">
+                      <img src="assets/avatar-demo.png" width="46" height="46" style="display:block; border-radius: 50%;" alt="User Avatar" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td colspan="3" height="12" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+
+            <!-- ROW 4 -->
+            <tr>
+              <td width="45" align="center" valign="middle" style="font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; color: #333333;">4</td>
+              <td width="16"></td>
+              <td bgcolor="#EAE6D0" style="border-radius: 18px; padding: 12px 20px;" valign="middle">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td align="left" valign="middle">
+                      <div style="font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; color: #222222; margin-bottom: 4px;">Nickname</div>
+                      <div style="font-family: Arial, sans-serif; font-size: 16px; font-weight: 400; color: #666666;">39 pts</div>
+                    </td>
+                    <td align="right" width="46" valign="middle">
+                      <img src="assets/avatar-demo.png" width="46" height="46" style="display:block; border-radius: 50%;" alt="User Avatar" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+          </table>
+        </mj-table>
+      </mj-column>
+    </mj-section>
+
+    <!-- Hangout -->
+    <mj-section background-color="#E9E7C7" padding="0px 24px 48px 24px" border-radius="24px 24px 24px 24px">
+      <mj-column width="100%">
+        <mj-image 
+          src="assets/theHangout.png" 
+          width="240px" 
+          align="center" 
+          alt="The Hangout" 
+          padding="48px 0px">
+        </mj-image>
+
+        <mj-table padding="0px 16px">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td width="42" align="center" valign="middle">
+                <img src="assets/date-icon.png" width="42" alt="When" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td align="left" valign="middle">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #767676; margin-bottom: 2px;">When?</div>
+                <div style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #2B4C3F;">11/06/2026</div>
+              </td>
+            </tr>
+            <tr><td colspan="3" height="20" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+            <tr>
+              <td width="42" align="center" valign="middle">
+                <img src="assets/location-icon.png" width="42" alt="Location" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td align="left" valign="middle">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #767676; margin-bottom: 2px;">Location</div>
+                <div style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #2B4C3F;">Fuckass bar</div>
+              </td>
+            </tr>
+            <tr><td colspan="3" height="20" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+            <tr>
+              <td width="42" align="center" valign="middle">
+                <img src="assets/budget-icon.png" width="42" alt="Budget" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td align="left" valign="middle">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #767676; margin-bottom: 2px;">Budget</div>
+                <div style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #2B4C3F;">&euro;30-40</div>
+              </td>
+            </tr>
+            <tr><td colspan="3" height="20" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+            <tr>
+              <td width="42" align="center" valign="middle">
+                <img src="assets/people-icon.png" width="42" alt="People" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td align="left" valign="middle">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #767676; margin-bottom: 2px;">People</div>
+                <div style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #2B4C3F;">6 invited</div>
+              </td>
+            </tr>
+            <tr><td colspan="3" height="20" style="font-size:0; line-height:0;">&nbsp;</td></tr>
+            <tr>
+              <td width="42" align="center" valign="middle">
+                <img src="assets/drink-icon.png" width="42" alt="Drink" style="display:block; border:0;" />
+              </td>
+              <td width="16"></td>
+              <td align="left" valign="middle">
+                <div style="font-family: Arial, sans-serif; font-size: 14px; color: #767676; margin-bottom: 2px;">Drink</div>
+                <div style="font-family: Arial, sans-serif; font-size: 18px; font-weight: 700; color: #2B4C3F;">Beer and Banter</div>
+              </td>
+            </tr>
+          </table>
+        </mj-table>
+      </mj-column>
+    </mj-section>
+
+    <!-- Location -->
+    <mj-section padding="32px 0px" border-radius="0px">
+      <mj-column width="55%" vertical-align="middle">
+        <mj-image 
+          src="assets/theLocation.png" 
+          width="186px" 
+          align="left" 
+          alt="The location" 
+          padding="24px 24px">
+        </mj-image>
+        <mj-text 
+          font-family="Arial, sans-serif" 
+          font-size="16px" 
+          line-height="24px" 
+          color="#333333" 
+          padding="0px 24px">
+          We found an absolute hidden gem! This cozy, ultra-niche bar is tucked away in a secret corner of Antwerp you've probably never even heard of. It's the perfect low-key spot featuring an incredible selection of unique craft beers and a relaxed vibe.
+        </mj-text>
+      </mj-column>
+      <mj-column width="45%" vertical-align="middle">
+        <mj-image 
+          src="assets/bar.png" 
+          width="186px" 
+          align="right" 
+          alt="Bar Interior" 
+          padding="16px 0px 0px 0px">
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+    <!-- Address & Opening Hours -->
+    <mj-section background-color="#5796FF" padding="40px 24px 40px 24px" border-radius="24px 24px 24px 24px">
+      <mj-column width="100%">
+        <mj-image 
+          src="assets/adress.png" 
+          width="130px" 
+          align="left" 
+          alt="Adress" 
+          padding="0px 0px 12px 0px">
+        </mj-image>
+        <mj-text 
+          font-family="Arial, sans-serif" 
+          font-size="18px" 
+          color="#FFFFFF" 
+          padding="0px 0px 24px 0px">
+          Street, number, postal code 
+          <img src="assets/copy-icon.png" width="18" alt="Copy" style="display: inline-block; vertical-align: middle; margin-left: 6px; border:0;" />
+        </mj-text>
+        <mj-table padding="0px 0px 40px 0px">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td align="center" valign="top" style="padding-right: 32px;">
+                <img src="assets/googlemaps-icon.png" width="44" alt="Google Maps" style="display:block; border:0; margin-bottom: 8px;" />
+                <div style="font-family: Arial, sans-serif; font-size: 13px; color: #FFFFFF;">Google Maps</div>
+              </td>
+              <td align="center" valign="top">
+                <img src="assets/applemaps-icon.png" width="44" alt="Apple Maps" style="display:block; border:0; margin-bottom: 8px;" />
+                <div style="font-family: Arial, sans-serif; font-size: 13px; color: #FFFFFF;">Apple Maps</div>
+              </td>
+            </tr>
+          </table>
+        </mj-table>
+        <mj-table  padding="0px 24px 40px 24px">
+          <tr>
+            <td width="60%" valign="middle">
+              <img src="assets/openingHours.png" width="230" alt="Opening hours" style="display:block; border:0; margin-bottom:16px;" />
+              <div style="font-family:Arial,sans-serif; font-size:16px; line-height:28px; color:#FFFFFF;">
+                <strong>Thu–Fri</strong> &middot; 10:00–22:00<br />
+                <strong>Mon–Sun</strong> &middot; 09:00–23:00<br />
+                <strong>Tue–Sat</strong> &middot; 11:00–00:00
+              </div>
+            </td>
+            <td width="40%" align="right" valign="middle">
+              <img src="assets/clock.png" width="120" alt="Clock" style="display:block; border:0; margin-left:auto;" />
+            </td>
+          </tr>
+        </mj-table>
+      </mj-column>
+    </mj-section>
+
+    <!-- Make a day out of it -->
+    <mj-section padding="32px 0px">
+      <mj-column width="100%" vertical-align="middle">
+        <mj-image 
+          src="assets/day-out-of-it.png" 
+          width="290px" 
+          align="center" 
+          alt="Make a day out of it" 
+          padding="24px 24px">
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+    <!-- Card 1: Frituur Chips (Orange) -->
+    <mj-wrapper padding="0px 24px 32px 24px">
+      <mj-section background-color="#FF7338" border-radius="20px" padding="24px 16px">
+        <mj-column width="100%">
+          <mj-table padding="0px 0px 16px 0px">
+            <tr>
+              <td width="45%" align="center" valign="middle">
+                <img src="assets/frituur-image.png" width="160" alt="Frituur Chips Graphic" style="display:block; border:0;" />
+              </td>
+              <td width="55%" valign="middle">
+                <img src="assets/frituur-h.png" width="180" alt="Frituur Chips" style="display:block; border:0; margin-bottom:12px;" />
+                <div style="font-family:Arial,sans-serif; font-size:15px; line-height:22px; color:#FFFFFF; margin-bottom:16px;">
+                  Grab a small pack of fries with Andalouse sauce down the street before you start counting pints in the local bar.
+                </div>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#streetfood</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#fries</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-bottom:6px;">#belgian</span>
+              </td>
+            </tr>
+          </mj-table>
+          <mj-table padding="0px">
+            <tr>
+              <td width="50%" style="padding-right:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:transparent; border:1.2px solid #87360E; border-radius:12px; padding:12px 0; text-decoration:none;">Visit website</a>
+              </td>
+              <td width="50%" style="padding-left:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:#1A1A1A; border-radius:12px; padding:12px 0; text-decoration:none;">Find on maps</a>
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <!-- Card 2: Street Art Alleys (Blue) -->
+    <mj-wrapper padding="0px 24px 32px 24px">
+      <mj-section background-color="#5796FF" border-radius="20px" padding="24px 16px">
+        <mj-column width="100%">
+          <mj-table padding="0px 0px 16px 0px">
+            <tr>
+              <td width="45%" align="center" valign="middle">
+                <img src="assets/street-art-image.png" width="160" alt="Street art image" style="display:block; border:0;" />
+              </td>
+              <td width="55%" valign="middle">
+                <img src="assets/street-art-h.png" width="180" alt="Street art" style="display:block; border:0; margin-bottom:12px;" />
+                <div style="font-family:Arial,sans-serif; font-size:15px; line-height:22px; color:#FFFFFF; margin-bottom:16px;">
+                  Take a 2-minute detour through Het Kopstraatje, a narrow alley covered in graffiti and murals, to experience raw Antwerp street vibes.
+                </div>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#streetart</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#graffiti</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-bottom:6px;">#art</span>
+              </td>
+            </tr>
+          </mj-table>
+          <mj-table padding="0px">
+            <tr>
+              <td width="50%" style="padding-right:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:transparent; border:1.2px solid #1B54B8; border-radius:12px; padding:12px 0; text-decoration:none;">Visit website</a>
+              </td>
+              <td width="50%" style="padding-left:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:#1A1A1A; border-radius:12px; padding:12px 0; text-decoration:none;">Find on maps</a>
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <!-- Card 3: Secret Labyrinth (Green) -->
+    <mj-wrapper padding="0px 24px 32px 24px">
+      <mj-section background-color="#00D67B" border-radius="20px" padding="24px 16px">
+        <mj-column width="100%">
+          <mj-table padding="0px 0px 16px 0px">
+            <tr>
+              <td width="45%" align="center" valign="middle">
+                <img src="assets/secret-labyrynth-image.png" width="160" alt="Secret labyrinth image" style="display:block; border:0;" />
+              </td>
+              <td width="55%" valign="middle">
+                <img src="assets/secret-labyrinth-h.png" width="180" alt="Secret labyrinth" style="display:block; border:0; margin-bottom:12px;" />
+                <div style="font-family:Arial,sans-serif; font-size:15px; line-height:22px; color:#FFFFFF; margin-bottom:16px;">
+                  Slip through the wooden door at Oude Koornmarkt 16 to find Vlaeykensgang - a hidden 16th-century alleyway that feels completely frozen in time.
+                </div>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#maze</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-right:6px; margin-bottom:6px;">#history</span>
+                <span style="display:inline-block; background-color:rgba(0,0,0,0.15); color:#FFFFFF; font-family:Arial,sans-serif; font-size:12px; padding:4px 10px; border-radius:6px; margin-bottom:6px;">#authentic</span>
+              </td>
+            </tr>
+          </mj-table>
+          <mj-table padding="0px">
+            <tr>
+              <td width="50%" style="padding-right:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:transparent; border:1.2px solid #0E8752; border-radius:12px; padding:12px 0; text-decoration:none;">Visit website</a>
+              </td>
+              <td width="50%" style="padding-left:6px;">
+                <a href="#" style="display:block; text-align:center; font-family:Arial,sans-serif; font-size:16px; color:#FFFFFF; background-color:#1A1A1A; border-radius:12px; padding:12px 0; text-decoration:none;">Find on maps</a>
+              </td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+
+    <!-- Footer -->
+    <mj-section padding="32px 24px 48px 24px">
+      <mj-column padding="20px 28px">
+        <mj-image
+          src="assets/logo.png"
+          width="45px"
+          align="center"
+          alt="Logo"
+          padding="0px 0px 29px 0px">
+        </mj-image>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          line-height="26px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px 0px 29px 0px">
+          Steenplein 1<br />
+          2000 Antwerpen
+        </mj-text>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px 0px 29px 0px">
+          info@visitantwerpen.be
+        </mj-text>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px">
+          +32(0)3 221 13 33
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

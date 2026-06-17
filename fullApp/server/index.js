@@ -47,8 +47,36 @@ app.use((req, res, next) => {
   next();
 });
 
+
 // API ROUTES 
 app.post("/api/trip", async (req, res) => {
+  const { possibleDates, budget, mood, expectedPlayers, players } = req.body;
+
+  const email = players?.[0]?.email || "";
+  const username = players?.[0]?.username || "";
+  let errors = [];
+
+  if (!possibleDates || possibleDates.length < 1) {
+    errors.push({ formState: 1, error: "No dates were selected." });
+  }
+  if (expectedPlayers === "" || expectedPlayers === null || expectedPlayers > 10) {
+    errors.push({ formState: 2, error: "Set a correct amount of players." });
+  }
+  if (budget === "" || budget === null) {
+    errors.push({ formState: 3, error: "Set a correct budget." });
+  }
+  if (mood === "" || mood === null) {
+    errors.push({ formState: 4, error: "Set what you would like to drink" });
+  }
+  if (email === "" || email === null || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    errors.push({ formState: 5, error: "Invalid email address." });
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ errors }); //quit and ship error to frontend
+    //sets res.ok to false -> triggers error handling
+  }
+
   try {
     console.log("🔥 HIT /api/trip");
     console.log("BODY:", req.body);
@@ -106,6 +134,17 @@ app.get("/api/trips", async (req, res) => {
   res.json(trips);
 });
 
+// const trip = {
+//   tripId,
+//   playerId,
+//   selectedDates,
+//   email,
+//   username,
+//   score,
+//   image,
+//   joining
+// };
+
 app.post("/api/trips/vote", async (req, res) => {
   const {
     tripId,
@@ -117,6 +156,22 @@ app.post("/api/trips/vote", async (req, res) => {
     image,
     joining = true, // Default to true
   } = req.body;
+
+  let errors=[];
+
+  if(joining){
+    if(selectedDates.length<1){
+      errors.push({ formState: 1, error: "Select atleast 1 date." });
+    }
+    if (email === "" || email === null || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      errors.push({ formState: 2, error: "Invalid email address." });
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({ errors }); //quit and ship error to frontend
+      //sets res.ok to false -> triggers error handling
+    }
+  }
 
   const trip = await getTripById(tripId);
 

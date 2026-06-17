@@ -1,25 +1,37 @@
 import { useEffect, useRef, useState } from "react";
-import duckImgSrc from "../assets/game/run.png";
-import duckJumpImgSrc from "../assets/game/jump.png";
-import duckDashImgSrc from "../assets/game/duck3.png";
-import obstacleImg1Src from "../assets/game/obstacle1.png";
-import obstacleImg2Src from "../assets/game/obstacle2.png";
-import obstacleImg3Src from "../assets/game/obstacle3.png";
+import run1ImgSrc from "../assets/game/sprite/run1.avif";
+import run2ImgSrc from "../assets/game/sprite/run2.avif";
+import run3ImgSrc from "../assets/game/sprite/run3.avif";
+import run4ImgSrc from "../assets/game/sprite/run4.avif";
+import run5ImgSrc from "../assets/game/sprite/run5.avif";
+import run6ImgSrc from "../assets/game/sprite/run6.avif";
+
+import jumpImgSrc from "../assets/game/sprite/jump.avif";
+
+import obstacleImg1Src from "../assets/game/obstacles/cone.avif";
+import obstacleImg2Src from "../assets/game/obstacles/fence.avif";
+import obstacleImg3Src from "../assets/game/obstacles/dove.avif";
 import floorImgSrc from "../assets/game/floor.png";
-import building1src from "../assets/game/building1.png";
+import building1src from "../assets/game/buildings/building1.avif";
+import building2src from "../assets/game/buildings/building2.avif"
+import building3src from "../assets/game/buildings/building3.avif"
+import building4src from "../assets/game/buildings/building4.avif"
 
 export default function Game({ onGameOver, attempt, image }) {
     // React References and States
     const canvasRef = useRef(null);
     const restartRef = useRef(null);
+    const pauseRef = useRef(null);
+    const resumeRef = useRef(null);
     const countdownTimerRef = useRef(null);
     const onGameOverRef = useRef(onGameOver);
 
     const [score, setScore] = useState(0);
     const [gameOverState, setGameOver] = useState(false);
+    const [pausedState, setPaused] = useState(false);
     const [countDown, setCountDown] = useState(true);
     const [count, setCount] = useState(3);
-    
+
     useEffect(() => {
         onGameOverRef.current = onGameOver;
     }, [onGameOver]);
@@ -62,8 +74,13 @@ export default function Game({ onGameOver, attempt, image }) {
         let isDashing = false;
         let isSpeedBoost = false;
         let isGameOver = false;
+        let isPaused = false;
         let gameOverShown = false;
         let isCountingDown = true;
+
+        // Animation state
+        let animationFrame = 0;
+        let animationCounter = 0;
 
         let assetsReady = false;
         let lastLevelUpScore = 0;
@@ -90,9 +107,8 @@ export default function Game({ onGameOver, attempt, image }) {
         const levelUpFlash = () => { };
 
         // Image Assets
-        let duckImg, duckJumpImg, duckDashImg, obstacleImg1, obstacleImg2, obstacleImg3, floorImg, buildingImg1;
-        const buildingImg2 = new Image();
-        const buildingImg3 = new Image();
+        let runImages = [];
+        let jumpImg, obstacleImg1, obstacleImg2, obstacleImg3, floorImg, buildingImg1, buildingImg2, buildingImg3, buildingImg4;
         const faceImg = new Image(); // Stores the captured face image
 
         const canDrawImage = (img) => img && img.complete && img.naturalWidth > 0;
@@ -101,26 +117,37 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Assign sources to image objects so they begin downloading from Vite's bundled paths.
         const loadAssets = async () => {
-            [
-                duckImg,
-                duckJumpImg,
-                duckDashImg,
-                obstacleImg1,
-                obstacleImg2,
-                obstacleImg3,
-                floorImg,
-                buildingImg1,
-            ] = await Promise.all([
-                loadImage(duckImgSrc),
-                loadImage(duckJumpImgSrc),
-                loadImage(duckDashImgSrc),
+            const assets = await Promise.all([
+                loadImage(run1ImgSrc),
+                loadImage(run2ImgSrc),
+                loadImage(run3ImgSrc),
+                loadImage(run4ImgSrc),
+                loadImage(run5ImgSrc),
+                loadImage(run6ImgSrc),
+                loadImage(jumpImgSrc),
                 loadImage(obstacleImg1Src),
                 loadImage(obstacleImg2Src),
                 loadImage(obstacleImg3Src),
                 loadImage(floorImgSrc),
                 loadImage(building1src),
+                loadImage(building2src),
+                loadImage(building3src),
+                loadImage(building4src),
             ]);
-            
+
+            runImages = assets.slice(0, 6);
+            [
+                jumpImg,
+                obstacleImg1,
+                obstacleImg2,
+                obstacleImg3,
+                floorImg,
+                buildingImg1,
+                buildingImg2,
+                buildingImg3,
+                buildingImg4,
+            ] = assets.slice(6);
+
             // If an image was captured, set its source
             if (image) {
                 faceImg.src = image;
@@ -152,7 +179,7 @@ export default function Game({ onGameOver, attempt, image }) {
                 spaceHeld = true;
             }
 
-            if (isCountingDown) return;
+            if (isCountingDown || isPaused) return;
 
             // If player initiates a jump and is on the ground
             if (
@@ -191,7 +218,7 @@ export default function Game({ onGameOver, attempt, image }) {
                 spaceHeld = false;
             }
 
-            if (isCountingDown) return;
+            if (isCountingDown || isPaused) return;
             // If player releases jump early, cut their upward momentum
             if (isJumpRelease) {
                 if (velocityY < 0) {
@@ -239,7 +266,7 @@ export default function Game({ onGameOver, attempt, image }) {
                 obstacleType === 3 ? groundY - height - 100 : groundY - height;// if the obstacle type is 3 put it in the air, otherwise put it on the floor.
 
             obstacles.push({//create the obstacle
-                x: $canvas.width,
+                x: logicalWidth,
                 y: obstacleY,
                 width,
                 height,
@@ -257,7 +284,7 @@ export default function Game({ onGameOver, attempt, image }) {
 
             if (!shouldSpawn) {//if there are obstacles 
                 const last = obstacles[obstacles.length - 1]; //grab the last obstacle
-                const dist = $canvas.width - last.x; //calculate the distance between the right side of the canvas and the last obstacle
+                const dist = logicalWidth - last.x; //calculate the distance between the right side of the canvas and the last obstacle
                 shouldSpawn = dist > targetGap; //if the distance is greater thn the randomly set targetGap, create a new obstacle
             }
 
@@ -309,17 +336,19 @@ export default function Game({ onGameOver, attempt, image }) {
                 rightmostX = last.x + last.width;
             }
 
-            // Use a while loop to instantly fill the screen on the first frame
-            while (rightmostX <= $canvas.width + 100) {
-                const rand = Math.random();
-                const buildingType = rand < 0.33 ? 1 : rand < 0.67 ? 2 : 3;
+            const buildingImages = [buildingImg1, buildingImg2, buildingImg3, buildingImg4];
 
-                const imgRef = buildingType === 1 ? buildingImg1 :
-                    buildingType === 2 ? (canDrawImage(buildingImg2) ? buildingImg2 : buildingImg1) :
-                        (canDrawImage(buildingImg3) ? buildingImg3 : buildingImg1);
+            // Use a while loop to instantly fill the screen on the first frame
+            while (rightmostX <= logicalWidth + 100) {
+                const rand = Math.random();
+                const buildingIndex = Math.floor(rand * buildingImages.length);
+                const buildingType = buildingIndex + 1;
+
+                const rawImg = buildingImages[buildingIndex];
+                const imgRef = canDrawImage(rawImg) ? rawImg : buildingImg1;
 
                 const aspectRatio = canDrawImage(imgRef) ? (imgRef.height / imgRef.width) : 0.6;
-                const width = $canvas.width * 0.8;
+                const width = logicalWidth * 0.8;
                 const height = width * aspectRatio;
                 const y = (groundY - 50) - height;
 
@@ -334,7 +363,7 @@ export default function Game({ onGameOver, attempt, image }) {
                     type: buildingType,
                     imgRef: imgRef
                 });
-                
+
                 rightmostX = spawnX + width;
             }
 
@@ -349,12 +378,33 @@ export default function Game({ onGameOver, attempt, image }) {
 
         }
 
+        // Logical dimensions for game logic
+        let logicalWidth = window.innerWidth;
+        let logicalHeight = window.innerHeight;
+
         // Adjust canvas dimensions to fill the current window width and height.
         const resizeCanvas = () => {
-            $canvas.width = window.innerWidth;
-            $canvas.height = window.innerHeight;
-            groundY = $canvas.height * 0.85; // Keep ground at the center
+            const dpr = window.devicePixelRatio || 1;
+            logicalWidth = window.innerWidth;
+            logicalHeight = window.innerHeight;
+
+            // Physical size
+            $canvas.width = logicalWidth * dpr;
+            $canvas.height = logicalHeight * dpr;
+
+            // Logical size via CSS
+            $canvas.style.width = `${logicalWidth}px`;
+            $canvas.style.height = `${logicalHeight}px`;
+
+            // Scale context once
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             
+            // Set image smoothing once to avoid per-frame overhead
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
+            groundY = logicalHeight * 0.85;
+
             // Re-calculate buildings on resize to prevent stretching
             if (assetsReady) {
                 buildings = [];
@@ -364,14 +414,15 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Determines if the player has collided with any obstacles
         const checkGameOver = () => {
-            if (isCountingDown) return; // Defensive check
+            if (isCountingDown || isPaused) return; // Defensive check
             const w = isDashing ? 159 : 86;
             const h = isDashing ? 65 : 126;
             const hitY = isDashing ? playerY + 61 : playerY;
 
 
             for (const o of obstacles) {
-                const shrink = 0.5; // Shrink obstacle hitbox width by 50% to be forgiving
+                // Use a full-width hitbox for the fence (type 2) and larger hitboxes for others
+                const shrink = o.type === 2 ? 1.0 : 0.8;
 
                 const collision = checkCollision( //check if rectangles intersect
                     80, // Player X fixed at 80
@@ -397,12 +448,25 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Combines all updates for the current frame
         const update = () => {
-            if (isGameOver || isCountingDown) return;
-            groundY = $canvas.height * 0.85;
+            if (isGameOver || isCountingDown || isPaused) return;
+            groundY = logicalHeight * 0.85;
             updatePlayer(); //update player position
             updateObstacles();
             updateBuildings();
             // Build logic 
+
+            // Update animation frame for running
+            if (!isJumping && !isDashing) {
+                animationCounter++;
+                if (animationCounter >= 3) { // Switch frame every 10 update ticks
+                    animationFrame = (animationFrame + 1) % 6;
+                    animationCounter = 0;
+                }
+            } else {
+                // Reset animation state when not running
+                animationFrame = 0;
+                animationCounter = 0;
+            }
 
             backgroundOffset += currentSpeed;
             checkGameOver();
@@ -413,40 +477,40 @@ export default function Game({ onGameOver, attempt, image }) {
         const drawBackground = () => {
             // Sky
             ctx.fillStyle = "#5796FF";
-            ctx.fillRect(0, 0, $canvas.width, $canvas.height);
+            ctx.fillRect(0, 0, logicalWidth, logicalHeight);
 
             // Buildings
             for (const b of buildings) {
                 if (canDrawImage(b.imgRef)) {
                     ctx.drawImage(
                         b.imgRef,
-                        b.x,
-                        b.y,
-                        b.width,
-                        b.height
+                        Math.round(b.x),
+                        Math.round(b.y),
+                        Math.round(b.width),
+                        Math.round(b.height)
                     );
                 }
             }
 
             // Floor
             if (canDrawImage(floorImg)) {
-                const floorY = groundY - 50;
-                const floorHeight = $canvas.height - floorY;
-                const floorWidth = $canvas.width;
-                let floorLoopOffset = backgroundOffset % floorWidth;
+                const floorY = Math.round(groundY - 50);
+                const floorHeight = Math.round(logicalHeight - floorY);
+                const floorWidth = Math.round(logicalWidth);
+                let floorLoopOffset = Math.round(backgroundOffset % floorWidth);
 
                 ctx.drawImage(
                     floorImg,
                     -floorLoopOffset,
                     floorY,
-                    floorWidth,
+                    floorWidth + 1,
                     floorHeight
                 );
                 ctx.drawImage(
                     floorImg,
                     floorWidth - floorLoopOffset,
                     floorY,
-                    floorWidth,
+                    floorWidth + 1,
                     floorHeight
                 );
             }
@@ -454,19 +518,17 @@ export default function Game({ onGameOver, attempt, image }) {
 
         const drawGround = () => {
             // ctx.fillStyle = "#fff";
-            // ctx.fillRect(0, groundY, $canvas.width, 1);
+            // ctx.fillRect(0, groundY, logicalWidth, 1);
         };
 
         const drawPlayer = () => {
-            const duckWidth = isDashing ? 159 : 86;
-            const duckHeight = isDashing ? 65 : 126;
-            const duckY = isDashing ? playerY + 61 : playerY;
+            const playerWidth = 86;
+            const playerHeight = 126;
+            const py = Math.round(playerY); // Round to avoid sub-pixel pixelation
 
-            const currentDuckImg = isDashing
-                ? duckDashImg
-                : isJumping
-                    ? duckJumpImg
-                    : duckImg;
+            const currentPlayerImg = isJumping
+                ? jumpImg
+                : runImages[animationFrame];
 
             let rotationAngle = 0;
 
@@ -480,73 +542,73 @@ export default function Game({ onGameOver, attempt, image }) {
                 }
             }
 
-            // Fallback for when the duck image hasn't loaded yet
-            if (!canDrawImage(currentDuckImg)) {
+            // Fallback for when the player image hasn't loaded yet
+            if (!canDrawImage(currentPlayerImg)) {
                 ctx.fillStyle = "orange";
-                ctx.fillRect(80, duckY, duckWidth, duckHeight);
+                ctx.fillRect(80, py, playerWidth, playerHeight);
                 return;
             }
 
+            ctx.save();
+            // Set high quality smoothing specifically for the player
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
             if (rotationAngle > 0) {
                 // Draw rotated player
-                ctx.save();
-                const centerX = 80 + duckWidth / 2;
-                const centerY = duckY + duckHeight / 2;
+                const centerX = 80 + playerWidth / 2;
+                const centerY = py + playerHeight / 2;
                 ctx.translate(centerX, centerY);
                 ctx.rotate((rotationAngle * Math.PI) / 180);
 
                 // Draw the body first
                 ctx.drawImage(
-                    currentDuckImg,
-                    -duckWidth / 2,
-                    -duckHeight / 2,
-                    duckWidth,
-                    duckHeight
+                    currentPlayerImg,
+                    -playerWidth / 2,
+                    -playerHeight / 2,
+                    playerWidth,
+                    playerHeight
                 );
 
                 // If face image exists, draw it on the head (inline, no nested functions)
                 if (canDrawImage(faceImg)) {
-                    const offsetX = -duckWidth / 2;
-                    const offsetY = -duckHeight / 2;
-                    
+                    const offsetX = -playerWidth / 2;
+                    const offsetY = -playerHeight / 2;
+
                     // The face image is 400x400 with a 300px circular head.
-                    // Scale it so the 300px circular part fits the duck's head size (~55px wide normal, ~35px dashing)
-                    const faceScale = (isDashing ? 15 : 37) / 300;
-                    const drawSize = 400 * faceScale;
-                    
+                    // Scale it so the 300px circular part fits the player's head size (~55px wide normal)
+                    const faceScale = 45 / 300;
+                    const drawSize = Math.round(400 * faceScale);
+
                     // Position relative to the character's top-left corner
-                    const fx = isDashing 
-                        ? offsetX + duckWidth * 0.55 - drawSize / 2 
-                        : offsetX + duckWidth * 0.55 - drawSize / 2;
-                    const fy = isDashing 
-                        ? offsetY + duckHeight * 0.2 - drawSize / 2 
-                        : offsetY + duckHeight * 0.2 - drawSize / 2;
+                    // Adjust horizontal offset if jumping to keep centered on head
+                    const headXMult = isJumping ? 0.48 : 0.55;
+                    const fx = offsetX + playerWidth * headXMult - drawSize / 2;
+                    const fy = offsetY + playerHeight * 0.2 - drawSize / 2;
 
-                    ctx.drawImage(faceImg, fx, fy, drawSize, drawSize);
+                    ctx.drawImage(faceImg, Math.round(fx), Math.round(fy), drawSize, drawSize);
                 }
-
-                ctx.restore();
             } else {
                 // Normal draw without rotation
-                ctx.drawImage(currentDuckImg, 80, duckY, duckWidth, duckHeight);
-                
+                ctx.drawImage(currentPlayerImg, 80, py, playerWidth, playerHeight);
+
                 // Overlay face if it exists
                 if (canDrawImage(faceImg)) {
                     // Scaling logic same as above
-                    const faceScale = (isDashing ? 15 : 37) / 300;
-                    const drawSize = 400 * faceScale;
+                    const faceScale = 45 / 300;
+                    const drawSize = Math.round(400 * faceScale);
 
-                    const fx = isDashing 
-                        ? 80 + duckWidth * 0.55 - drawSize / 2 
-                        : 80 + duckWidth * 0.547 - drawSize / 2;
-                    const fy = isDashing 
-                        ? duckY + duckHeight * 0.2 - drawSize / 2 
-                        : duckY + duckHeight * 0.18 - drawSize / 2;
+                    // Adjust horizontal offset if jumping to keep centered on head
+                    const headXMult = isJumping ? 0.48 : 0.547;
+                    const fx = 80 + playerWidth * headXMult - drawSize / 2;
+                    const fy = py + playerHeight * 0.18 - drawSize / 2;
 
-                    ctx.drawImage(faceImg, fx, fy, drawSize, drawSize);
+                    ctx.drawImage(faceImg, Math.round(fx), Math.round(fy), drawSize, drawSize);
                 }
             }
+            ctx.restore();
         };
+
 
         const drawObstacles = () => {
             for (const o of obstacles) {
@@ -586,7 +648,7 @@ export default function Game({ onGameOver, attempt, image }) {
             drawGround();
             drawPlayer();
             drawObstacles();
-            showGameOverModal();
+            if (!isPaused) showGameOverModal();
         };
 
         const startCountdown = () => {
@@ -616,6 +678,8 @@ export default function Game({ onGameOver, attempt, image }) {
         const restart = () => {
             isGameOver = false;
             setGameOver(false);
+            isPaused = false;
+            setPaused(false);
 
             obstacles = [];
             buildings = [];
@@ -639,8 +703,17 @@ export default function Game({ onGameOver, attempt, image }) {
             startCountdown();
         };
 
+        const pause = () => {
+            if (isGameOver || isCountingDown) return;
+            isPaused = true;
+            setPaused(true);
+        };
 
-
+        const resume = () => {
+            isPaused = false;
+            setPaused(false);
+            startCountdown();
+        };
 
         // Main Game Loop
         const gameLoop = () => {
@@ -654,15 +727,15 @@ export default function Game({ onGameOver, attempt, image }) {
         const init = async () => {
             // First pass at resizing
             resizeCanvas();
-            
+
             await loadAssets();
-            
+
             // Second pass at resizing after assets are ready and layout settled
             setTimeout(() => {
                 resizeCanvas();
                 playerY = groundY - GROUND_OFFSET;
                 playerInitialized = true;
-                
+
                 // Only start game logic after final stabilized resize
                 updateBuildings();
                 startCountdown();
@@ -672,6 +745,8 @@ export default function Game({ onGameOver, attempt, image }) {
             setScore(0);
 
             restartRef.current = restart;
+            pauseRef.current = pause;
+            resumeRef.current = resume;
             window.addEventListener("resize", resizeCanvas);
 
             // Desktop Keyboard Listeners
@@ -709,7 +784,7 @@ export default function Game({ onGameOver, attempt, image }) {
     return (
         <>
             {countDown && (
-                <div id="gameOverModal" className="settings__panel" tyle={{ textAlign: "center" }}>
+                <div id="gameOverModal" className="settings__panel" style={{ textAlign: "center" }}>
 
                     <p className="modal__text">get ready...</p>
                     <h2 style={{ fontSize: "4rem", marginTop: "1rem", color: "white" }}>{count}</h2>
@@ -720,7 +795,7 @@ export default function Game({ onGameOver, attempt, image }) {
             {gameOverState && !countDown && (
                 <div id="gameOverModal" className="settings__panel">
                     <div className="settings__content">
-                        <h2>GAME OVER</h2>
+                        <h2 className="title no-wrap">GAME OVER</h2>
                         <p className="modal__score">
                             Your Score: <span id="finalScore">{score}</span>
                         </p>
@@ -729,17 +804,31 @@ export default function Game({ onGameOver, attempt, image }) {
                         >
                             Try Again
                         </button>
-
-
-                        <p className="modal__text">Press space to restart</p>
                     </div>
                 </div>
             )}
+
+            {pausedState && !countDown && (
+                <div id="pauseModal" className="settings__panel">
+                    <div className="settings__content">
+                        <h2 className="title no-wrap">PAUSED</h2>
+                        <button
+                            onClick={() => resumeRef.current?.()}
+                        >
+                            Resume
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <section className="game__nav">
-                <button className="game__pause">⏸️</button>
+                <button className="game__pause" onClick={() => pauseRef.current?.()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32" fill="none">
+                        <path d="M7 0C8.65685 6.44256e-08 10 1.34315 10 3V29C10 30.6569 8.65685 32 7 32H3C1.34315 32 0 30.6569 0 29V3C0 1.34315 1.34315 6.44256e-08 3 0H7ZM25 0C26.6569 6.44256e-08 28 1.34315 28 3V29C28 30.6569 26.6569 32 25 32H21C19.3431 32 18 30.6569 18 29V3C18 1.34315 19.3431 6.44256e-08 21 0H25Z" fill="#D0FF4C" />
+                    </svg></button>
                 <div className="game__info">
                     <p className="game__attempt">Attempt {attempt}/3</p>
-                    <p className="game__score">your score:  {score}</p>
+                    <p className="game__score">your score: {score}</p>
                 </div>
             </section>
             <canvas ref={canvasRef} id="gameCanvas" />
