@@ -11,3 +11,4 @@ test/serverBased/certs/
 # VSCode settings
 .vscode/
 .vite
+email/ 

@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import errorSrc from "../assets/error/error.png"
 
-export default function errorTrip (){
+export default function ErrorTrip (){
     const {errorCode} = useLoaderData();
     return (
         <>

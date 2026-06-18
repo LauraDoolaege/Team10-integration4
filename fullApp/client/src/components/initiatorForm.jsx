@@ -149,7 +149,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
     });
 
     return () => fp.destroy();
-  }, [formState]);
+  }, [formState, formData.possibleDates]);
 
   return (
     <>

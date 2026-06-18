@@ -11,13 +11,13 @@ export default function Leaderboard() {
     const initiatorPage = leaderboard.trip.initiatorId === localStorage.getItem("playerId");
     const url = `${window.location.origin}/friend/${tripId}`
 
-    const [showSuccess, setShowSuccess] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(() => {
+        return localStorage.getItem("alreadyVisited") !== "true";
+    });
     const [isFading, setIsFading] = useState(false);
 
     useEffect(() => {
-        const alreadyVisited = localStorage.getItem("alreadyVisited");
-        if (alreadyVisited !== "true") {
-            setShowSuccess(true);
+        if (showSuccess) {
             localStorage.setItem("alreadyVisited", "true");
             const timer = setTimeout(() => {
                 setIsFading(true);
@@ -25,7 +25,7 @@ export default function Leaderboard() {
             }, 3000);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [showSuccess]);
 
     const [copied, setCopied] = useState(false);
 
