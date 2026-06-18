@@ -36,6 +36,7 @@ const getCoupon = async (couponId) => {
             t.*,
             c.name AS cafe_name,
             c.location,
+            c.address,
             c.description
         FROM trips t
         JOIN cafes c ON c.id = t.cafe_id
@@ -58,6 +59,7 @@ const getCoupon = async (couponId) => {
                 id: trip.cafe_id,
                 name: trip.cafe_name,
                 location: trip.location,
+                address: trip.address,
                 description: trip.description,
             },
         },

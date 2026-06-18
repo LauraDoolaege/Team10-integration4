@@ -1,0 +1,113 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Arial" href="https://fonts.googleapis.com/css?family=Arial"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif"></mj-all>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#F7F6EA">
+    <!-- Header -->
+    <mj-section padding="32px 20px" background-color="#5796FF" border-radius="0px 0px 24px 24px">
+      <mj-column>
+        <mj-image 
+          src="assets/logo.png" 
+          alt="Logo"
+          width="45px"
+          align="center">
+        </mj-image>
+        
+        <mj-spacer height="24px"></mj-spacer>
+        
+        <mj-image 
+          src="assets/header.png" 
+          alt="Header"
+          width="300px"
+          padding="0px">
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+    <!-- Leaderboard -->
+    <mj-section background-color="#F7F5EE" padding="40px 24px" border-radius="0px">
+      <mj-column width="100%">
+        <mj-image 
+          src="assets/your-coupon.png" 
+          width="240px" 
+          align="center" 
+          alt="Your Coupon" 
+          padding="16px 0px 48px 0px">
+        </mj-image>
+
+      <mj-text
+      font-family="Arial, sans-serif"
+      font-size="16px"
+      color="#707070"
+      align="center"
+      line-height="140%"
+      padding="0px 24px 16px 24px">
+      Show this qr code to the bar upon ordering to redeem your free drink
+    </mj-text>
+
+    <!-- Place & Date -->
+    <mj-text
+      font-family="Arial, sans-serif"
+      font-size="20px"
+      color="#79775B"
+      align="center"
+      line-height="140%"
+      padding="0px 0px 24px 0px">
+      <strong>Place:</strong> bar name<br />
+      <strong>Date:</strong> 11/06/2026
+    </mj-text>
+
+    <!-- QR Code -->
+    <mj-image
+      src="assets/qr-code.png"
+      width="150px"
+      alt="QR Code"
+      padding="0px 0px 24px 0px" />
+        </mj-image>
+      </mj-column>
+    </mj-section>
+
+
+    <!-- Footer -->
+    <mj-section padding="0px 24px 48px 24px">
+      <mj-column padding="20px 28px">
+        <mj-image
+          src="assets/logo.png"
+          width="45px"
+          align="center"
+          alt="Logo"
+          padding="0px 0px 29px 0px">
+        </mj-image>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          line-height="26px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px 0px 29px 0px">
+          Steenplein 1<br />
+          2000 Antwerpen
+        </mj-text>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px 0px 29px 0px">
+          info@visitantwerpen.be
+        </mj-text>
+        <mj-text
+          font-family="Arial, sans-serif"
+          font-size="16px"
+          color="#1A1A1A"
+          align="center"
+          padding="0px">
+          +32(0)3 221 13 33
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
