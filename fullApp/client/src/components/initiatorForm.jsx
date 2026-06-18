@@ -93,13 +93,12 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
         return formData.budget !== "";
 
       case 4:
-       return 1 === 1
-        // return formData.mood.trim().length > 0;
+       
+       return formData.mood.trim().length > 0;
 
       case 5:
         return (
-          1===1
-         // /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) regex test for basic email format validation
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) //regex test for basic email format validation
         );
 
       default:
@@ -150,7 +149,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
     });
 
     return () => fp.destroy();
-  }, [formState]);
+  }, [formState, formData.possibleDates]);
 
   return (
     <>

@@ -26,6 +26,8 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
     return Number(sessionStorage.getItem("attempts") || 0);
   });
 
+  const [input, setInput] = useState(false);
+
   // Load score from sessionStorage
   const [score, setScore] = useState(() => {
     return Number(sessionStorage.getItem("score") || 0);
@@ -92,6 +94,12 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
         return formData.dates.length > 0;
       case 2:
   
+        return (
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) //regex test for basic email format validation
+        );
+
+      case 9:
+
         return (
           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) //regex test for basic email format validation
         );
@@ -581,13 +589,50 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
 
       {/* State 5: Submission / Summary */}
       {formState === 9 && (
-        <div style={{ textAlign: "center", marginTop: "auto", marginBottom: "auto" }}>
-          <h2>All attempts completed!</h2>
-          <p>Your highest score: {score}</p>
-          <button type="submit" className="submit__btn button-primary">
-            Submit Vote
-          </button>
-        </div>
+        <>
+          <div className="summary-container">
+            <div className="summary__header">
+              {/* Header space */}
+              <h2 className="summary__intro">All attempts completed!</h2>
+              <p className="summary__score">Your highest score: {score}</p>
+            </div>
+
+            <div className="summary__cta">
+              <div>
+              </div>
+              <div className="summary__text">
+              <h3 className="summary__title">Last step!</h3>
+              <p className="summary__subtitle">Check your email.</p>
+              </div>
+
+            <article className="summary__article">
+              <div className="summary__text-container">
+                <p className="summary__overview-title">Email</p>
+                {!input && <p>{formData.email}</p>}
+                {input && (
+                  <input
+                    onBlur={() => setInput(false)}
+                    className={formData.email === "" ? "" : !canGoNext() ? "input__error" : "input__correct"}
+                    type="email"
+                    name="email"
+                    id="mail"
+                    value={formData.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    autoFocus
+                  />
+                )}
+              </div>
+              {!input && (
+                <button type="button" className="summary__edit-button" onClick={() => setInput(true)}>Edit</button>
+              )}
+            </article>
+
+              <button disabled={!canGoNext()} type="submit" className="summary__submit-btn button-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </Form>
   )

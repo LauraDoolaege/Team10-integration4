@@ -202,9 +202,9 @@ app.post("/api/trips/vote", async (req, res) => {
 
       const allPlayers = await getPlayersDetailsByTripId(tripId);
       // Filter out players who opted out.
-      // Since they have no email, username, or image (they remain as empty strings "" or null),
-      // these "falsy" fallback values will ensure they are excluded from the email list.
-      const confirmedPlayers = allPlayers.filter(p => p.email && p.username && p.image);
+      // They are identified by missing email or username.
+      // Image is optional and has a fallback in the mailer.
+      const confirmedPlayers = allPlayers.filter(p => p.email && p.username);
       
       const votes = await getDateVotesByTripId(tripId);
 
@@ -213,9 +213,10 @@ app.post("/api/trips/vote", async (req, res) => {
         possibleDates: trip.trip.possibleDates
       });
 
+      console.log(`[SERVER] Sending trip details to ${confirmedPlayers.length} players`);
       for (const player of confirmedPlayers) {
-        sendTripDetails(player.email, {
-          cafe: trip.trip.cafe_name,
+        await sendTripDetails(player.email, {
+          ...trip.trip,
           finalDate, 
           players: confirmedPlayers
         });
@@ -223,7 +224,8 @@ app.post("/api/trips/vote", async (req, res) => {
 
       const highestScorer = await getHighestTripScore(tripId);
       if (highestScorer && highestScorer.email) {
-        sendTripCoupon(highestScorer.email, couponId, trip.trip.cafe_name, finalDate);
+        console.log(`[SERVER] Sending trip coupon to highest scorer: ${highestScorer.email}`);
+        await sendTripCoupon(highestScorer.email, couponId, trip.trip.cafe_name, finalDate);
       }
     }
   }

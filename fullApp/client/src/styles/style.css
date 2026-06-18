@@ -88,7 +88,9 @@
   --color-skip: #79775B;
   --color-underlined: #0E3A87;
   --color-grey:#C3C3C3;
-
+  --color-light-red: #F8D7DA;
+  --color-light-green: #D4EDDA;
+  --color-red: #ac2a37;
 
   --highlight-yellow: #D0FF4C;
 
@@ -217,6 +219,7 @@ body {
   align-items: center;
   background-color: var(--color-blue);
   height: 100dvh;
+  width: 100%;
 }
 
 .camera__content{
@@ -265,7 +268,7 @@ body {
   width: 100%;
 }
 
-.camera-container video {
+.camera-container .video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3564,4 +3567,223 @@ margin-bottom: var(--space-xl);
 
 .not-joining__cta-text {
   max-width: 80%;
+}
+/* ==========================================
+   COUPON STYLES (Cloned from Not Joining)
+   ========================================== */
+
+.coupon-container {
+  background:
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+    var(--color-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100dvh;
+  padding: var(--space-xl) 0 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.coupon__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  min-height: 0;
+}
+
+.coupon__buildings {
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.coupon__cta {
+  background-color: var(--color-white);
+  padding: var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-xl);
+  border-radius: 30px 30px 0px 0px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.coupon__cta-text {
+  max-width: 90%;
+}
+
+.coupon__active {
+  color: var(--color-green);
+  background-color: var(--color-light-green);
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+}
+
+.coupon__used {
+  color: var(--color-red);
+  background-color: var(--color-light-red);
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+}
+
+/* ==========================================
+   TRIP FORM SUMMARY STYLES (Cloned for Isolation)
+   ========================================== */
+
+.summary-container {
+  background: var(--color-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100dvh;
+  padding: var(--space-xl) 0 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  justify-content: center;
+  text-align: center;
+  align-items:center;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  min-height: 0;
+}
+
+.summary__cta {
+  background-color: var(--color-white);
+  padding: var(--space-xxl);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  gap: var(--space-xxl);
+  border-radius: 30px 30px 0px 0px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.summary__score{
+  font-family: var(--font-family-sans);
+  font-size: var(--font-xxl);
+  color: var(--color-white);
+  font-weight: 700;
+  background-color:var(--color-pink);
+  padding:var(--space-md) var(--space-md);
+  width: 80%;
+}
+
+.summary__intro {
+  font-family: var(--font-family-sans) !important;
+  font-size: var(--font-xl);
+  color:var(--color-white);
+  margin: 0;
+
+  width: 100%;
+}
+
+.summary__title {
+  font-family: var(--font-family-heading) !important;
+  font-size: var(--font-xxxl);
+  margin: 0;
+
+  width: 100%;
+}
+
+.summary__subtitle {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-xl);
+  color: var(--color-grey);
+  
+  width: 100%;
+}
+
+.summary__article {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--color-grey);
+  padding-bottom: var(--space-xs);
+  gap: var(--space-md);
+}
+
+.summary__text{
+  display:flex;
+  flex-direction: column;
+  text-align: center;
+  gap: var(--space-lg);
+  justify-content: center;
+  width:100%;
+}
+
+.summary__text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.summary__text-container p {
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.summary__text-container p::-webkit-scrollbar {
+  display: none;
+}
+
+.summary__edit-button {
+  background-color: transparent;
+  color: var(--color-grey);
+  border: none;
+  width: auto;
+  font-size: var(--font-lg);
+  text-decoration: underline;
+}
+
+.summary__overview-title {
+  white-space: nowrap;
+  font-size: var(--font-sm);
+  color: var(--neutral-gray);
+  font-family: var(--font-family-sans);
+}
+
+.summary__submit-btn {
+  width: 100%;
+  margin-top: auto;
 }

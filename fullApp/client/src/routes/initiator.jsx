@@ -2,7 +2,6 @@ import { useActionData } from "react-router";
 import { useState, useEffect } from "react";
 import InitiatorForm from "../components/initiatorForm";
 import Game from "../components/game";
-import Camera from "../components/camera";
 import InitiatorOnboarding from "../components/initiatorOnboarding";
 
 export default function Initiator() {
