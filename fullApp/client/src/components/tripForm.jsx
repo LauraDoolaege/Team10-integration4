@@ -2,7 +2,7 @@ import { Form, useSubmit } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import Game from "../components/game";
 import Camera from "../components/camera";
-import InitiatorFormNavigation from "./initiatorFormNavigation";
+import FormNavigation from "./initiatorFormNavigation";
 import successSrc from "../assets/images/Onboarding/trip/success.avif"
 
 import buildingsImg from "../assets/images/Onboarding/step5/buildings.avif";
@@ -168,7 +168,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                    <div className="form-container"> 
                        <fieldset className="form-container-step">
                         <legend className="visually-hidden">Step 1: overview </legend>
-                        <InitiatorFormNavigation currentStep={formState} setStep={setFormState} />
+                        <FormNavigation currentStep={formState} setStep={setFormState} page="friend" canGoNext={canGoNext} />
             
                         <div className="form__text-content">
                         <h2 className="title no-wrap">Drinks at Antwerp!</h2>
@@ -253,11 +253,7 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                 <legend className="visually-hidden">
                   Step 1: available dates
                 </legend>
-
-                <InitiatorFormNavigation
-                  currentStep={formState}
-                  setStep={setFormState}
-                />
+                  <FormNavigation currentStep={formState} setStep={setFormState} page="friend" canGoNext={canGoNext} />
 
                 <div className="form__text-content">
                   <h2 className="title">Availability</h2>
@@ -316,10 +312,8 @@ export default function TripForm({ receivedTrip, playerId, actionData }) {
                 <legend className="visually-hidden">
                   Step 2: contact details
                 </legend>
-                <InitiatorFormNavigation
-                  currentStep={formState}
-                  setStep={setFormState}
-                />
+                     <FormNavigation currentStep={formState} setStep={setFormState} page="friend" canGoNext={canGoNext} />
+         
                 <div className="form__text-content">
                   <h2 className="title">Contact</h2>
                   <p>Where can we reach you?</p>

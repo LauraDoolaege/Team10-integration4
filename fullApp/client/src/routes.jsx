@@ -20,6 +20,7 @@ import {
 
 import Leaderboard from "./routes/leaderboard.jsx";
 import {
+  LeaderboardAction,
   LeaderboardLoader
 } from "./routes/leaderboard.data.js";
 
@@ -59,7 +60,8 @@ export default [
       {
         path: "leaderboard/:tripId",
         element: <Leaderboard />,
-        loader: LeaderboardLoader
+        loader: LeaderboardLoader,
+        action: LeaderboardAction
       },
       {
         path: "error/:error",

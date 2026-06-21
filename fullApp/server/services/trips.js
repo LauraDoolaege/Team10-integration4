@@ -689,7 +689,18 @@ const getFinalDate = (trip) => {
     return closestDate;
 };
 
-
+const clearTripData = async (tripId) => {
+    try {
+        await db.query(`DELETE FROM votes WHERE trip_id = ?`, [tripId]);
+        await db.query(`DELETE FROM trip_voters WHERE trip_id = ?`, [tripId]);
+        await db.query(`DELETE FROM trip_players WHERE trip_id = ?`, [tripId]);
+        await db.query(`DELETE FROM trip_dates WHERE trip_id = ?`, [tripId]);
+        console.log(`[DATABASE] Cleared player details, votes, and dates for trip: ${tripId}`);
+    } catch (error) {
+        console.error("Error clearing trip data:", error);
+        throw error;
+    }
+};
 
 module.exports = {
     getCoupon, 
@@ -712,4 +723,5 @@ module.exports = {
     getDateVotesByTripId,
     getDateVotesWithImagesByTripId,
     getHighestTripScore,
+    clearTripData,
 };

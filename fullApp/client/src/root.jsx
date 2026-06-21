@@ -1,7 +1,19 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigation } from "react-router";
 import "./styles/reset.css";
 import "./styles/style.css";
 
 export default function Root() {
-  return <Outlet />;
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
+
+  return (
+    <>
+      {isLoading && (
+        <div className="global-loader-overlay">
+          <div className="spinner">Loading...</div>
+        </div>
+      )}
+      <Outlet />
+    </>
+  );
 }

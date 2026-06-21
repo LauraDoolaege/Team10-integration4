@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, Form, useNavigation } from "react-router-dom";
 
 import pfpSrc from "../assets/images/Planning/step1/pfp.avif";
 import buidlSrc from "../assets/images/Planning/step1/building.avif";
@@ -7,7 +7,10 @@ import successSrc from "../assets/images/leaderboard/confirmation.png"
 
 export default function Leaderboard() {
     const { tripId, leaderboard } = useLoaderData();
+    const navigation = useNavigation();
+    const isSubmitting = navigation.state === "submitting";
     const players = leaderboard.players;
+    const canClose = players.length>=2;
     const initiatorPage = leaderboard.trip.initiatorId === localStorage.getItem("playerId");
     const url = `${window.location.origin}/friend/${tripId}`
 
@@ -15,6 +18,8 @@ export default function Leaderboard() {
         return localStorage.getItem("alreadyVisited") !== "true";
     });
     const [isFading, setIsFading] = useState(false);
+    const [popupState,setPopupState] = useState(false);
+    const [closeButton, setCloseButton] =useState(canClose);
 
     useEffect(() => {
         if (showSuccess) {
@@ -63,7 +68,7 @@ export default function Leaderboard() {
                 <div className={`succes__container ${isFading ? "fade-out" : ""}`}>
                     <img src={successSrc} alt="check mark" />
                     <h2 className="title">Succes!</h2>
-                    <p className="subtitle">you succesfully created a trip!</p>
+                    <p className="subtitle">nice!</p>
                 </div>
                 )}
 
@@ -130,7 +135,7 @@ export default function Leaderboard() {
                                         </button>
                                     </div>
                      
-                            <button onClick={handleShare} className="button-primary button-share">
+                            <button type="button" onClick={handleShare} className="button-share">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
                                     <polyline points="16 6 12 2 8 6"></polyline>
@@ -138,24 +143,62 @@ export default function Leaderboard() {
                                 </svg>
                                 Share
                             </button>
+                            {closeButton &&(
+                            <button type="button" className="button__outline"  onClick={() => setPopupState(true)}>
+                                closeTrip
+                            </button>
+                            )}
                         </div>
                     )}
 
 
                     {!initiatorPage && (
-                    <>
-                    <h3 className="leaderboard__subtitle">Looks like you're in the lead!</h3>
-                    <p className="text leaderboard__cta-text">Now <span className="highlight-bold">let's plan a trip </span> and invite your friends to <span className="highlight-bold">fill this leaderboard!</span></p>
-                    <button className="button__arrow-fill" >
-                        <p>Plan the trip!</p>
-                        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.750127 0.75C0.750127 0.75 8.75006 6.64187 8.75006 8.75C8.75006 10.8583 0.750061 16.75 0.750061 16.75" stroke="#C3C3C3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
+                        <>
+                            <h3 className="leaderboard__subtitle">Wait for your friends!</h3>
+                            <p className="text leaderboard__cta-text">Wait untill all your friends have played the game!</p>
+
                         </>
                     )}
                 </div>
             </div>
+
+            {popupState && (
+                <Form onSubmit={()=>{
+                    setPopupState(false)
+                    setCloseButton(false);
+                }} method="POST">
+                    
+                    <div className="leaderboard-popup-overlay">
+                        <div className="leaderboard-popup-card">
+                            <div className="leaderboard-popup-heading">
+                                <h2 className="title">Are you sure?</h2>
+                                <p className="text">Your friends won't be play the game, and the final trip details will be sent out to everyone's mailbox?</p>
+                            </div>
+
+                            <div className="leaderboard-popup-buttons">
+                                <button
+                                    type="submit"
+                                 
+                                    className="button__arrow-fill">
+                                        confirm
+                                    </button>
+                                <button
+                                    type="button"
+                                    className="button__outline"
+                                    onClick={() => { setPopupState(false) }}>cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </Form>
+            )}
+
+            {isSubmitting && (
+                <div className="leaderboard-popup-overlay">
+                    <div className="spinner">
+                        Sending emails & closing trip...
+                    </div>
+                </div>
+            )}
         </>
     );
 }

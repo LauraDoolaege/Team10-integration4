@@ -13,7 +13,6 @@ export default function Trip() {
 
   return (
     <> 
-
       {tripState === 0 && (
         <TripOnboarding setTripState={setTripState}/>
       )}
