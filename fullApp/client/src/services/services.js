@@ -65,7 +65,7 @@ export async function endTrip(tripId) {
   const res = await fetch(`${window.location.origin}/api/closetrip/${tripId}`);
 
   if (!res.ok) {
-    throw new Error("Failed to fetch trip");
+    throw new Error("Failed to close trip");
   }
 
   return await res.json();
