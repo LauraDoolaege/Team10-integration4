@@ -61,6 +61,17 @@ export async function redeemCoupon(couponId) {
 }
 
 
+export async function endTrip(tripId) {
+  const res = await fetch(`${window.location.origin}/api/closetrip/${tripId}`);
+
+  if (!res.ok) {
+    throw new Error("Failed to close trip");
+  }
+
+  return await res.json();
+}
+
+
 
 export async function getTrip(tripId, playerId) {
   const res = await fetch(`${window.location.origin}/api/trips/${tripId}/${playerId}`);

@@ -31,6 +31,7 @@ export default function Game({ onGameOver, attempt, image }) {
     const [pausedState, setPaused] = useState(false);
     const [countDown, setCountDown] = useState(true);
     const [count, setCount] = useState(3);
+    const [isLoadingAssets, setIsLoadingAssets] = useState(true);
 
     useEffect(() => {
         onGameOverRef.current = onGameOver;
@@ -44,9 +45,9 @@ export default function Game({ onGameOver, attempt, image }) {
         const ctx = $canvas.getContext("2d");
         if (!ctx) return;
 
-        // ----------------------------
-        // IMAGE SAFETY LOADER
-        // ----------------------------
+
+        //image safety loader
+    
 
         const loadImage = (src) =>
             new Promise((resolve) => {
@@ -66,6 +67,10 @@ export default function Game({ onGameOver, attempt, image }) {
 
         // Game State Variables 
         let animationId;
+        // Frame pacing variables to limit execution speed to 60 FPS.
+        // Prevents the game from running too fast on high-refresh-rate (120Hz/144Hz+) screens.
+        let lastTime = performance.now();
+        const fpsInterval = 1000 / 60; // Target 60 frames per second
         let groundY = window.innerHeight * 0.85;
         let playerY = 0;
         let velocityY = 0;
@@ -385,8 +390,9 @@ export default function Game({ onGameOver, attempt, image }) {
         // Adjust canvas dimensions to fill the current window width and height.
         const resizeCanvas = () => {
             const dpr = window.devicePixelRatio || 1;
-            logicalWidth = window.innerWidth;
-            logicalHeight = window.innerHeight;
+            const parent = $canvas.parentElement;
+            logicalWidth = (parent && parent.clientWidth) ? parent.clientWidth : window.innerWidth;
+            logicalHeight = (parent && parent.clientHeight) ? parent.clientHeight : window.innerHeight;
 
             // Physical size
             $canvas.width = logicalWidth * dpr;
@@ -671,6 +677,7 @@ export default function Game({ onGameOver, attempt, image }) {
                 clearInterval(countdownTimerRef.current);
                 setCountDown(false);
                 isCountingDown = false;
+                lastTime = performance.now(); // Reset time when gameplay officially starts
             }, 1000);
         };
 
@@ -716,11 +723,21 @@ export default function Game({ onGameOver, attempt, image }) {
         };
 
         // Main Game Loop
-        const gameLoop = () => {
-            update();
-            render();
-            // Continuously request the next frame from the browser
+        const gameLoop = (currentTime) => {
+            // Keep requesting frames at the monitor's natural refresh rate
             animationId = requestAnimationFrame(gameLoop);
+
+            const time = currentTime || performance.now();
+            const elapsed = time - lastTime;
+
+            // Throttle updates and rendering so they run at exactly 60 FPS,
+            // regardless of the screen's refresh rate (60Hz, 120Hz, 144Hz, etc.)
+            if (elapsed >= fpsInterval) {
+                // Adjust lastTime to account for minor timing fluctuations
+                lastTime = time - (elapsed % fpsInterval);
+                update();
+                render();
+            }
         };
 
         // Setup & Initialization (init) 
@@ -729,6 +746,7 @@ export default function Game({ onGameOver, attempt, image }) {
             resizeCanvas();
 
             await loadAssets();
+            setIsLoadingAssets(false);
 
             // Second pass at resizing after assets are ready and layout settled
             setTimeout(() => {
@@ -783,7 +801,17 @@ export default function Game({ onGameOver, attempt, image }) {
     //React JSX UI
     return (
         <>
-            {countDown && (
+            {isLoadingAssets && (
+                <div id="loadingModal" className="settings__panel" style={{ textAlign: "center" }}>
+                    <div className="settings__content">
+                        <h2 className="title no-wrap" style={{ color: "white" }}>LOADING...</h2>
+                        <div className="spinner" style={{ margin: "1.5rem auto", background: "transparent", boxShadow: "none", padding: 0 }}></div>
+                        <p className="modal__text">Downloading game assets</p>
+                    </div>
+                </div>
+            )}
+
+            {countDown && !isLoadingAssets && (
                 <div id="gameOverModal" className="settings__panel" style={{ textAlign: "center" }}>
 
                     <p className="modal__text">get ready...</p>

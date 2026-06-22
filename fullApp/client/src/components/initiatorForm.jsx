@@ -4,7 +4,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { io } from "socket.io-client";
 
-import InitiatorFormNavigation from "./initiatorFormNavigation";
+import FormNavigation from "./initiatorFormNavigation";
 
 import pfpSrc from "../assets/images/Planning/step1/pfp.avif";
 import buidlSrc from "../assets/images/Planning/step1/building.avif";
@@ -231,7 +231,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
           <div className="form-container"> 
            <fieldset className="form-container-step">
             <legend className="visually-hidden">Step 1: Select possible dates</legend>
-            <InitiatorFormNavigation currentStep={formState} setStep={setFormState} />
+            <FormNavigation currentStep={formState} setStep={setFormState} page="initiator" canGoNext={canGoNext} />
 
             <div className="form__text-content">
             <h2 className="title">Dates</h2>
@@ -247,7 +247,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
           <div className="form-container"> 
            <fieldset className="form-container-step">
             <legend className="visually-hidden">Step 2: Expected number of players</legend>
-            <InitiatorFormNavigation currentStep={formState} setStep={setFormState} />
+              <FormNavigation currentStep={formState} setStep={setFormState} page="initiator" canGoNext={canGoNext} />
 
             <div className="form__text-content">
             <h2 className="title">Players</h2>
@@ -313,7 +313,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
           <div className="form-container">
             <fieldset className="form-container-step">
               <legend className="visually-hidden">Step 3: Budget selection</legend>
-              <InitiatorFormNavigation currentStep={formState} setStep={setFormState} />
+              <FormNavigation currentStep={formState} setStep={setFormState} page="initiator" canGoNext={canGoNext} />
 
               <div className="form__text-content">
                 <h2 className="title">Budget</h2>
@@ -363,7 +363,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
          <div className="form-container"> 
            <fieldset className="form-container-step">
             <legend className="visually-hidden">Step 4: Select bar mood preferences</legend>
-            <InitiatorFormNavigation currentStep={formState} setStep={setFormState} />
+              <FormNavigation currentStep={formState} setStep={setFormState} page="initiator" canGoNext={canGoNext} />
 
             <div className="form__text-content">
             <h2 className="title">Preferences</h2>
@@ -419,7 +419,7 @@ export default function InitiatorForm({ actionData, nickname, score, image }) {
             <div className="form-container">
               <fieldset className="form-container-step">
                 <legend className="visually-hidden">Step 5: Contact details</legend>
-                <InitiatorFormNavigation currentStep={formState === 6 ? 5 : formState} setStep={setFormState} />
+                <FormNavigation currentStep={formState} setStep={setFormState} page="initiator" canGoNext={canGoNext} />
 
                 <div className="form__text-content">
                   <h2 className="title">Contact</h2>

@@ -30,7 +30,9 @@ const {
   getDateVotesByTripId,
   getDateVotesWithImagesByTripId,
 
-  getHighestTripScore, } = require("./services/trips");
+  getHighestTripScore,
+  clearTripData, 
+} = require("./services/trips");
 
 const { sendTripDetails, sendTripCoupon } = require("./services/mailer");
 
@@ -115,6 +117,56 @@ app.get("/api/coupon/redeem/:couponId", async (req, res) => {
     res.status(500).json({ error: error.message || "Failed to fetch coupon" });
   }
 });
+
+// const res = await fetch(`${window.location.origin}/api/closetrip/${tripId}`);
+
+
+app.get("/api/closetrip/:tripId", async (req, res) => {
+  try {
+    const tripId = req.params.tripId;
+    const trip = await getTripById(tripId);
+
+    await closeTrip(tripId);
+    const couponId = crypto.randomUUID();
+    await createCoupon(couponId, tripId);
+
+    const allPlayers = await getPlayersDetailsByTripId(tripId);
+    // Filter out players who opted out.
+    // They are identified by missing email or username.
+    // Image is optional and has a fallback in the mailer.
+    const confirmedPlayers = allPlayers.filter(p => p.email && p.username);
+
+    const votes = await getDateVotesByTripId(tripId);
+
+    const finalDate = getFinalDate({
+      votes,
+      possibleDates: trip.trip.possibleDates
+    });
+
+    console.log(`[SERVER] Sending trip details to ${confirmedPlayers.length} players`);
+    for (const player of confirmedPlayers) {
+      await sendTripDetails(player.email, {
+        ...trip.trip,
+        finalDate,
+        players: confirmedPlayers
+      });
+    }
+
+    const highestScorer = await getHighestTripScore(tripId);
+    if (highestScorer && highestScorer.email) {
+      console.log(`[SERVER] Sending trip coupon to highest scorer: ${highestScorer.email}`);
+      await sendTripCoupon(highestScorer.email, couponId, trip.trip.cafe_name, finalDate);
+    }
+
+    await clearTripData(tripId);
+    const couponData = await getCoupon(couponId);
+    res.json(couponData);
+  } catch (error) {
+    console.error("Error ending trip:", error);
+    res.status(500).json({ error: error.message || "Failed to end trip" });
+  }
+});
+
 
 app.get("/api/coupon/:couponId", async (req, res) => {
   try {
@@ -227,6 +279,8 @@ app.post("/api/trips/vote", async (req, res) => {
         console.log(`[SERVER] Sending trip coupon to highest scorer: ${highestScorer.email}`);
         await sendTripCoupon(highestScorer.email, couponId, trip.trip.cafe_name, finalDate);
       }
+
+      await clearTripData(tripId);
     }
   }
 

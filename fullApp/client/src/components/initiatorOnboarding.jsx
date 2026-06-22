@@ -54,7 +54,7 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
                     </div>
                     <div className="onboarding__text__section onboarding__text__section-1 ">
         
-                        <h2 className="onboarding__antwerp">Your hangout starts here!</h2>
+                        <h2 className="onboarding__antwerp">Your hangout <br /> starts here!</h2>
                         <p className="text onboarding__text-1">The city where plans make it out of the groupchat.</p>
                         <button type="button" className="onboarding__button" onClick={handleContinue}>continue</button>
                     </div>
@@ -109,7 +109,7 @@ export default function InitiatorOnboarding({ onComplete, nickname, setNickname,
 
             {onboardingState === 3 && (
                 <section key={onboardingState} className="onboarding onboarding-4">
-                    <button className="onboarding__skip" type="button" onClick={() => setOnboardingState(5)}>
+                    <button className="onboarding__skip" type="button" onClick={() => setOnboardingState(4)}>
                         <p>skip</p>
                         <svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0.750127 0.75C0.750127 0.75 8.75006 6.64187 8.75006 8.75C8.75006 10.8583 0.750061 16.75 0.750061 16.75" stroke="#79775B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

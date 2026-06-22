@@ -135,10 +135,8 @@ export default function FaceCapture({ setState, image, setImage }) {
             ) : (
                 <div className="camera__content">
                     {/* Preview matching the capture screen layout */}
-                    <div className="camera-container">
-                        <img src={image} alt="Captured face" className="video" style={{ objectFit: 'cover' }} />
-                        <div className="camera-overlay" />
-                        <div className="camera-instruction" />
+                    <div className="camera-container camera-preview-container">
+                        <img src={image} alt="Captured face" className="camera-preview-image" />
                     </div>
 
                     <div className="camera__text-container">
