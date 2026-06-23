@@ -1,0 +1,52 @@
+
+/* Budget Visual Section */
+.budget-visual {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: 200px;
+  margin: var(--space-xl) auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.wallet-img {
+  width: 100%;
+  height: auto;
+  z-index: 20; /* Ensure wallet is on top */
+  position: relative;
+}
+
+.bills-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure bills are behind wallet */
+  pointer-events: none;
+}
+
+.bill-img {
+  position: absolute;
+  width: 120px; /* Slightly larger for better visibility behind wallet */
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+/* Individual bill rotations to create the illusion of a messy stack */
+.bill-img:nth-child(odd) { transform: rotate(-5deg); }
+.bill-img:nth-child(even) { transform: rotate(5deg); }
+.bill-img:nth-child(3n) { transform: rotate(-12deg); }
+.bill-img:nth-child(4n) { transform: rotate(15deg); }
+.bill-img:nth-child(5n) { transform: rotate(-8deg) translateY(-10px); }
+.bill-img:nth-child(6n) { transform: rotate(10deg) translateX(10px); }
+.bill-img:nth-child(7n) { transform: rotate(-15deg) translateY(5px); }
+.bill-img:nth-child(8n) { transform: rotate(8deg) translateX(-5px); }
+.bill-img:nth-child(9n) { transform: rotate(-3deg) translateY(-15px); }
+.bill-img:nth-child(10n) { transform: rotate(12deg) translateY(10px); }

@@ -1,0 +1,8 @@
+{
+  "name": "plan-a-root",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd server && npm ci",
+    "serve": "cd server && node index.js"
+  }
+}
